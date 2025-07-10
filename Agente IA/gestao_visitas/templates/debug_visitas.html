@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEBUG - Visitas PNSB</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug-box { border: 2px solid #007bff; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .error { border-color: #dc3545; background-color: #f8d7da; }
+        .success { border-color: #28a745; background-color: #d4edda; }
+        .warning { border-color: #ffc107; background-color: #fff3cd; }
+        .info { border-color: #17a2b8; background-color: #d1ecf1; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        #resultados { margin-top: 20px; }
+        .visita-item { background: #f8f9fa; padding: 10px; margin: 5px 0; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 DEBUG - Visitas PNSB</h1>
+    
+    <div class="debug-box info">
+        <h3>Teste de Conectividade</h3>
+        <button onclick="testarConexao()">Testar Conexão</button>
+        <button onclick="testarAPI()">Testar API</button>
+        <button onclick="testarVisitas()">Carregar Visitas</button>
+        <button onclick="limparResultados()">Limpar</button>
+    </div>
+    
+    <div id="resultados"></div>
+    
+    <div class="debug-box">
+        <h3>Visitas Carregadas:</h3>
+        <div id="lista-visitas-debug">Nenhuma visita carregada ainda...</div>
+    </div>
+
+    <script>
+        console.log('🔍 DEBUG PAGE CARREGADA');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `debug-box ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}</strong>: ${message}`;
+            document.getElementById('resultados').appendChild(div);
+            console.log(message);
+        }
+        
+        function limparResultados() {
+            document.getElementById('resultados').innerHTML = '';
+            document.getElementById('lista-visitas-debug').innerHTML = 'Nenhuma visita carregada ainda...';
+        }
+        
+        async function testarConexao() {
+            log('🔍 Testando conexão com o servidor...', 'info');
+            
+            try {
+                const response = await fetch('/', { 
+                    method: 'GET',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    log('✅ Conexão com servidor OK (status: ' + response.status + ')', 'success');
+                } else {
+                    log('❌ Erro na conexão (status: ' + response.status + ')', 'error');
+                }
+            } catch (error) {
+                log('❌ Erro de conexão: ' + error.message, 'error');
+            }
+        }
+        
+        async function testarAPI() {
+            log('🔍 Testando API /api/visitas...', 'info');
+            
+            try {
+                const response = await fetch('/api/visitas', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    cache: 'no-cache'
+                });
+                
+                log('📊 Status da resposta: ' + response.status, response.ok ? 'success' : 'error');
+                log('📊 Headers da resposta: ' + JSON.stringify([...response.headers.entries()]), 'info');
+                
+                const text = await response.text();
+                log('📊 Resposta bruta: ' + text.substring(0, 500) + (text.length > 500 ? '...' : ''), 'info');
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(text);
+                        log('✅ API retornou JSON válido com ' + data.length + ' itens', 'success');
+                        return data;
+                    } catch (parseError) {
+                        log('❌ Erro ao fazer parse do JSON: ' + parseError.message, 'error');
+                        return null;
+                    }
+                } else {
+                    log('❌ API retornou erro: ' + text, 'error');
+                    return null;
+                }
+            } catch (error) {
+                log('❌ Erro na API: ' + error.message, 'error');
+                return null;
+            }
+        }
+        
+        async function testarVisitas() {
+            log('🔍 Carregando visitas...', 'info');
+            
+            const visitas = await testarAPI();
+            
+            if (visitas && Array.isArray(visitas)) {
+                if (visitas.length === 0) {
+                    log('⚠️ API retornou array vazio - nenhuma visita encontrada', 'warning');
+                    document.getElementById('lista-visitas-debug').innerHTML = '<em>Nenhuma visita retornada pela API</em>';
+                } else {
+                    log('✅ Visitas carregadas com sucesso!', 'success');
+                    
+                    const container = document.getElementById('lista-visitas-debug');
+                    container.innerHTML = '';
+                    
+                    visitas.forEach((visita, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'visita-item';
+                        div.innerHTML = `
+                            <strong>Visita ${index + 1}:</strong><br>
+                            • ID: ${visita.id}<br>
+                            • Município: ${visita.municipio}<br>
+                            • Data: ${visita.data}<br>
+                            • Status: ${visita.status}<br>
+                            • Local: ${visita.local}<br>
+                            • Tipo: ${visita.tipo_pesquisa}
+                        `;
+                        container.appendChild(div);
+                        
+                        log(`📅 Visita ${index + 1}: ${visita.municipio} (${visita.data}) - ${visita.status}`, 'success');
+                    });
+                }
+            } else {
+                log('❌ Dados inválidos retornados pela API', 'error');
+                document.getElementById('lista-visitas-debug').innerHTML = '<em style="color: red;">Erro ao carregar visitas</em>';
+            }
+        }
+        
+        // Testar automaticamente quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Página de debug carregada - executando testes automáticos...', 'info');
+            
+            setTimeout(async () => {
+                await testarConexao();
+                await testarVisitas();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1250 @@
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.auto_scheduler:AutoSchedulerService inicializado com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Scheduler automático iniciado com sucesso
+INFO:gestao_visitas.routes.auto_scheduler_api:AutoSchedulerService inicializado e iniciado
+INFO:gestao_visitas.services.strategy_assistant:StrategyAssistantService inicializado com sucesso
+INFO:gestao_visitas.routes.strategy_assistant_api:StrategyAssistantService inicializado
+INFO:gestao_visitas.services.critical_alerts_service:CriticalAlertsService inicializado com sucesso
+INFO:gestao_visitas.routes.critical_alerts_api:CriticalAlertsService inicializado
+INFO:gestao_visitas.services.timeline_service:TimelineService inicializado com sucesso
+INFO:gestao_visitas.routes.timeline_api:TimelineService inicializado
+INFO:gestao_visitas.services.google_maps_service:GoogleMapsService inicializado com sucesso
+INFO:gestao_visitas.routes.google_maps_api:GoogleMapsService inicializado
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250708_092507
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+ * Serving Flask app 'app'
+ * Debug mode: on
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.auto_scheduler:AutoSchedulerService inicializado com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Scheduler automático iniciado com sucesso
+INFO:gestao_visitas.routes.auto_scheduler_api:AutoSchedulerService inicializado e iniciado
+INFO:gestao_visitas.services.strategy_assistant:StrategyAssistantService inicializado com sucesso
+INFO:gestao_visitas.routes.strategy_assistant_api:StrategyAssistantService inicializado
+INFO:gestao_visitas.services.critical_alerts_service:CriticalAlertsService inicializado com sucesso
+INFO:gestao_visitas.routes.critical_alerts_api:CriticalAlertsService inicializado
+INFO:gestao_visitas.services.timeline_service:TimelineService inicializado com sucesso
+INFO:gestao_visitas.routes.timeline_api:TimelineService inicializado
+INFO:gestao_visitas.services.google_maps_service:GoogleMapsService inicializado com sucesso
+INFO:gestao_visitas.routes.google_maps_api:GoogleMapsService inicializado
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 10:34:33] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 10:35:10] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 10:53:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 10:58:23] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada para follow-up: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada para follow-up: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 11:22:47] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250708_132047
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250708_132048
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:54] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:55] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:55] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:55] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:55] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:55] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:55] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:56] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:56] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:56] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:56] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:56] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:56] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:56] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:57] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:57] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:57] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:57] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:57] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:57] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:57] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/icons/icon-base.svg HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:17:58] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada para follow-up: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada para follow-up: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:03] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:04] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:04] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:04] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:04] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:04] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:04] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:05] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:05] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:05] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:05] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:05] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:05] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:05] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:05] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/icons/icon-base.svg HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:06] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/icons/icon-base.svg HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:35:07] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:11] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:11] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:11] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:11] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:11] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:11] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:11] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:14] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:41:15] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:50] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:50] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:50] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:50] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:50] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:50] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:50] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/icons/icon-base.svg HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:52] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 15:55:53] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:10] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:10] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:10] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:10] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:10] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:10] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:10] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:11] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:11] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:11] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:11] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:11] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:11] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:11] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:11] "GET /static/icons/favicon.ico HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:12] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:12] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:12] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:12] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:12] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:12] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:12] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:12] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:09:13] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:32] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:32] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:32] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:32] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:32] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:32] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:32] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:35] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:35] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:35] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:35] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:35] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:35] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:35] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:36] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:36] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:36] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:36] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:36] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:36] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:36] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:36] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:37] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:37] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:37] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:37] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:37] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:20:37] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:54:40] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:54:40] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:54:40] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:54:40] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:54:40] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:54:40] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:54:40] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:54:48] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:55:16] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 16:55:16] "GET /static/manifest.json HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:03] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:04] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:04] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:05] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:05] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:05] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:05] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:05] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:08] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:09] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:14] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:14] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:14] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:14] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:14] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:14] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:14] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:15] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:16] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:38] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:38] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:38] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:38] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:38] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:38] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:38] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:39] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:40] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:40] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:40] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:40] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:40] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:40] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:07:40] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:44] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:45] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:45] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:45] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:45] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:45] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:45] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:47] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:47] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:47] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:47] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:47] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:47] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:47] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:47] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:18:52] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:20:58] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:51] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:51] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:51] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:51] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:51] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:51] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:51] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:53] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:53] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:53] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:53] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:53] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:53] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:32:53] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:38] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:38] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:38] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:38] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:38] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:38] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:38] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:39] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:39] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:39] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:39] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:39] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:39] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 17:43:39] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:10] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:10] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:10] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:10] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:10] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:10] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:10] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:11] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:11] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:11] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:11] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:11] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:11] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:11] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:12] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:08:12] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:18:08] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:18:09] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:18:09] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:18:09] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:18:09] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:18:09] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:18:09] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:18:10] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:17] "GET /visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:17] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:18] "GET /api/contatos_csv HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:18] "GET /api/contatos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:18] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:22] "GET /questionarios-obrigatorios HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:22] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:22] "GET /api/questionarios/questionarios-obrigatorios HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:23] "GET /api/questionarios/entidades-prioritarias-uf HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:23] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:48:23] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:55:32] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:55:32] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 18:55:34] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Relatório Executivo Diário
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao gerar relatório executivo: 'RelatorioService' object has no attribute 'gerar_relatorio_executivo'
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Relatório Executivo Diário
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Relatório Executivo Diário
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao gerar relatório executivo: 'RelatorioService' object has no attribute 'gerar_relatorio_executivo'
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Relatório Executivo Diário
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250708_192048
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250708_192052
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada para follow-up: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada para follow-up: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:werkzeug: * Detected change in '/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/routes/questionarios_api.py', reloading
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250708_092512
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+💾 Backup automático criado: 20250708_093029
+💾 Backup automático criado: 20250708_093548
+💾 Backup automático criado: 20250708_094105
+💾 Backup automático criado: 20250708_094624
+💾 Backup automático criado: 20250708_095145
+💾 Backup automático criado: 20250708_095702
+💾 Backup automático criado: 20250708_100219
+💾 Backup automático criado: 20250708_100739
+💾 Backup automático criado: 20250708_101257
+💾 Backup automático criado: 20250708_101817
+💾 Backup automático criado: 20250708_102339
+💾 Backup automático criado: 20250708_102858
+💾 Backup automático criado: 20250708_103417
+💾 Backup automático criado: 20250708_103936
+💾 Backup automático criado: 20250708_104457
+💾 Backup automático criado: 20250708_105016
+💾 Backup automático criado: 20250708_105535
+💾 Backup automático criado: 20250708_110056
+💾 Backup automático criado: 20250708_110618
+💾 Backup automático criado: 20250708_111140
+💾 Backup automático criado: 20250708_111703
+💾 Backup automático criado: 20250708_112224
+💾 Backup automático criado: 20250708_112745
+💾 Backup automático criado: 20250708_113305
+💾 Backup automático criado: 20250708_113827
+💾 Backup automático criado: 20250708_114350
+💾 Backup automático criado: 20250708_114911
+💾 Backup automático criado: 20250708_115431
+💾 Backup automático criado: 20250708_115953
+💾 Backup automático criado: 20250708_120514
+💾 Backup automático criado: 20250708_121035
+💾 Backup automático criado: 20250708_121554
+💾 Backup automático criado: 20250708_122116
+💾 Backup automático criado: 20250708_122638
+💾 Backup automático criado: 20250708_123159
+💾 Backup automático criado: 20250708_123721
+💾 Backup automático criado: 20250708_124238
+💾 Backup automático criado: 20250708_124753
+💾 Backup automático criado: 20250708_125309
+💾 Backup automático criado: 20250708_125825
+💾 Backup automático criado: 20250708_130343
+💾 Backup automático criado: 20250708_130905
+💾 Backup automático criado: 20250708_131423
+💾 Backup automático criado: 20250708_131941
+💾 Backup automático criado: 20250708_132459
+💾 Backup automático criado: 20250708_133020
+💾 Backup automático criado: 20250708_133539
+💾 Backup automático criado: 20250708_134059
+💾 Backup automático criado: 20250708_134622
+💾 Backup automático criado: 20250708_135141
+💾 Backup automático criado: 20250708_135701
+💾 Backup automático criado: 20250708_140223
+💾 Backup automático criado: 20250708_140743
+💾 Backup automático criado: 20250708_141302
+💾 Backup automático criado: 20250708_141826
+💾 Backup automático criado: 20250708_142346
+💾 Backup automático criado: 20250708_142906
+💾 Backup automático criado: 20250708_143428
+💾 Backup automático criado: 20250708_143948
+💾 Backup automático criado: 20250708_144509
+💾 Backup automático criado: 20250708_145027
+💾 Backup automático criado: 20250708_145549
+💾 Backup automático criado: 20250708_150108
+💾 Backup automático criado: 20250708_150627
+💾 Backup automático criado: 20250708_151148
+💾 Backup automático criado: 20250708_151708
+💾 Backup automático criado: 20250708_152227
+💾 Backup automático criado: 20250708_152745
+💾 Backup automático criado: 20250708_153306
+💾 Backup automático criado: 20250708_153826
+💾 Backup automático criado: 20250708_154346
+💾 Backup automático criado: 20250708_154909
+💾 Backup automático criado: 20250708_155429
+💾 Backup automático criado: 20250708_155949
+💾 Backup automático criado: 20250708_160511
+💾 Backup automático criado: 20250708_161032
+💾 Backup automático criado: 20250708_161551
+💾 Backup automático criado: 20250708_162110
+💾 Backup automático criado: 20250708_162629
+💾 Backup automático criado: 20250708_163150
+💾 Backup automático criado: 20250708_163710
+💾 Backup automático criado: 20250708_164232
+💾 Backup automático criado: 20250708_164753
+💾 Backup automático criado: 20250708_165313
+💾 Backup automático criado: 20250708_165835
+💾 Backup automático criado: 20250708_170355
+💾 Backup automático criado: 20250708_170915
+💾 Backup automático criado: 20250708_171438
+💾 Backup automático criado: 20250708_171957
+💾 Backup automático criado: 20250708_172517
+💾 Backup automático criado: 20250708_173036
+💾 Backup automático criado: 20250708_173559
+💾 Backup automático criado: 20250708_174119
+💾 Backup automático criado: 20250708_174639
+💾 Backup automático criado: 20250708_175200
+💾 Backup automático criado: 20250708_175720
+💾 Backup automático criado: 20250708_180241
+💾 Backup automático criado: 20250708_180804
+💾 Backup automático criado: 20250708_181324
+💾 Backup automático criado: 20250708_181844
+💾 Backup automático criado: 20250708_182405
+💾 Backup automático criado: 20250708_182928
+💾 Backup automático criado: 20250708_183449
+💾 Backup automático criado: 20250708_184009
+💾 Backup automático criado: 20250708_184529
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250708_185046
+💾 Backup automático criado: 20250708_185607
+💾 Backup automático criado: 20250708_190128
+💾 Backup automático criado: 20250708_190646
+💾 Backup automático criado: 20250708_191205
+💾 Backup automático criado: 20250708_191725
+💾 Backup automático criado: 20250708_192246
+💾 Backup automático criado: 20250708_192808
+💾 Backup automático criado: 20250708_193326
+💾 Backup automático criado: 20250708_193845
+💾 Backup automático criado: 20250708_194404
+💾 Backup automático criado: 20250708_194927
+💾 Backup automático criado: 20250708_195448
+💾 Backup automático criado: 20250708_200009
+💾 Backup automático criado: 20250708_200532
+💾 Backup automático criado: 20250708_201053
+🛑 Sistema de backup automático parado
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.auto_scheduler:AutoSchedulerService inicializado com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Scheduler automático iniciado com sucesso
+INFO:gestao_visitas.routes.auto_scheduler_api:AutoSchedulerService inicializado e iniciado
+INFO:gestao_visitas.services.strategy_assistant:StrategyAssistantService inicializado com sucesso
+INFO:gestao_visitas.routes.strategy_assistant_api:StrategyAssistantService inicializado
+INFO:gestao_visitas.services.critical_alerts_service:CriticalAlertsService inicializado com sucesso
+INFO:gestao_visitas.routes.critical_alerts_api:CriticalAlertsService inicializado
+INFO:gestao_visitas.services.timeline_service:TimelineService inicializado com sucesso
+INFO:gestao_visitas.routes.timeline_api:TimelineService inicializado
+INFO:gestao_visitas.services.google_maps_service:GoogleMapsService inicializado com sucesso
+INFO:gestao_visitas.routes.google_maps_api:GoogleMapsService inicializado
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:30] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:30] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:30] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:30] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:36] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:36] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:36] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:36] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:36] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:37] "[33mGET /api/entidades-identificadas HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:37] "[33mGET /api/questionarios-obrigatorios HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:24:41] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:29:39] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:34:38] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:40:53] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:44:39] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:49:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:54:38] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 20:59:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:04:48] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:09:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:14:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:19:55] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:24:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:29:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:34:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:39:46] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:44:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:49:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:54:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 21:59:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:04:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:09:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:14:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:19:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:24:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:29:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:34:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:39:47] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:44:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:49:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:54:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 22:59:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:04:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:09:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:20] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:21] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:21] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:21] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:21] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:21] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:21] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:21] "[33mGET /api/entidades-identificadas HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:21] "[33mGET /api/questionarios-obrigatorios HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "[33mGET /api/questionarios-obrigatorios HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:22] "[33mGET /api/entidades-identificadas HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:23] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:12:23] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:13] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:13] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:13] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:13] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:13] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:13] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:13] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "[33mGET /api/entidades-identificadas HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "[33mGET /api/questionarios-obrigatorios HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "[33mGET /api/questionarios-obrigatorios HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:14] "[33mGET /api/entidades-identificadas HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "[33mGET /api/questionarios-obrigatorios HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "[33mGET /api/entidades-identificadas HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:15] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:16] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:19] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:13:22] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:18:31] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada para follow-up: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada para follow-up: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:23:18] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:23:57] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:23:57] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:23:57] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:23:57] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:23:57] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:23:57] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [08/Jul/2025 23:23:57] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+💾 Backup automático criado: 20250708_093025
+💾 Backup automático criado: 20250708_093544
+💾 Backup automático criado: 20250708_094101
+💾 Backup automático criado: 20250708_094620
+💾 Backup automático criado: 20250708_095141
+💾 Backup automático criado: 20250708_095658
+💾 Backup automático criado: 20250708_100215
+💾 Backup automático criado: 20250708_100733
+💾 Backup automático criado: 20250708_101253
+💾 Backup automático criado: 20250708_101813
+💾 Backup automático criado: 20250708_102332
+💾 Backup automático criado: 20250708_102853
+💾 Backup automático criado: 20250708_103412
+💾 Backup automático criado: 20250708_103931
+💾 Backup automático criado: 20250708_104452
+💾 Backup automático criado: 20250708_105011
+💾 Backup automático criado: 20250708_105530
+💾 Backup automático criado: 20250708_110051
+💾 Backup automático criado: 20250708_110613
+💾 Backup automático criado: 20250708_111135
+💾 Backup automático criado: 20250708_111656
+💾 Backup automático criado: 20250708_112219
+💾 Backup automático criado: 20250708_112740
+💾 Backup automático criado: 20250708_113301
+💾 Backup automático criado: 20250708_113822
+💾 Backup automático criado: 20250708_114343
+💾 Backup automático criado: 20250708_114906
+💾 Backup automático criado: 20250708_115426
+💾 Backup automático criado: 20250708_115945
+💾 Backup automático criado: 20250708_120508
+💾 Backup automático criado: 20250708_121029
+💾 Backup automático criado: 20250708_121549
+💾 Backup automático criado: 20250708_122110
+💾 Backup automático criado: 20250708_122633
+💾 Backup automático criado: 20250708_123153
+💾 Backup automático criado: 20250708_123713
+💾 Backup automático criado: 20250708_124232
+💾 Backup automático criado: 20250708_124748
+💾 Backup automático criado: 20250708_125302
+💾 Backup automático criado: 20250708_125819
+💾 Backup automático criado: 20250708_130339
+💾 Backup automático criado: 20250708_130857
+💾 Backup automático criado: 20250708_131416
+💾 Backup automático criado: 20250708_131935
+💾 Backup automático criado: 20250708_132454
+💾 Backup automático criado: 20250708_133015
+💾 Backup automático criado: 20250708_133534
+💾 Backup automático criado: 20250708_134054
+💾 Backup automático criado: 20250708_134616
+💾 Backup automático criado: 20250708_135135
+💾 Backup automático criado: 20250708_135655
+💾 Backup automático criado: 20250708_140215
+💾 Backup automático criado: 20250708_140737
+💾 Backup automático criado: 20250708_141257
+💾 Backup automático criado: 20250708_141818
+💾 Backup automático criado: 20250708_142341
+💾 Backup automático criado: 20250708_142901
+💾 Backup automático criado: 20250708_143421
+💾 Backup automático criado: 20250708_143943
+💾 Backup automático criado: 20250708_144502
+💾 Backup automático criado: 20250708_145021
+💾 Backup automático criado: 20250708_145540
+💾 Backup automático criado: 20250708_150101
+💾 Backup automático criado: 20250708_150620
+💾 Backup automático criado: 20250708_151140
+💾 Backup automático criado: 20250708_151702
+💾 Backup automático criado: 20250708_152220
+💾 Backup automático criado: 20250708_152738
+💾 Backup automático criado: 20250708_153300
+💾 Backup automático criado: 20250708_153819
+💾 Backup automático criado: 20250708_154339
+💾 Backup automático criado: 20250708_154859
+💾 Backup automático criado: 20250708_155422
+💾 Backup automático criado: 20250708_155942
+💾 Backup automático criado: 20250708_160502
+💾 Backup automático criado: 20250708_161025
+💾 Backup automático criado: 20250708_161544
+💾 Backup automático criado: 20250708_162101
+💾 Backup automático criado: 20250708_162622
+💾 Backup automático criado: 20250708_163143
+💾 Backup automático criado: 20250708_163703
+💾 Backup automático criado: 20250708_164226
+💾 Backup automático criado: 20250708_164746
+💾 Backup automático criado: 20250708_165307
+💾 Backup automático criado: 20250708_165827
+💾 Backup automático criado: 20250708_170349
+💾 Backup automático criado: 20250708_170909
+💾 Backup automático criado: 20250708_171429
+💾 Backup automático criado: 20250708_171951
+💾 Backup automático criado: 20250708_172511
+💾 Backup automático criado: 20250708_173030
+💾 Backup automático criado: 20250708_173553
+💾 Backup automático criado: 20250708_174114
+💾 Backup automático criado: 20250708_174633
+💾 Backup automático criado: 20250708_175156
+💾 Backup automático criado: 20250708_175716
+💾 Backup automático criado: 20250708_180237
+💾 Backup automático criado: 20250708_180757
+💾 Backup automático criado: 20250708_181319
+💾 Backup automático criado: 20250708_181840
+💾 Backup automático criado: 20250708_182401
+💾 Backup automático criado: 20250708_182923
+💾 Backup automático criado: 20250708_183442
+💾 Backup automático criado: 20250708_184004
+💾 Backup automático criado: 20250708_184525
+💾 Backup automático criado: 20250708_185041
+💾 Backup automático criado: 20250708_185602
+💾 Backup automático criado: 20250708_190123
+💾 Backup automático criado: 20250708_190641
+💾 Backup automático criado: 20250708_191200
+💾 Backup automático criado: 20250708_191719
+💾 Backup automático criado: 20250708_192241
+💾 Backup automático criado: 20250708_192801
+💾 Backup automático criado: 20250708_193321
+💾 Backup automático criado: 20250708_193840
+💾 Backup automático criado: 20250708_194400
+💾 Backup automático criado: 20250708_194926
+💾 Backup automático criado: 20250708_195447
+💾 Backup automático criado: 20250708_200008
+💾 Backup automático criado: 20250708_200531
+💾 Backup automático criado: 20250708_201052
+💾 Backup automático criado: 20250708_201613
+💾 Backup automático criado: 20250708_202136
+💾 Backup automático criado: 20250708_202658
+💾 Backup automático criado: 20250708_203219
+💾 Backup automático criado: 20250708_203743
+💾 Backup automático criado: 20250708_204305
+💾 Backup automático criado: 20250708_204825
+💾 Backup automático criado: 20250708_205346
+💾 Backup automático criado: 20250708_205910
+💾 Backup automático criado: 20250708_210430
+💾 Backup automático criado: 20250708_210951
+💾 Backup automático criado: 20250708_211515
+💾 Backup automático criado: 20250708_212036
+💾 Backup automático criado: 20250708_212557
+💾 Backup automático criado: 20250708_213118
+💾 Backup automático criado: 20250708_213642
+💾 Backup automático criado: 20250708_214203
+💾 Backup automático criado: 20250708_214723
+💾 Backup automático criado: 20250708_215246
+💾 Backup automático criado: 20250708_215807
+💾 Backup automático criado: 20250708_220327
+💾 Backup automático criado: 20250708_220850
+💾 Backup automático criado: 20250708_221410
+💾 Backup automático criado: 20250708_221931
+💾 Backup automático criado: 20250708_222452
+💾 Backup automático criado: 20250708_223010
+💾 Backup automático criado: 20250708_223529
+💾 Backup automático criado: 20250708_224054
+💾 Backup automático criado: 20250708_224614
+💾 Backup automático criado: 20250708_225133
+💾 Backup automático criado: 20250708_225652
+💾 Backup automático criado: 20250708_230215
+💾 Backup automático criado: 20250708_230732
+💾 Backup automático criado: 20250708_231246
+💾 Backup automático criado: 20250708_231802
+💾 Backup automático criado: 20250708_232317
+💾 Backup automático criado: 20250708_232834
+💾 Backup automático criado: 20250708_233358
+💾 Backup automático criado: 20250708_233917
+💾 Backup automático criado: 20250708_234435
+💾 Backup automático criado: 20250708_234955
+💾 Backup automático criado: 20250708_235516
+💾 Backup automático criado: 20250709_000036
+💾 Backup automático criado: 20250709_000556
+💾 Backup automático criado: 20250709_001120
+💾 Backup automático criado: 20250709_001642
+💾 Backup automático criado: 20250709_002203
+💾 Backup automático criado: 20250709_002726
+💾 Backup automático criado: 20250709_003248
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250709_012121
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250709_012121
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro na detecção de conflitos: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Tabela de visitas não encontrada ou vazia: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso

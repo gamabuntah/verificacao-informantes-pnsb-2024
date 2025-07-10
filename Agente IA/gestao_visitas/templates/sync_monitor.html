@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Sincronização - PNSB 2024</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/design-system.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0F1419 0%, #181A20 50%, #23263B 100%);
+            color: #F1F1F1;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: rgba(35, 38, 59, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(95, 92, 255, 0.2);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .status-card {
+            background: linear-gradient(145deg, #23263B 0%, #2D3142 100%);
+            border: 1px solid rgba(95, 92, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .connection-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .connection-online {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #28a745;
+        }
+
+        .connection-offline {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #dc3545;
+        }
+
+        .connection-unstable {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            color: #ffc107;
+        }
+
+        .sync-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #2D3142;
+            border-radius: 8px;
+            border-left: 4px solid transparent;
+        }
+
+        .sync-pending {
+            border-left-color: #ffc107;
+        }
+
+        .sync-progress {
+            border-left-color: #17a2b8;
+        }
+
+        .sync-complete {
+            border-left-color: #28a745;
+        }
+
+        .sync-error {
+            border-left-color: #dc3545;
+        }
+
+        .sync-info {
+            flex-grow: 1;
+        }
+
+        .sync-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .sync-details {
+            font-size: 14px;
+            color: #B8BCC8;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-ring {
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .progress-ring-circle {
+            width: 100%;
+            height: 100%;
+            fill: transparent;
+            stroke: #3A3F54;
+            stroke-width: 3;
+            stroke-dasharray: 113;
+            stroke-dashoffset: 113;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .progress-ring-progress {
+            stroke: #5F5CFF;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .realtime-log {
+            background: #0F1419;
+            border: 1px solid #3A3F54;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            color: #B8BCC8;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(58, 63, 84, 0.3);
+        }
+
+        .log-timestamp {
+            color: #6c757d;
+            margin-right: 10px;
+        }
+
+        .log-success { color: #28a745; }
+        .log-warning { color: #ffc107; }
+        .log-error { color: #dc3545; }
+        .log-info { color: #17a2b8; }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-box {
+            background: #2D3142;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(95, 92, 255, 0.1);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #5F5CFF;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #B8BCC8;
+        }
+
+        .metric-trend {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .trend-up { color: #28a745; }
+        .trend-down { color: #dc3545; }
+        .trend-stable { color: #6c757d; }
+
+        .action-button {
+            background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(95, 92, 255, 0.4);
+        }
+
+        .action-button:disabled {
+            background: #3A3F54;
+            color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .sync-queue {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .queue-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #3A3F54;
+            border-radius: 6px;
+        }
+
+        .queue-priority {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .priority-high { background: #dc3545; }
+        .priority-medium { background: #ffc107; }
+        .priority-low { background: #28a745; }
+
+        .connection-test {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: #2D3142;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .test-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #6c757d;
+        }
+
+        .test-active {
+            background: #5F5CFF;
+            animation: pulse 1s infinite;
+        }
+
+        .test-success { background: #28a745; }
+        .test-error { background: #dc3545; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .bandwidth-meter {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #2D3142;
+            border-radius: 8px;
+        }
+
+        .bandwidth-bar {
+            flex-grow: 1;
+            height: 8px;
+            background: #3A3F54;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bandwidth-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #dc3545, #ffc107, #28a745);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="h2 mb-0">
+                        <i class="fas fa-sync-alt me-2"></i>
+                        Monitor de Sincronização
+                    </h1>
+                    <p class="text-muted mb-0">Monitoramento em tempo real da sincronização de dados offline</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-outline-light" onclick="window.location.href='/dashboard-offline'">
+                        <i class="fas fa-chart-line me-2"></i>Dashboard
+                    </button>
+                    <button class="btn btn-outline-light ms-2" onclick="window.location.href='/'">
+                        <i class="fas fa-home me-2"></i>Início
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Connection Status -->
+        <div class="connection-indicator" id="connectionIndicator">
+            <div class="test-indicator" id="connectionDot"></div>
+            <div>
+                <div class="fw-bold" id="connectionText">Verificando conexão...</div>
+                <div class="small" id="connectionDetails">Aguarde...</div>
+            </div>
+            <div>
+                <button class="action-button" onclick="testConnection()">
+                    <i class="fas fa-sync me-2"></i>Testar
+                </button>
+            </div>
+        </div>
+
+        <!-- Bandwidth Monitor -->
+        <div class="status-card">
+            <h5 class="mb-3">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                Monitor de Conectividade
+            </h5>
+            
+            <div class="bandwidth-meter">
+                <div>
+                    <i class="fas fa-download me-2"></i>
+                    <span id="downloadSpeed">- kbps</span>
+                </div>
+                <div class="bandwidth-bar">
+                    <div class="bandwidth-fill" id="bandwidthBar"></div>
+                </div>
+                <div>
+                    <i class="fas fa-upload me-2"></i>
+                    <span id="uploadSpeed">- kbps</span>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <div class="connection-test">
+                        <div class="test-indicator" id="pingIndicator"></div>
+                        <div>
+                            <div class="fw-bold">Ping</div>
+                            <div class="small" id="pingValue">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="connection-test">
+                        <div class="test-indicator" id="apiIndicator"></div>
+                        <div>
+                            <div class="fw-bold">API Status</div>
+                            <div class="small" id="apiStatus">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="connection-test">
+                        <div class="test-indicator" id="mapsIndicator"></div>
+                        <div>
+                            <div class="fw-bold">Google Maps</div>
+                            <div class="small" id="mapsStatus">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sync Metrics -->
+        <div class="status-card">
+            <h5 class="mb-3">
+                <i class="fas fa-chart-bar me-2"></i>
+                Métricas de Sincronização
+            </h5>
+            
+            <div class="metric-grid" id="syncMetrics">
+                <!-- Metrics will be loaded dynamically -->
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sync Queue -->
+            <div class="col-lg-6">
+                <div class="status-card">
+                    <h5 class="mb-3">
+                        <i class="fas fa-list me-2"></i>
+                        Fila de Sincronização
+                        <button class="btn btn-sm btn-outline-secondary float-end" onclick="clearQueue()">
+                            <i class="fas fa-trash me-1"></i>Limpar
+                        </button>
+                    </h5>
+                    
+                    <div class="sync-queue" id="syncQueue">
+                        <!-- Queue items will be loaded dynamically -->
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button class="action-button" onclick="processSyncQueue()">
+                            <i class="fas fa-play me-2"></i>Processar Fila
+                        </button>
+                        <button class="action-button" onclick="pauseSync()">
+                            <i class="fas fa-pause me-2"></i>Pausar Sync
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync Activities -->
+            <div class="col-lg-6">
+                <div class="status-card">
+                    <h5 class="mb-3">
+                        <i class="fas fa-activity me-2"></i>
+                        Atividades Recentes
+                    </h5>
+                    
+                    <div id="syncActivities">
+                        <!-- Recent sync activities -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Realtime Log -->
+        <div class="status-card">
+            <h5 class="mb-3">
+                <i class="fas fa-terminal me-2"></i>
+                Log em Tempo Real
+                <button class="btn btn-sm btn-outline-secondary float-end" onclick="clearRealtimeLog()">
+                    <i class="fas fa-trash me-1"></i>Limpar
+                </button>
+            </h5>
+            
+            <div class="realtime-log" id="realtimeLog">
+                <!-- Real-time log entries -->
+            </div>
+            
+            <div class="mt-3">
+                <label class="form-check-label me-3">
+                    <input type="checkbox" class="form-check-input" id="autoScroll" checked>
+                    Auto-scroll
+                </label>
+                <label class="form-check-label me-3">
+                    <input type="checkbox" class="form-check-input" id="verboseLogging">
+                    Logging detalhado
+                </label>
+                <button class="action-button" onclick="exportLog()">
+                    <i class="fas fa-download me-2"></i>Exportar Log
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let syncMonitorInterval;
+        let connectionTestInterval;
+        let isOnline = navigator.onLine;
+        let syncQueue = [];
+        let syncMetrics = {
+            totalSynced: 0,
+            pendingSync: 0,
+            lastSyncTime: null,
+            avgSyncTime: 0,
+            errorRate: 0
+        };
+
+        // Initialize monitor
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSyncMonitor();
+            startMonitoring();
+            setupEventListeners();
+            loadInitialData();
+        });
+
+        // Initialize sync monitor
+        function initializeSyncMonitor() {
+            addLogEntry('Sistema de monitoramento inicializado', 'info');
+            updateConnectionStatus();
+            updateSyncMetrics();
+        }
+
+        // Start monitoring intervals
+        function startMonitoring() {
+            // Connection monitoring
+            connectionTestInterval = setInterval(testConnection, 30000); // 30 seconds
+
+            // Sync monitoring
+            syncMonitorInterval = setInterval(checkSyncStatus, 10000); // 10 seconds
+
+            addLogEntry('Monitoramento automático iniciado', 'success');
+        }
+
+        // Load initial data
+        async function loadInitialData() {
+            try {
+                await checkSyncStatus();
+                await loadSyncQueue();
+                await loadRecentActivities();
+            } catch (error) {
+                addLogEntry('Erro ao carregar dados iniciais: ' + error.message, 'error');
+            }
+        }
+
+        // Test connection
+        async function testConnection() {
+            const connectionIndicator = document.getElementById('connectionIndicator');
+            const connectionDot = document.getElementById('connectionDot');
+            const connectionText = document.getElementById('connectionText');
+            const connectionDetails = document.getElementById('connectionDetails');
+
+            // Set testing state
+            connectionDot.className = 'test-indicator test-active';
+            connectionText.textContent = 'Testando conexão...';
+
+            try {
+                const startTime = Date.now();
+                
+                // Test basic connectivity
+                const response = await fetch('/api/offline/sync-status', {
+                    method: 'GET',
+                    cache: 'no-cache'
+                });
+
+                const endTime = Date.now();
+                const pingTime = endTime - startTime;
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // Update connection status
+                    connectionIndicator.className = 'connection-indicator connection-online';
+                    connectionDot.className = 'test-indicator test-success';
+                    connectionText.textContent = 'Conexão estável';
+                    connectionDetails.textContent = `Ping: ${pingTime}ms | API: OK`;
+
+                    // Update ping indicator
+                    document.getElementById('pingIndicator').className = 'test-indicator test-success';
+                    document.getElementById('pingValue').textContent = `${pingTime}ms`;
+                    
+                    // Update API status
+                    document.getElementById('apiIndicator').className = 'test-indicator test-success';
+                    document.getElementById('apiStatus').textContent = 'Online';
+
+                    isOnline = true;
+                    addLogEntry(`Teste de conectividade: OK (${pingTime}ms)`, 'success');
+
+                } else {
+                    throw new Error('API não disponível');
+                }
+
+            } catch (error) {
+                // Update to offline state
+                connectionIndicator.className = 'connection-indicator connection-offline';
+                connectionDot.className = 'test-indicator test-error';
+                connectionText.textContent = 'Conexão instável';
+                connectionDetails.textContent = 'Erro: ' + error.message;
+
+                // Update indicators
+                document.getElementById('pingIndicator').className = 'test-indicator test-error';
+                document.getElementById('pingValue').textContent = 'Timeout';
+                document.getElementById('apiIndicator').className = 'test-indicator test-error';
+                document.getElementById('apiStatus').textContent = 'Offline';
+
+                isOnline = false;
+                addLogEntry('Teste de conectividade: FALHOU - ' + error.message, 'error');
+            }
+
+            // Test Google Maps (simulated)
+            await testMapsConnection();
+        }
+
+        // Test Maps connection
+        async function testMapsConnection() {
+            try {
+                // Simulate Maps API test
+                const mapsIndicator = document.getElementById('mapsIndicator');
+                const mapsStatus = document.getElementById('mapsStatus');
+
+                if (isOnline) {
+                    mapsIndicator.className = 'test-indicator test-success';
+                    mapsStatus.textContent = 'Disponível';
+                } else {
+                    mapsIndicator.className = 'test-indicator test-error';
+                    mapsStatus.textContent = 'Indisponível';
+                }
+            } catch (error) {
+                addLogEntry('Erro ao testar Google Maps: ' + error.message, 'warning');
+            }
+        }
+
+        // Check sync status
+        async function checkSyncStatus() {
+            try {
+                const response = await fetch('/api/offline/sync-status');
+                const data = await response.json();
+
+                if (data.success) {
+                    updateSyncMetrics(data.data);
+                    addLogEntry('Status de sincronização atualizado', 'info');
+                } else {
+                    addLogEntry('Erro ao verificar status de sync: ' + data.error, 'warning');
+                }
+            } catch (error) {
+                addLogEntry('Erro na verificação de sync: ' + error.message, 'error');
+            }
+        }
+
+        // Update sync metrics
+        function updateSyncMetrics(data = null) {
+            if (data) {
+                syncMetrics.pendingSync = data.pending_uploads || 0;
+                syncMetrics.lastSyncTime = data.last_sync;
+            }
+
+            const metricsContainer = document.getElementById('syncMetrics');
+            metricsContainer.innerHTML = `
+                <div class="metric-box">
+                    <div class="metric-value">${syncMetrics.totalSynced}</div>
+                    <div class="metric-label">Total Sincronizado</div>
+                    <div class="metric-trend trend-up">
+                        <i class="fas fa-arrow-up me-1"></i>+${Math.floor(Math.random() * 10)}
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">${syncMetrics.pendingSync}</div>
+                    <div class="metric-label">Pendentes</div>
+                    <div class="metric-trend ${syncMetrics.pendingSync > 0 ? 'trend-up' : 'trend-stable'}">
+                        ${syncMetrics.pendingSync > 0 ? '<i class="fas fa-exclamation-triangle me-1"></i>Atenção' : '<i class="fas fa-check me-1"></i>OK'}
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">${syncMetrics.avgSyncTime}</div>
+                    <div class="metric-label">Tempo Médio (s)</div>
+                    <div class="metric-trend trend-stable">
+                        <i class="fas fa-minus me-1"></i>Estável
+                    </div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-value">${syncMetrics.errorRate}%</div>
+                    <div class="metric-label">Taxa de Erro</div>
+                    <div class="metric-trend ${syncMetrics.errorRate > 5 ? 'trend-up' : 'trend-down'}">
+                        ${syncMetrics.errorRate > 5 ? '<i class="fas fa-arrow-up me-1"></i>Alta' : '<i class="fas fa-arrow-down me-1"></i>Baixa'}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load sync queue
+        async function loadSyncQueue() {
+            const queueContainer = document.getElementById('syncQueue');
+            
+            // Simulate queue items (replace with real API call)
+            const queueItems = [
+                { id: 1, type: 'Visita', name: 'Visita Itajaí - Prefeitura', priority: 'high', status: 'pending' },
+                { id: 2, type: 'Checklist', name: 'Checklist MRS - Empresa X', priority: 'medium', status: 'pending' },
+                { id: 3, type: 'Contato', name: 'Atualização contato Y', priority: 'low', status: 'processing' }
+            ];
+
+            queueContainer.innerHTML = queueItems.map(item => `
+                <div class="queue-item">
+                    <div class="d-flex align-items-center">
+                        <div class="queue-priority priority-${item.priority}"></div>
+                        <div>
+                            <div class="fw-bold">${item.name}</div>
+                            <div class="small text-muted">${item.type}</div>
+                        </div>
+                    </div>
+                    <div class="sync-status">
+                        <i class="fas fa-clock"></i>
+                        ${item.status === 'pending' ? 'Pendente' : 'Processando'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load recent activities
+        async function loadRecentActivities() {
+            const activitiesContainer = document.getElementById('syncActivities');
+            
+            // Simulate recent activities
+            const activities = [
+                { id: 1, action: 'Sync Concluído', item: 'Visita ABC', time: '2 min atrás', status: 'complete' },
+                { id: 2, action: 'Upload Pendente', item: 'Checklist XYZ', time: '5 min atrás', status: 'pending' },
+                { id: 3, action: 'Erro de Sync', item: 'Dados municipio', time: '10 min atrás', status: 'error' }
+            ];
+
+            activitiesContainer.innerHTML = activities.map(activity => `
+                <div class="sync-item sync-${activity.status}">
+                    <div class="sync-info">
+                        <div class="sync-title">${activity.action}</div>
+                        <div class="sync-details">${activity.item} • ${activity.time}</div>
+                    </div>
+                    <div class="sync-status">
+                        ${activity.status === 'complete' ? '<i class="fas fa-check"></i>' : 
+                          activity.status === 'pending' ? '<i class="fas fa-clock"></i>' : 
+                          '<i class="fas fa-exclamation-triangle"></i>'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update connection status
+        function updateConnectionStatus() {
+            const isOnline = navigator.onLine;
+            const indicator = document.getElementById('connectionIndicator');
+            const dot = document.getElementById('connectionDot');
+            const text = document.getElementById('connectionText');
+            const details = document.getElementById('connectionDetails');
+
+            if (isOnline) {
+                indicator.className = 'connection-indicator connection-online';
+                dot.className = 'test-indicator test-success';
+                text.textContent = 'Online';
+                details.textContent = 'Conexão com a internet detectada';
+            } else {
+                indicator.className = 'connection-indicator connection-offline';
+                dot.className = 'test-indicator test-error';
+                text.textContent = 'Offline';
+                details.textContent = 'Sem conexão com a internet';
+            }
+        }
+
+        // Add log entry
+        function addLogEntry(message, type = 'info') {
+            const logContainer = document.getElementById('realtimeLog');
+            const timestamp = new Date().toLocaleTimeString('pt-BR');
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.innerHTML = `
+                <span class="log-timestamp">[${timestamp}]</span>
+                ${message}
+            `;
+            
+            logContainer.appendChild(logEntry);
+            
+            // Auto scroll if enabled
+            if (document.getElementById('autoScroll').checked) {
+                logContainer.scrollTop = logContainer.scrollHeight;
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            window.addEventListener('online', () => {
+                updateConnectionStatus();
+                addLogEntry('Conexão restaurada', 'success');
+                testConnection();
+            });
+
+            window.addEventListener('offline', () => {
+                updateConnectionStatus();
+                addLogEntry('Conexão perdida', 'warning');
+            });
+        }
+
+        // Action functions
+        function processSyncQueue() {
+            addLogEntry('Processando fila de sincronização...', 'info');
+            // Implement sync queue processing
+        }
+
+        function pauseSync() {
+            addLogEntry('Sincronização pausada pelo usuário', 'warning');
+            // Implement sync pause
+        }
+
+        function clearQueue() {
+            document.getElementById('syncQueue').innerHTML = '<div class="text-center text-muted">Fila vazia</div>';
+            addLogEntry('Fila de sincronização limpa', 'info');
+        }
+
+        function clearRealtimeLog() {
+            document.getElementById('realtimeLog').innerHTML = '';
+            addLogEntry('Log limpo pelo usuário', 'info');
+        }
+
+        function exportLog() {
+            const logContent = document.getElementById('realtimeLog').textContent;
+            const blob = new Blob([logContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sync_log_${new Date().toISOString().slice(0, 10)}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            addLogEntry('Log exportado com sucesso', 'success');
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (syncMonitorInterval) clearInterval(syncMonitorInterval);
+            if (connectionTestInterval) clearInterval(connectionTestInterval);
+        });
+    </script>
+</body>
+</html>

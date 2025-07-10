@@ -1,0 +1,28 @@
+{
+  "backup_20250705_181649_automatic": {
+    "backup_id": "backup_20250705_181649_automatic",
+    "timestamp": "2025-07-05T18:16:49.518401",
+    "size_bytes": 17321,
+    "file_path": "gestao_visitas/backups_automaticos/backup_20250705_181649_automatic.zip.enc",
+    "checksum": "3c42ae212d5313a6a0fb1375c0d4930d",
+    "compressed": true,
+    "encrypted": true,
+    "backup_type": "automatic",
+    "description": "",
+    "cloud_synced": false,
+    "restoration_tested": false
+  },
+  "backup_20250705_181743_automatic": {
+    "backup_id": "backup_20250705_181743_automatic",
+    "timestamp": "2025-07-05T18:17:43.395808",
+    "size_bytes": 17320,
+    "file_path": "gestao_visitas/backups_automaticos/backup_20250705_181743_automatic.zip.enc",
+    "checksum": "867d38b3c4db151021eb36561d82b6fc",
+    "compressed": true,
+    "encrypted": true,
+    "backup_type": "automatic",
+    "description": "",
+    "cloud_synced": false,
+    "restoration_tested": false
+  }
+}

@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+
+{% block title %}Contatos - Sistema PNSB{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">📞 Contatos das Prefeituras</h2>
+        <div class="d-flex gap-2">
+            <button class="btn-primary-custom" onclick="exportarContatos()">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+            <button class="btn-outline-custom" onclick="importarContatos()">
+                <i class="fas fa-upload"></i> Importar
+            </button>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-container">
+        <div class="filters-title">
+            <i class="fas fa-filter"></i>
+            Filtros de Busca
+        </div>
+        
+        <div class="filters-grid">
+            <div class="filter-group">
+                <label class="filter-label">Município</label>
+                <select class="filter-select" id="filtroMunicipio">
+                    <option value="">Todos os municípios</option>
+                    <option value="Balneário Camboriú">Balneário Camboriú</option>
+                    <option value="Balneário Piçarras">Balneário Piçarras</option>
+                    <option value="Bombinhas">Bombinhas</option>
+                    <option value="Camboriú">Camboriú</option>
+                    <option value="Itajaí">Itajaí</option>
+                    <option value="Itapema">Itapema</option>
+                    <option value="Luiz Alves">Luiz Alves</option>
+                    <option value="Navegantes">Navegantes</option>
+                    <option value="Penha">Penha</option>
+                    <option value="Porto Belo">Porto Belo</option>
+                    <option value="Ilhota">Ilhota</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Tipo de Pesquisa</label>
+                <select class="filter-select" id="filtroTipoPesquisa">
+                    <option value="">Todos os tipos</option>
+                    <option value="MRS">MRS - Resíduos Sólidos</option>
+                    <option value="MAP">MAP - Águas Pluviais</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Tipo de Informante</label>
+                <select class="filter-select" id="filtroTipoInformante">
+                    <option value="">Todos os tipos</option>
+                    <option value="prefeitura">Prefeitura</option>
+                    <option value="empresa_terceirizada">Contratada</option>
+                    <option value="entidade_catadores">Entidade de Catadores</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label class="filter-label">Buscar</label>
+                <input type="text" class="filter-input" id="filtroBusca" placeholder="Digite para buscar...">
+            </div>
+        </div>
+    </div>
+
+    <!-- Estatísticas -->
+    <div class="contacts-stats">
+        <div class="contacts-count">
+            <span id="contatosCount">0</span> contatos encontrados
+        </div>
+        <div class="contacts-actions">
+            <button class="btn-outline-custom btn-sm" onclick="limparFiltros()">
+                <i class="fas fa-times"></i> Limpar Filtros
+            </button>
+        </div>
+    </div>
+
+    <!-- Grid de Contatos -->
+    <div class="contacts-grid" id="contactsGrid">
+        <!-- Cards serão inseridos aqui via JavaScript -->
+    </div>
+    
+    <!-- Loading -->
+    <div id="loadingContatos" class="text-center py-5" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+        <p class="mt-3 text-secondary">Carregando contatos...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let contatos = [];
+let contatosFiltrados = [];
+
+// Função para criar card de contato
+function criarCardContato(contato) {
+    const tipoPesquisaLabel = contato.tipo_pesquisa === 'MRS' ? 'Resíduos Sólidos' : 'Águas Pluviais';
+    
+    return `
+        <div class="contact-card">
+            <div class="contact-header">
+                <div class="contact-title">${contato.municipio}</div>
+                <div class="contact-type">${contato.tipo_pesquisa}</div>
+            </div>
+            
+            <div class="contact-field">
+                <div class="contact-field-label">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Local
+                </div>
+                <div class="contact-field-content">${contato.local || ''}</div>
+                ${criarFontesIA(contato, 'local')}
+            </div>
+            
+            <div class="contact-field">
+                <div class="contact-field-label">
+                    <i class="fas fa-user-tie"></i>
+                    Responsável
+                </div>
+                <div class="contact-field-content">${contato.responsavel || ''}</div>
+                ${criarFontesIA(contato, 'responsavel')}
+            </div>
+            
+            <div class="contact-field">
+                <div class="contact-field-label">
+                    <i class="fas fa-map-marker"></i>
+                    Endereço
+                </div>
+                <div class="contact-field-content">${contato.endereco || ''}</div>
+                ${criarFontesIA(contato, 'endereco')}
+            </div>
+            
+            <div class="contact-field">
+                <div class="contact-field-label">
+                    <i class="fas fa-phone"></i>
+                    Contato
+                </div>
+                <div class="contact-field-content">${contato.contato || ''}</div>
+                ${criarFontesIA(contato, 'contato')}
+            </div>
+            
+            <div class="contact-field">
+                <div class="contact-field-label">
+                    <i class="fas fa-clock"></i>
+                    Horário
+                </div>
+                <div class="contact-field-content">${contato.horario || ''}</div>
+                ${criarFontesIA(contato, 'horario')}
+            </div>
+            
+            <div class="contact-actions">
+                <button class="contact-action-btn" onclick="editarContato('${contato.id}')">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="contact-action-btn" onclick="criarVisita('${contato.municipio}', '${contato.tipo_pesquisa}')">
+                    <i class="fas fa-calendar-plus"></i> Agendar Visita
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// Função para criar mini-cards das fontes IA
+function criarFontesIA(contato, campo) {
+    const chatgpt = contato[campo + '_chatgpt'] || '';
+    const gemini = contato[campo + '_gemini'] || '';
+    const grok = contato[campo + '_grok'] || '';
+    const maisProvavel = contato[campo + '_mais_provavel'] || '';
+    
+    // Se não há dados de nenhuma IA, não mostrar
+    if (!chatgpt && !gemini && !grok && !maisProvavel) {
+        return '';
+    }
+    
+    let fontes = [];
+    
+    if (chatgpt) {
+        fontes.push(`
+            <div class="contact-source" title="${chatgpt}" style="border-color: #10a37f;">
+                <div class="contact-source-name" style="color: #10a37f;">ChatGPT</div>
+                <div class="contact-source-value">${truncarTexto(chatgpt, 25)}</div>
+            </div>
+        `);
+    }
+    
+    if (gemini) {
+        fontes.push(`
+            <div class="contact-source" title="${gemini}" style="border-color: #4285f4;">
+                <div class="contact-source-name" style="color: #4285f4;">Gemini</div>
+                <div class="contact-source-value">${truncarTexto(gemini, 25)}</div>
+            </div>
+        `);
+    }
+    
+    if (grok) {
+        fontes.push(`
+            <div class="contact-source" title="${grok}" style="border-color: #1DA1F2;">
+                <div class="contact-source-name" style="color: #1DA1F2;">Grok</div>
+                <div class="contact-source-value">${truncarTexto(grok, 25)}</div>
+            </div>
+        `);
+    }
+    
+    if (maisProvavel) {
+        fontes.push(`
+            <div class="contact-source" title="${maisProvavel}" style="border-color: var(--secondary-color); background: rgba(110, 231, 183, 0.1);">
+                <div class="contact-source-name" style="color: var(--secondary-color); font-weight: 700;">⭐ Mais Provável</div>
+                <div class="contact-source-value" style="color: var(--text-primary);">${truncarTexto(maisProvavel, 25)}</div>
+            </div>
+        `);
+    }
+    
+    return `
+        <div class="contact-sources" style="margin-top: 0.75rem;">
+            <div style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 0.5rem; font-weight: 600;">
+                Fontes das IAs:
+            </div>
+            ${fontes.join('')}
+        </div>
+    `;
+}
+
+function truncarTexto(texto, limite) {
+    if (!texto) return '';
+    return texto.length > limite ? texto.substring(0, limite) + '...' : texto;
+}
+
+// Carregar contatos
+async function carregarContatos() {
+    document.getElementById('loadingContatos').style.display = 'block';
+    
+    try {
+        // Carregar dados MAP e MRS
+        const response = await fetch('/api/contatos_csv');
+        const data = await response.json();
+        
+        // Transformar dados de linhas para contatos organizados
+        contatos = transformarDadosContatos(data);
+        console.log(`Carregados ${contatos.length} contatos de ${data.length} linhas CSV`);
+        
+        // Debug: mostrar contatos criados
+        console.log('Contatos criados:', contatos.map(c => `${c.municipio}-${c.tipo_pesquisa}`));
+        
+        aplicarFiltros();
+    } catch (error) {
+        console.error('Erro ao carregar contatos:', error);
+        document.getElementById('contactsGrid').innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
+                <h5>Erro ao carregar contatos</h5>
+                <p class="text-muted">Tente recarregar a página</p>
+            </div>
+        `;
+    } finally {
+        document.getElementById('loadingContatos').style.display = 'none';
+    }
+}
+
+// Transformar dados da API em formato de contatos
+function transformarDadosContatos(dadosLinhas) {
+    const contatosMap = new Map();
+    
+    console.log(`Processando ${dadosLinhas.length} linhas do CSV`);
+    
+    dadosLinhas.forEach((linha, index) => {
+        const chave = `${linha.municipio}-${linha.tipo_pesquisa}`;
+        
+        // Debug para primeiras linhas
+        if (index < 5) {
+            console.log(`Linha ${index}:`, {
+                municipio: linha.municipio,
+                tipo: linha.tipo_pesquisa,
+                campo: linha.campo,
+                chave: chave
+            });
+        }
+        
+        if (!contatosMap.has(chave)) {
+            contatosMap.set(chave, {
+                id: chave,
+                municipio: linha.municipio,
+                tipo_pesquisa: linha.tipo_pesquisa,
+                tipo_informante: linha.tipo_informante || 'prefeitura',
+                local: '',
+                local_chatgpt: '',
+                local_gemini: '',
+                local_grok: '',
+                local_mais_provavel: '',
+                responsavel: '',
+                responsavel_chatgpt: '',
+                responsavel_gemini: '',
+                responsavel_grok: '',
+                responsavel_mais_provavel: '',
+                endereco: '',
+                endereco_chatgpt: '',
+                endereco_gemini: '',
+                endereco_grok: '',
+                endereco_mais_provavel: '',
+                contato: '',
+                contato_chatgpt: '',
+                contato_gemini: '',
+                contato_grok: '',
+                contato_mais_provavel: '',
+                horario: '',
+                horario_chatgpt: '',
+                horario_gemini: '',
+                horario_grok: '',
+                horario_mais_provavel: ''
+            });
+        }
+        
+        const contato = contatosMap.get(chave);
+        const campo = linha.campo.toLowerCase();
+        
+        // Mapear campos
+        let campoNormalizado = '';
+        if (campo.includes('local')) campoNormalizado = 'local';
+        else if (campo.includes('responsavel') || campo.includes('responsável')) campoNormalizado = 'responsavel';
+        else if (campo.includes('endereco') || campo.includes('endereço')) campoNormalizado = 'endereco';
+        else if (campo.includes('contato')) campoNormalizado = 'contato';
+        else if (campo.includes('horario') || campo.includes('horário')) campoNormalizado = 'horario';
+        
+        if (campoNormalizado) {
+            // Definir valor principal (mais provável ou primeiro disponível)
+            const valorPrincipal = linha.mais_provavel || linha.chatgpt || linha.gemini || linha.grok || '';
+            contato[campoNormalizado] = valorPrincipal;
+            
+            // Definir valores das IAs
+            contato[campoNormalizado + '_chatgpt'] = linha.chatgpt || '';
+            contato[campoNormalizado + '_gemini'] = linha.gemini || '';
+            contato[campoNormalizado + '_grok'] = linha.grok || '';
+            contato[campoNormalizado + '_mais_provavel'] = linha.mais_provavel || '';
+        }
+    });
+    
+    // Filtrar contatos que têm pelo menos um campo preenchido
+    return Array.from(contatosMap.values()).filter(contato => {
+        return contato.local || contato.responsavel || contato.endereco || 
+               contato.contato || contato.horario ||
+               contato.local_chatgpt || contato.local_gemini || contato.local_grok ||
+               contato.responsavel_chatgpt || contato.responsavel_gemini || contato.responsavel_grok ||
+               contato.endereco_chatgpt || contato.endereco_gemini || contato.endereco_grok ||
+               contato.contato_chatgpt || contato.contato_gemini || contato.contato_grok ||
+               contato.horario_chatgpt || contato.horario_gemini || contato.horario_grok;
+    });
+}
+
+// Aplicar filtros
+function aplicarFiltros() {
+    const municipio = document.getElementById('filtroMunicipio').value;
+    const tipoPesquisa = document.getElementById('filtroTipoPesquisa').value;
+    const tipoInformante = document.getElementById('filtroTipoInformante').value;
+    const busca = document.getElementById('filtroBusca').value.toLowerCase();
+    
+    contatosFiltrados = contatos.filter(contato => {
+        const passaMunicipio = !municipio || contato.municipio === municipio;
+        const passaTipoPesquisa = !tipoPesquisa || contato.tipo_pesquisa === tipoPesquisa;
+        const passaTipoInformante = !tipoInformante || contato.tipo_informante === tipoInformante;
+        
+        const passaBusca = !busca || 
+            contato.municipio?.toLowerCase().includes(busca) ||
+            contato.local?.toLowerCase().includes(busca) ||
+            contato.responsavel?.toLowerCase().includes(busca) ||
+            contato.endereco?.toLowerCase().includes(busca) ||
+            contato.contato?.toLowerCase().includes(busca) ||
+            contato.horario?.toLowerCase().includes(busca);
+        
+        return passaMunicipio && passaTipoPesquisa && passaTipoInformante && passaBusca;
+    });
+    
+    renderizarContatos();
+}
+
+// Renderizar contatos
+function renderizarContatos() {
+    const grid = document.getElementById('contactsGrid');
+    const count = document.getElementById('contatosCount');
+    
+    count.textContent = contatosFiltrados.length;
+    
+    if (contatosFiltrados.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h5>Nenhum contato encontrado</h5>
+                <p class="text-muted">Tente ajustar os filtros de busca</p>
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = contatosFiltrados.map(contato => criarCardContato(contato)).join('');
+}
+
+// Event listeners
+document.getElementById('filtroMunicipio').addEventListener('change', aplicarFiltros);
+document.getElementById('filtroTipoPesquisa').addEventListener('change', aplicarFiltros);
+document.getElementById('filtroTipoInformante').addEventListener('change', aplicarFiltros);
+document.getElementById('filtroBusca').addEventListener('input', Utils.debounce(aplicarFiltros, 300));
+
+// Funções de ação
+function limparFiltros() {
+    document.getElementById('filtroMunicipio').value = '';
+    document.getElementById('filtroTipoPesquisa').value = '';
+    document.getElementById('filtroTipoInformante').value = '';
+    document.getElementById('filtroBusca').value = '';
+    aplicarFiltros();
+}
+
+function editarContato(id) {
+    // Implementar edição
+    NotificationManager.info('Funcionalidade em desenvolvimento');
+}
+
+function criarVisita(municipio, tipoPesquisa) {
+    // Redirecionar para página de visitas com dados pré-preenchidos
+    window.location.href = `/visitas?municipio=${encodeURIComponent(municipio)}&tipo=${tipoPesquisa}`;
+}
+
+function exportarContatos() {
+    // Implementar exportação
+    NotificationManager.info('Exportando contatos...');
+}
+
+function importarContatos() {
+    // Implementar importação
+    NotificationManager.info('Funcionalidade em desenvolvimento');
+}
+
+// Inicializar quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    carregarContatos();
+});
+</script>
+{% endblock %}

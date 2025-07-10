@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Calendário - Gestão de Visitas PNSB{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-4">Calendário de Visitas</h2>
+<div class="row g-4 mb-4">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <div id="calendario-visitas"></div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card p-4 h-100">
+            <h5 class="card-title mb-3">Agendar Nova Visita</h5>
+            <form id="form-nova-visita">
+                <div class="mb-3">
+                    <label for="municipio" class="form-label">Município</label>
+                    <select class="form-select bg-dark text-light" id="municipio" required>
+                        <option value="">Selecione</option>
+                        <option>Blumenau</option>
+                        <option>Joinville</option>
+                        <option>Itajaí</option>
+                        <option>Bombinhas</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="data" class="form-label">Data</label>
+                    <input type="date" class="form-control bg-dark text-light" id="data" required>
+                </div>
+                <div class="mb-3">
+                    <label for="hora" class="form-label">Horário</label>
+                    <input type="time" class="form-control bg-dark text-light" id="hora" required>
+                </div>
+                <div class="mb-3">
+                    <label for="informante" class="form-label">Informante</label>
+                    <input type="text" class="form-control bg-dark text-light" id="informante" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Agendar</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Detalhes da Visita -->
+<div class="modal fade" id="modalDetalhesVisita" tabindex="-1" aria-labelledby="modalDetalhesVisitaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalDetalhesVisitaLabel">Detalhes da Visita</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="detalhes-visita-body">
+        <!-- Conteúdo preenchido via JS -->
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/api/visitas')
+      .then(res => res.json())
+      .then(visitas => {
+        const calendarEl = document.getElementById('calendario-visitas');
+        const events = visitas.map(v => ({
+            title: `${v.municipio} - ${v.status}`,
+            start: v.data + 'T' + (v.hora_inicio || '09:00'),
+            extendedProps: v
+        }));
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 500,
+            themeSystem: 'standard',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listWeek'
+            },
+            events: events,
+            eventClick: function(info) {
+                const v = info.event.extendedProps;
+                document.getElementById('detalhes-visita-body').innerHTML = `
+                    <strong>Município:</strong> ${v.municipio}<br>
+                    <strong>Data:</strong> ${v.data}<br>
+                    <strong>Horário:</strong> ${v.hora_inicio || '--:--'}<br>
+                    <strong>Status:</strong> <span class="badge bg-${v.status === 'Realizada' ? 'success' : v.status === 'Pendente' ? 'warning' : 'primary'}">${v.status}</span><br>
+                    <strong>Informante:</strong> ${v.informante || '-'}
+                `;
+                const modal = new bootstrap.Modal(document.getElementById('modalDetalhesVisita'));
+                modal.show();
+            }
+        });
+        calendar.render();
+      });
+});
+// Simulação de agendamento
+const form = document.getElementById('form-nova-visita');
+form.onsubmit = function(e) {
+    e.preventDefault();
+    alert('Visita agendada! (Simulação)');
+    form.reset();
+};
+</script>
+{% endblock %} 

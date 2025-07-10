@@ -1,0 +1,5 @@
+=== INICIANDO APP.PY CORRETO ===
+Traceback (most recent call last):
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/app.py", line 46, in <module>
+    error_handler = ErrorHandler(app)
+NameError: name 'ErrorHandler' is not defined

@@ -1,0 +1,2156 @@
+{% extends 'base.html' %}
+{% block title %}Visitas - Gestão de Visitas PNSB{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <h2 class="fw-bold mb-0">Visitas Técnicas</h2>
+    <button class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#modalNovaVisita">
+        <i class="fas fa-plus"></i> Agendar Nova Visita
+    </button>
+</div>
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <select class="select-custom" id="filtro-municipio">
+            <option value="">Todos os Municípios</option>
+            <option>Balneário Camboriú</option>
+            <option>Balneário Piçarras</option>
+            <option>Bombinhas</option>
+            <option>Camboriú</option>
+            <option>Itajaí</option>
+            <option>Itapema</option>
+            <option>Luiz Alves</option>
+            <option>Navegantes</option>
+            <option>Penha</option>
+            <option>Porto Belo</option>
+            <option>Ilhota</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <input type="date" class="input-custom" id="filtro-data">
+    </div>
+    <div class="col-md-3">
+        <select class="select-custom" id="filtro-status">
+            <option value="">Todos os Status</option>
+            <option value="agendada">Agendada</option>
+            <option value="em andamento">Em Andamento</option>
+            <option value="realizada">Realizada</option>
+            <option value="questionários concluídos">Questionários Concluídos</option>
+            <option value="questionários validados">Questionários Validados</option>
+            <option value="finalizada">Finalizada</option>
+            <option value="remarcada">Remarcada</option>
+            <option value="não realizada">Não Realizada</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <button class="btn-outline-custom w-100" id="btn-filtrar">
+            <i class="fas fa-filter"></i> Filtrar
+        </button>
+    </div>
+</div>
+<div class="row g-4" id="lista-visitas">
+    <!-- Cards de visitas serão inseridos aqui via JS -->
+</div>
+
+<!-- Modal Nova Visita -->
+<div class="modal fade modal-nova-visita" id="modalNovaVisita" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nova Visita</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+        <form id="form-nova-visita">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="municipio" class="form-label">Município</label>
+                                <select class="form-select" id="municipio" required>
+                                    <option value="">Selecione...</option>
+              <option>Balneário Camboriú</option>
+              <option>Balneário Piçarras</option>
+              <option>Bombinhas</option>
+              <option>Camboriú</option>
+              <option>Itajaí</option>
+              <option>Itapema</option>
+              <option>Luiz Alves</option>
+              <option>Navegantes</option>
+              <option>Penha</option>
+              <option>Porto Belo</option>
+              <option>Ilhota</option>
+            </select>
+          </div>
+          </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="tipo_pesquisa" class="form-label">Tipo de Pesquisa</label>
+                                <select class="form-select" id="tipo_pesquisa" required>
+                                    <option value="MRS">MRS - Manejo de Resíduos Sólidos</option>
+                                    <option value="MAP">MAP - Manejo de Águas Pluviais</option>
+                                    <option value="ambos">MRS + MAP</option>
+                                </select>
+          </div>
+          </div>
+          </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="data" class="form-label">Data</label>
+                                <input type="date" class="form-control" id="data" required placeholder="dd/mm/aaaa">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="hora" class="form-label">Hora</label>
+                                <input type="time" class="form-control" id="hora" required placeholder="--:--">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="tipo_informante" class="form-label">Tipo de Informante</label>
+                                <select class="form-select" id="tipo_informante" required>
+                                    <option value="prefeitura">Prefeitura</option>
+                                    <option value="empresa_terceirizada">Contratada</option>
+                                    <option value="entidade_catadores">Entidade de Catadores</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="local" class="form-label">Local</label>
+                                <div class="autocomplete-container">
+                                    <input type="text" class="form-control" id="local" required autocomplete="off" placeholder="Digite para buscar ou selecionar um local...">
+                                    <div class="autocomplete-dropdown" id="localDropdown">
+                                        <!-- Sugestões serão inseridas aqui via JS -->
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">
+                                    <i class="fas fa-lightbulb"></i> Sugestões baseadas nos dados coletados pelas IAs
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="telefone" class="form-label">WhatsApp (opcional)</label>
+                                <input type="tel" class="form-control" id="telefone" placeholder="+55 11 99999-9999">
+                                <small class="form-text text-muted">
+                                    <i class="fab fa-whatsapp text-success"></i> Para envio automático de agendamento
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="pesquisador_responsavel" class="form-label">Pesquisador</label>
+                                <input type="text" class="form-control" id="pesquisador_responsavel" placeholder="Nome do pesquisador responsável">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="observacoes" class="form-label">Observações</label>
+                                <textarea class="form-control" id="observacoes" rows="4" placeholder="Adicione observações sobre a visita..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="form-nova-visita" class="btn btn-primary">Salvar</button>
+            </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Checklist por Visita -->
+<div class="modal fade" id="modalChecklist" tabindex="-1" aria-labelledby="modalChecklistLabel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalChecklistLabel">Checklist da Visita</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="form-checklist-visita">
+          <div id="checklist-conteudo"></div>
+          <button type="submit" class="btn btn-primary">Salvar Checklist</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toasts para feedback visual -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+  <div id="toastFeedback" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="toastFeedbackMsg">Ação realizada!</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+
+<style>
+.timeline-acoes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 1.2rem auto 0.7rem auto;
+  justify-content: center;
+  align-items: flex-end;
+  max-width: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+.timeline-acao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  background: linear-gradient(145deg, #23263a 70%, #1abc9c22 100%);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  transition: box-shadow 0.18s, background 0.18s, transform 0.18s, border 0.18s;
+  box-shadow: 0 2px 10px #0002, 0 1.5px 0 #1abc9c33 inset;
+  border: 2px solid #2e324d;
+  margin-bottom: 0.1rem;
+  margin-top: 0.1rem;
+  overflow: visible;
+  position: relative;
+}
+.timeline-icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.3rem;
+  color: #1abc9c;
+  transition: color 0.18s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.timeline-acao.ativo .timeline-icone,
+.timeline-acao:hover .timeline-icone {
+  color: #fff;
+}
+.timeline-label {
+  font-size: 0.65rem;
+  color: #e0e6f0;
+  margin-top: 0.18rem;
+  text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  transition: color 0.18s;
+  display: block;
+  min-height: 1em;
+}
+.timeline-acao.ativo .timeline-label,
+.timeline-acao:hover .timeline-label {
+  color: #1abc9c;
+}
+.timeline-acao-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+.timeline-acao:hover {
+  box-shadow: 0 8px 32px 0 rgba(255,179,71,0.18);
+  border-color: #FFB347;
+  background: linear-gradient(145deg, #23263a 60%, #FFB34733 100%);
+  transform: translateY(-2px) scale(1.07);
+}
+/* Mobile Improvements */
+@media (max-width: 768px) {
+  .visita-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .visita-card-status-excluir {
+    align-self: flex-end;
+  }
+  
+  .visita-card-info-row {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+  
+  .timeline-acoes { 
+    flex-wrap: wrap; 
+    gap: 0.4rem; 
+    max-width: 100%; 
+  }
+  
+  .timeline-acao { 
+    width: 38px; 
+    height: 38px; 
+  }
+  
+  .timeline-icone { 
+    font-size: 0.9rem; 
+  }
+  
+  .timeline-label { 
+    font-size: 0.52rem; 
+    min-height: 0.8em; 
+  }
+  
+  .visita-card-municipio {
+    font-size: 1.5rem;
+  }
+  
+  .btn-excluir-visita,
+  .btn-editar-visita {
+    opacity: 1; /* Always visible on mobile */
+  }
+}
+
+@media (max-width: 500px) {
+  .timeline-acoes { 
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    gap: 0.3rem; 
+    align-items: center; 
+  }
+  
+  .visita-card {
+    margin-bottom: 1rem;
+  }
+  
+  .visita-card-info {
+    min-width: auto;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.6rem;
+  }
+}
+.visita-card {
+  background: linear-gradient(120deg, #23263B 60%, #181A20 100%);
+  border-radius: 22px;
+  box-shadow: 0 6px 32px 0 rgba(95,92,255,0.10);
+  border: 2px solid #2D3142;
+  transition: box-shadow 0.2s, border 0.2s, transform 0.18s;
+  position: relative;
+  overflow: hidden;
+}
+.visita-card:hover {
+  box-shadow: 0 12px 48px 0 rgba(110,231,183,0.18);
+  border-color: #6EE7B7;
+  transform: translateY(-2px) scale(1.01);
+}
+.text-gradient {
+  background: linear-gradient(90deg, #6EE7B7 0%, #5F5CFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.visita-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+.visita-card-municipio {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, #6EE7B7 0%, #5F5CFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: left;
+  margin-bottom: 0.2rem;
+  line-height: 1.1;
+}
+.visita-card-status-excluir {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.visita-card-info-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.1rem;
+}
+.visita-card-info {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #5F5CFF;
+  background: #181A20;
+  border-radius: 7px;
+  border: 0.3px solid #fff;
+  padding: 0.28rem 0.95rem;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  box-shadow: 0 1px 4px 0 rgba(95,92,255,0.07);
+  min-width: 110px;
+  justify-content: center;
+}
+.btn-excluir-visita {
+  opacity: 0;
+  transition: opacity 0.18s, transform 0.18s;
+  font-size: 1.1rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+}
+.visita-card:hover .btn-excluir-visita {
+  opacity: 1;
+  transform: scale(1.08);
+}
+.visita-card-label,
+.visita-card-info-text {
+  color: #6EE7B7 !important;
+  font-weight: 600;
+}
+.visita-card-info-block {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  margin-left: 1.7rem;
+}
+.visita-card-select-status {
+  font-size: 0.95rem;
+  padding: 0.18rem 1.2rem 0.18rem 0.5rem;
+  border-radius: 7px;
+  min-width: 120px;
+  max-width: 170px;
+  height: 2rem;
+  background: #181A20;
+  color: #fff;
+  border: 1px solid #6EE7B7;
+  margin-left: 0.5rem;
+}
+#modalNovaVisita .form-control:focus {
+    box-shadow: 0 0 0 2px #6EE7B7 !important;
+    border-color: #6EE7B7 !important;
+    background: rgba(36,38,58,0.95) !important;
+    color: #fff !important;
+}
+#modalNovaVisita .btn:hover, #modalNovaVisita .btn:focus {
+    filter: brightness(1.08) saturate(1.2);
+    box-shadow: 0 2px 12px 0 #5F5CFF44;
+}
+#modalNovaVisita .modal-content {
+    box-shadow: 0 12px 48px 0 rgba(110,231,183,0.18), 0 2px 16px 0 #5F5CFF22;
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+console.log('JS carregado!');
+function statusBadge(status) {
+  const map = {
+    'agendada': 'primary',
+    'em preparação': 'info',
+    'em execução': 'info',
+    'resultados visita': 'secondary',
+    'realizada': 'success',
+    'remarcada': 'warning',
+    'cancelada': 'danger',
+    'não realizada': 'danger',
+    'em follow-up': 'info',
+    'finalizada': 'success',
+    'antes da visita': 'primary',
+    'durante a visita': 'info',
+    'após a visita': 'success'
+  };
+  const cor = map[(status || '').toLowerCase()] || 'dark';
+  return `<span class="badge bg-${cor}" style="color:#fff;">${status}</span>`;
+}
+
+// Usar o novo sistema de toast do base.html
+// showToast já está definido no base.html
+
+// Etapas e campos por etapa (reorganizado e agrupado)
+const ETAPAS = [
+  {
+    nome: 'Antes da Visita',
+    grupos: [
+      {titulo: 'Preparação e Materiais', campos: [
+        'cracha_ibge', 'recibo_entrega', 'questionario_mrs_impresso', 'questionario_map_impresso',
+        'carta_oficial', 'questionario_mrs_digital', 'questionario_map_digital', 'manual_pnsb',
+        'guia_site_externo', 'card_contato', 'audio_explicativo', 'planejamento_rota', 'agenda_confirmada']}
+    ]
+  },
+  {
+    nome: 'Durante a Visita',
+    grupos: [
+      {titulo: 'Abordagem e Apresentação', campos: [
+        'apresentacao_ibge', 'explicacao_objetivo', 'explicacao_estrutura', 'explicacao_data_referencia',
+        'explicacao_prestador', 'explicacao_servicos', 'explicacao_site_externo', 'explicacao_pdf_editavel']},
+      {titulo: 'Validação e Coleta', campos: [
+        'validacao_prestadores', 'registro_contatos', 'assinatura_informante', 'observacoes_durante']}
+    ]
+  },
+  {
+    nome: 'Após a Visita',
+    grupos: [
+      {titulo: 'Encerramento e Follow-up', campos: [
+        'devolucao_materiais', 'registro_followup', 'combinacao_entrega', 'combinacao_acompanhamento', 'observacoes_finais']}
+    ]
+  }
+];
+
+function getEtapaAtual(v) {
+  const etapas = ETAPAS.map(e => e.nome);
+  const statusLower = (v.status || '').toLowerCase();
+  if (etapas.map(e => e.toLowerCase()).includes(statusLower)) {
+    return etapas.map(e => e.toLowerCase()).indexOf(statusLower);
+  }
+  if (["agendada", "pendente"].includes(statusLower)) return 0;
+  // Inferência baseada em campos do checklist
+  if (v.checklist && (
+    Object.values(v.checklist.materiais || {}).some(i => i.status === 'concluido') ||
+    Object.values(v.checklist.documentos || {}).some(i => i.status === 'concluido') ||
+    Object.values(v.checklist.equipamentos || {}).some(i => i.status === 'concluido')
+  )) return 1;
+  if (["realizada", "finalizada", "após a visita"].includes(statusLower)) return 2;
+  return 0;
+}
+
+function etapasTimeline(etapas, atual) {
+  return `<div class="d-flex flex-row flex-wrap align-items-center gap-2">
+    ${etapas.map((etapa, idx) => `
+      <div class="text-center">
+        <div style="width:28px;height:28px;line-height:28px;border-radius:50%;background:${idx === atual ? '#6EE7B7' : '#23263B'};color:${idx === atual ? '#23263B' : '#B0B3C7'};font-weight:600;display:inline-block;cursor:pointer;" data-etapa="${idx}">${idx+1}</div>
+        <div style="font-size:12px;cursor:pointer;" data-etapa="${idx}">${etapa}</div>
+      </div>
+      ${idx < etapas.length-1 ? '<div style="width:32px;height:2px;background:#2D3142;"></div>' : ''}
+    `).join('')}
+  </div>`;
+}
+
+// Lista de status possíveis
+const STATUS_VISITA_COMPLETO = [
+  'agendada',
+  'em preparação',
+  'em execução',
+  'resultados visita',
+  'realizada',
+  'verificação whatsapp',
+  'em follow-up',
+  'remarcada',
+  'cancelada',
+  'não realizada',
+  'finalizada'
+];
+
+// Funções para Verificação por WhatsApp
+function registrarEmailEnviado(visitaId) {
+  if (!confirm('Confirma que o e-mail foi enviado pelo sistema IBGE?')) return;
+  
+  fetch(`/api/visitas/${visitaId}/registrar-email`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({data_envio: new Date().toISOString()})
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.message) {
+      showToast(data.message, 'success');
+      atualizarVisitas();
+    } else {
+      showToast(data.error || 'Erro ao registrar e-mail', 'danger');
+    }
+  })
+  .catch(error => {
+    showToast('Erro na requisição: ' + error.message, 'danger');
+  });
+}
+
+function enviarVerificacaoWhatsApp(visitaId) {
+  if (!confirm('Enviar verificação por WhatsApp se responsável recebeu o e-mail?')) return;
+  
+  fetch(`/api/visitas/${visitaId}/verificacao-whatsapp`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'}
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.sucesso) {
+      showToast(data.message, 'success');
+      atualizarVisitas();
+    } else {
+      showToast(data.error || 'Erro ao enviar verificação', 'warning');
+    }
+  })
+  .catch(error => {
+    showToast('Erro na requisição: ' + error.message, 'danger');
+  });
+}
+
+function confirmarRecebimentoEmail(visitaId, emailRecebido) {
+  const confirmMsg = emailRecebido 
+    ? 'Confirmar que o responsável RECEBEU o e-mail?' 
+    : 'Confirmar que o responsável NÃO RECEBEU o e-mail?';
+    
+  if (!confirm(confirmMsg)) return;
+  
+  fetch(`/api/visitas/${visitaId}/confirmar-email`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({email_recebido: emailRecebido})
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.sucesso) {
+      showToast(data.message, 'success');
+      atualizarVisitas();
+    } else {
+      showToast(data.error || 'Erro ao confirmar recebimento', 'danger');
+    }
+  })
+  .catch(error => {
+    showToast('Erro na requisição: ' + error.message, 'danger');
+  });
+}
+
+function mostrarModalVerificacaoWhatsApp(visitaId, verificacao) {
+  const modal = document.createElement('div');
+  modal.className = 'modal fade';
+  modal.innerHTML = `
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <i class="fab fa-whatsapp text-success"></i> Verificação por WhatsApp
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <h6>Status da Verificação:</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-${verificacao.telefone_cadastrado ? 'check text-success' : 'times text-danger'}"></i> 
+                  Telefone cadastrado</li>
+              <li><i class="fas fa-${verificacao.email_enviado ? 'check text-success' : 'times text-danger'}"></i> 
+                  E-mail enviado pelo IBGE</li>
+              <li><i class="fas fa-${verificacao.verificacao_enviada ? 'check text-success' : 'times text-danger'}"></i> 
+                  Verificação por WhatsApp enviada</li>
+              <li><i class="fas fa-${verificacao.resposta_recebida ? 'check text-success' : 'times text-danger'}"></i> 
+                  Resposta recebida</li>
+            </ul>
+          </div>
+          
+          ${verificacao.data_email ? `<p><strong>E-mail enviado em:</strong> ${verificacao.data_email}</p>` : ''}
+          ${verificacao.data_verificacao ? `<p><strong>Verificação enviada em:</strong> ${verificacao.data_verificacao}</p>` : ''}
+          ${verificacao.data_resposta ? `<p><strong>Resposta recebida em:</strong> ${verificacao.data_resposta}</p>` : ''}
+          
+          <div class="d-grid gap-2">
+            ${!verificacao.email_enviado ? `
+              <button class="btn btn-primary" onclick="registrarEmailEnviado(${visitaId}); this.closest('.modal').remove();">
+                <i class="fas fa-envelope"></i> Registrar E-mail Enviado
+              </button>
+            ` : ''}
+            
+            ${verificacao.pode_verificar && !verificacao.verificacao_enviada ? `
+              <button class="btn btn-success" onclick="enviarVerificacaoWhatsApp(${visitaId}); this.closest('.modal').remove();">
+                <i class="fab fa-whatsapp"></i> Enviar Verificação WhatsApp
+              </button>
+            ` : ''}
+            
+            ${verificacao.verificacao_enviada && !verificacao.resposta_recebida ? `
+              <div class="row">
+                <div class="col-6">
+                  <button class="btn btn-success w-100" onclick="confirmarRecebimentoEmail(${visitaId}, true); this.closest('.modal').remove();">
+                    <i class="fas fa-check"></i> Recebeu E-mail
+                  </button>
+                </div>
+                <div class="col-6">
+                  <button class="btn btn-warning w-100" onclick="confirmarRecebimentoEmail(${visitaId}, false); this.closest('.modal').remove();">
+                    <i class="fas fa-times"></i> Não Recebeu
+                  </button>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  const bsModal = new bootstrap.Modal(modal);
+  bsModal.show();
+  
+  modal.addEventListener('hidden.bs.modal', () => {
+    modal.remove();
+  });
+}
+
+function abrirModalReagendamento(visitaId) {
+  fetch(`/api/visitas/${visitaId}`)
+    .then(res => res.json())
+    .then(visita => {
+      if (document.getElementById('municipio')) document.getElementById('municipio').value = visita.municipio || '';
+      if (document.getElementById('data')) document.getElementById('data').value = visita.data.split('/').reverse().join('-') || '';
+      if (document.getElementById('hora')) document.getElementById('hora').value = visita.hora_inicio || '';
+      if (document.getElementById('local')) document.getElementById('local').value = visita.local || '';
+      if (document.getElementById('tipo_pesquisa')) document.getElementById('tipo_pesquisa').value = visita.tipo_pesquisa || 'MRS';
+      if (document.getElementById('observacoes')) document.getElementById('observacoes').value = visita.observacoes || '';
+
+      // Atualizar título do modal
+      document.querySelector('#modalNovaVisita .modal-title').textContent = 'Reagendar Visita';
+
+      const modalReagendar = new bootstrap.Modal(document.getElementById('modalNovaVisita'));
+      modalReagendar.show();
+
+      const form = document.getElementById('form-nova-visita');
+      const originalSubmit = form.onsubmit;
+
+      form.onsubmit = function(e) {
+        console.log('Submit do formulário de edição disparado!');
+        e.preventDefault();
+        const data = {
+          municipio: document.getElementById('municipio').value,
+          data: document.getElementById('data').value,
+          hora_inicio: document.getElementById('hora').value,
+          hora_fim: document.getElementById('hora').value,
+          local: document.getElementById('local').value,
+          tipo_pesquisa: document.getElementById('tipo_pesquisa').value,
+          tipo_informante: document.getElementById('tipo_informante').value,
+          observacoes: document.getElementById('observacoes').value
+        };
+        console.log('Enviando PUT para /api/visitas/' + visitaId, data);
+        fetch(`/api/visitas/${visitaId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        })
+        .then(async res => {
+          const result = await res.json();
+          if (res.ok) {
+            showToast('Visita reagendada com sucesso!', 'success');
+            form.reset();
+            atualizarVisitas();
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalNovaVisita'));
+            if (modalInstance) modalInstance.hide();
+          } else {
+            showToast('Erro ao reagendar visita: ' + (result.error || 'Erro desconhecido.'), 'danger');
+          }
+        })
+        .catch(error => {
+          showToast('Erro ao reagendar visita: ' + error, 'danger');
+        });
+      };
+
+      document.getElementById('modalNovaVisita').addEventListener('hidden.bs.modal', function restoreSubmit() {
+        form.onsubmit = originalSubmit;
+        document.querySelector('#modalNovaVisita .modal-title').textContent = 'Nova Visita';
+        document.getElementById('modalNovaVisita').removeEventListener('hidden.bs.modal', restoreSubmit);
+      });
+    })
+    .catch(error => {
+      showToast('Erro ao carregar dados da visita: ' + error, 'danger');
+    });
+}
+
+function getAcoesTimelinePorStatus(status, visitaId) {
+  switch ((status || '').toLowerCase()) {
+    case 'agendada':
+      return [
+        { label: 'Preparar', action: () => mudarStatus(visitaId, 'em preparação'), icon: 'fa-play' }
+      ];
+    case 'em preparação':
+      return [
+        { label: 'Checklist', action: () => abrirChecklistModal(visitaId, 0), icon: 'fa-list-check', etapa: 0 },
+        { label: 'Executar', action: () => mudarStatus(visitaId, 'em execução'), icon: 'fa-arrow-right' },
+        { label: 'Limpar', action: () => excluirEtapa(visitaId, 'Antes da Visita'), icon: 'fa-eraser', etapa: 0 }
+      ];
+    case 'em execução':
+      return [
+        { label: 'Checklist', action: () => abrirChecklistModal(visitaId, 1), icon: 'fa-list-check', etapa: 1 },
+        { label: 'Aguardar', action: () => mudarStatus(visitaId, 'resultados visita'), icon: 'fa-hourglass-half' },
+        { label: 'Concluir', action: () => mudarStatus(visitaId, 'realizada'), icon: 'fa-check' },
+        { label: 'Cancelar', action: () => mudarStatus(visitaId, 'cancelada'), icon: 'fa-xmark' },
+        { label: 'Remarcar', action: () => mudarStatus(visitaId, 'remarcada'), icon: 'fa-calendar-days' },
+        { label: 'Limpar', action: () => excluirEtapa(visitaId, 'Durante a Visita'), icon: 'fa-eraser', etapa: 1 }
+      ];
+    case 'resultados visita':
+      return [
+        { label: 'Checklist', action: () => abrirChecklistModal(visitaId, 2), icon: 'fa-list-check', etapa: 2 },
+        { label: 'Finalizar', action: () => mudarStatus(visitaId, 'finalizada'), icon: 'fa-flag-checkered' },
+        { label: 'Remarcar', action: () => mudarStatus(visitaId, 'remarcada'), icon: 'fa-calendar-days' },
+        { label: 'Limpar', action: () => excluirEtapa(visitaId, 'Após a Visita'), icon: 'fa-eraser', etapa: 2 }
+      ];
+    case 'realizada':
+      return [
+        { label: 'WhatsApp', action: () => mostrarModalVerificacaoWhatsApp(visitaId), icon: 'fab fa-whatsapp' },
+        { label: 'Follow-up', action: () => mudarStatus(visitaId, 'em follow-up'), icon: 'fa-arrow-rotate-right' },
+        { label: 'Relatório', action: () => abrirChecklistModal(visitaId, 2), icon: 'fa-file-lines' }
+      ];
+    case 'verificação whatsapp':
+      return [
+        { label: 'Follow-up', action: () => mudarStatus(visitaId, 'em follow-up'), icon: 'fa-arrow-rotate-right' },
+        { label: 'Verificar', action: () => mostrarModalVerificacaoWhatsApp(visitaId), icon: 'fab fa-whatsapp' },
+        { label: 'Relatório', action: () => abrirChecklistModal(visitaId, 2), icon: 'fa-file-lines' }
+      ];
+    case 'em follow-up':
+      return [
+        { label: 'Finalizar', action: () => mudarStatus(visitaId, 'finalizada'), icon: 'fa-flag-checkered' },
+        { label: 'Checklist', action: () => abrirChecklistModal(visitaId, 2), icon: 'fa-list-check' }
+      ];
+    case 'finalizada':
+      return [
+        { label: 'Relatório', action: () => abrirChecklistModal(visitaId, 2), icon: 'fa-file-lines' }
+      ];
+    case 'remarcada':
+    case 'cancelada':
+    case 'não realizada':
+      return [
+        { label: 'Reagendar', action: () => abrirModalReagendamento(visitaId), icon: 'fa-calendar-plus' }
+      ];
+    default:
+      return [];
+  }
+}
+
+function renderTimelineAcoes(status, visitaId) {
+  const acoes = getAcoesTimelinePorStatus(status, visitaId);
+  return `<div class='timeline-acoes d-flex align-items-center justify-content-center' data-visita-id='${visitaId}'>
+    ${acoes.map((acao, idx) => `
+      <div class='timeline-acao-container'>
+        <div class='timeline-acao ${idx === 0 ? 'ativo' : ''}' data-acao-idx='${idx}' data-visita-id='${visitaId}'>
+          <span class='timeline-icone'><i class='fa-solid ${acao.icon}'></i></span>
+        </div>
+        <span class='timeline-label'>${acao.label}</span>
+      </div>
+    `).join('')}
+  </div>`;
+}
+
+function renderAcoesPorStatus(status, visitaId, etapaAtual) {
+  switch ((status || '').toLowerCase()) {
+    case 'agendada':
+      return `<button class='btn btn-outline-primary btn-sm me-2' onclick="mudarStatus(${visitaId}, 'em preparação')">Iniciar Preparação</button>`;
+    case 'em preparação':
+      return `
+        <button class='btn btn-outline-info btn-sm me-2' onclick="abrirChecklistModal(${visitaId}, 0)">Checklist de Materiais</button>
+        <button class='btn btn-outline-success btn-sm me-2' onclick="mudarStatus(${visitaId}, 'em execução')">Pronto para Execução</button>
+        <button class='btn btn-outline-danger btn-sm' onclick="excluirEtapa(${visitaId}, 'Antes da Visita')">Limpar Etapa</button>
+      `;
+    case 'em execução':
+      return `
+        <button class='btn btn-outline-info btn-sm me-2' onclick="abrirChecklistModal(${visitaId}, 1)">Checklist Durante a Visita</button>
+        <button class='btn btn-outline-warning btn-sm me-2' onclick="mudarStatus(${visitaId}, 'resultados visita')">Resultados Visita</button>
+        <button class='btn btn-outline-success btn-sm me-2' onclick="mudarStatus(${visitaId}, 'realizada')">Concluir Visita</button>
+        <button class='btn btn-outline-danger btn-sm' onclick="mudarStatus(${visitaId}, 'cancelada')">Cancelar</button>
+        <button class='btn btn-outline-secondary btn-sm' onclick="mudarStatus(${visitaId}, 'remarcada')">Remarcar</button>
+        <button class='btn btn-outline-danger btn-sm' onclick="excluirEtapa(${visitaId}, 'Durante a Visita')">Limpar Etapa</button>
+      `;
+    case 'resultados visita':
+      return `
+        <button class='btn btn-outline-info btn-sm me-2' onclick="abrirChecklistModal(${visitaId}, 2)">Checklist Após a Visita</button>
+        <button class='btn btn-outline-success btn-sm me-2' onclick="mudarStatus(${visitaId}, 'finalizada')">Finalizar</button>
+        <button class='btn btn-outline-secondary btn-sm' onclick="mudarStatus(${visitaId}, 'remarcada')">Remarcar</button>
+        <button class='btn btn-outline-danger btn-sm' onclick="excluirEtapa(${visitaId}, 'Após a Visita')">Limpar Etapa</button>
+      `;
+    case 'realizada':
+      return `
+        <button class='btn btn-outline-success btn-sm me-2' onclick="mostrarModalVerificacaoWhatsApp(${visitaId})">
+          <i class="fab fa-whatsapp"></i> Verificar WhatsApp
+        </button>
+        <button class='btn btn-outline-secondary btn-sm me-2' onclick="mudarStatus(${visitaId}, 'em follow-up')">Iniciar Follow-up</button>
+        <button class='btn btn-outline-info btn-sm' onclick="abrirChecklistModal(${visitaId}, 2)">Visualizar Relatório</button>
+      `;
+    case 'verificação whatsapp':
+      return `
+        <button class='btn btn-outline-warning btn-sm me-2' onclick="mostrarModalVerificacaoWhatsApp(${visitaId})">
+          <i class="fab fa-whatsapp"></i> Gerenciar Verificação
+        </button>
+        <button class='btn btn-outline-secondary btn-sm me-2' onclick="mudarStatus(${visitaId}, 'em follow-up')">Ir para Follow-up</button>
+        <button class='btn btn-outline-info btn-sm' onclick="abrirChecklistModal(${visitaId}, 2)">Visualizar Relatório</button>
+      `;
+    case 'em follow-up':
+      return `
+        <button class='btn btn-outline-success btn-sm me-2' onclick="mudarStatus(${visitaId}, 'finalizada')">Finalizar</button>
+        <button class='btn btn-outline-info btn-sm' onclick="abrirChecklistModal(${visitaId}, 2)">Checklist Após a Visita</button>
+      `;
+    case 'finalizada':
+      return `<button class='btn btn-outline-info btn-sm' onclick="abrirChecklistModal(${visitaId}, 2)">Visualizar Relatório</button>`;
+    case 'remarcada':
+      return `<button class='btn btn-outline-primary btn-sm' onclick="mudarStatus(${visitaId}, 'agendada')">Reagendar</button>`;
+    case 'cancelada':
+    case 'não realizada':
+      return `<button class='btn btn-outline-primary btn-sm' onclick="mudarStatus(${visitaId}, 'agendada')">Reagendar</button>`;
+    default:
+      return '';
+  }
+}
+
+function mudarStatus(visitaId, novoStatus) {
+  fetch(`/api/visitas/${visitaId}/status`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({status: novoStatus})
+  })
+  .then(res => {
+    if (!res.ok) {
+      return res.json().then(data => {
+        throw new Error(data.error || `Erro HTTP ${res.status}`);
+      });
+    }
+    return res.json();
+  })
+  .then(() => {
+    atualizarVisitas();
+    showToast(`Status alterado para: ${novoStatus}`, 'success');
+  })
+  .catch(error => {
+    console.error('Erro ao alterar status:', error);
+    showToast('Erro: ' + error.message, 'danger');
+  });
+}
+
+function excluirEtapa(visitaId, etapaNome) {
+  fetch(`/api/checklist/${visitaId}/${encodeURIComponent(etapaNome)}`, {
+    method: 'DELETE'
+  })
+  .then(() => {
+    atualizarVisitas();
+    showToast('Etapa limpa!', 'warning');
+  })
+  .catch(() => showToast('Erro ao limpar etapa', 'danger'));
+}
+
+function remarcarVisita(visitaId) {
+  // Exemplo: abrir modal de reagendamento (implementar modal se desejar)
+  if (confirm('Deseja remarcar esta visita?')) {
+    mudarStatus(visitaId, 'remarcada');
+  }
+}
+
+function cancelarVisita(visitaId) {
+  if (confirm('Tem certeza que deseja cancelar esta visita?')) {
+    mudarStatus(visitaId, 'cancelada');
+  }
+}
+
+function finalizarVisita(visitaId) {
+  mudarStatus(visitaId, 'finalizada');
+}
+
+function abrirChecklistModal(visitaId, etapaIndex) {
+  fetch(`/api/checklist/${visitaId}`)
+    .then(res => res.json())
+    .then(data => {
+      let html = '';
+      const etapa = ETAPAS[etapaIndex];
+      html += `<h5 class='mb-3'>Etapa: <span class='text-info'>${etapa.nome}</span></h5>`;
+      etapa.grupos.forEach(grupo => {
+        html += `<div class='mb-2'><strong>${grupo.titulo}</strong></div>`;
+        grupo.campos.forEach(campoId => {
+          const label = campoId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+          html += `<div class="form-check mb-2 ms-3">
+            <input class="form-check-input" type="checkbox" id="${campoId}" name="${campoId}" ${(data && typeof data[campoId] !== 'undefined' && data[campoId]) ? 'checked' : ''}>
+            <label class="form-check-label" for="${campoId}">${label}</label>
+          </div>`;
+        });
+      });
+      // Campo de observações por etapa
+      let obsValue = '';
+      if (etapaIndex === 0) obsValue = data && data.observacoes_antes ? data.observacoes_antes : '';
+      if (etapaIndex === 1) obsValue = data && data.observacoes_durante ? data.observacoes_durante : '';
+      if (etapaIndex === 2) obsValue = data && data.observacoes_apos ? data.observacoes_apos : '';
+      html += `<div class="mb-3 mt-3">
+        <label for="observacoes_${etapaIndex}" class="form-label">Observações</label>
+        <textarea class="form-control" id="observacoes_${etapaIndex}" name="observacoes_${etapaIndex}" rows="3">${obsValue}</textarea>
+      </div>`;
+      document.getElementById('checklist-conteudo').innerHTML = html;
+      document.getElementById('form-checklist-visita').onsubmit = function(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const payload = {};
+        for (let [key, value] of formData.entries()) {
+          if (key.startsWith('observacoes')) payload[key] = value;
+          else payload[key] = true;
+        }
+        etapa.grupos.forEach(grupo => {
+          grupo.campos.forEach(campoId => {
+            if (!formData.has(campoId)) payload[campoId] = false;
+          });
+        });
+        fetch(`/api/checklist/${visitaId}`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({etapa: etapa.nome, dados: payload})
+        })
+        .then(res => res.json())
+        .then(() => {
+          atualizarVisitas();
+          showToast('Checklist salvo!', 'success');
+          const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalChecklist'));
+          if (modalInstance) modalInstance.hide();
+        })
+        .catch(() => showToast('Erro ao salvar checklist', 'danger'));
+      };
+      const modalChecklistShow = new bootstrap.Modal(document.getElementById('modalChecklist'));
+      modalChecklistShow.show();
+    });
+}
+
+function editarVisita(visitaId) {
+  fetch(`/api/visitas/${visitaId}`)
+    .then(res => {
+      if (!res.ok) {
+        throw new Error('Erro ao carregar dados da visita');
+      }
+      return res.json();
+    })
+    .then(visita => {
+      // Validar dados recebidos
+      if (!visita || !visita.id) {
+        throw new Error('Dados da visita inválidos');
+      }
+
+      // Preencher o modal com os dados da visita
+      const municipio = document.getElementById('municipio');
+      const data = document.getElementById('data');
+      const hora = document.getElementById('hora');
+      const local = document.getElementById('local');
+      const tipoPesquisa = document.getElementById('tipo_pesquisa');
+      const observacoes = document.getElementById('observacoes');
+      const tipoInformante = document.getElementById('tipo_informante');
+
+      if (!municipio || !data || !hora || !local || !tipoPesquisa || !observacoes || !tipoInformante) {
+        throw new Error('Campos do formulário não encontrados');
+      }
+
+      // Converter e validar data
+      let dataFormatada = '';
+      try {
+        const partesData = visita.data.split('/');
+        if (partesData.length === 3) {
+          // Validar se a data é válida
+          const dia = parseInt(partesData[0]);
+          const mes = parseInt(partesData[1]);
+          const ano = parseInt(partesData[2]);
+          
+          if (isNaN(dia) || isNaN(mes) || isNaN(ano)) {
+            throw new Error('Data contém valores inválidos');
+          }
+          
+          // Validar limites da data
+          if (dia < 1 || dia > 31 || mes < 1 || mes > 12 || ano < 2000 || ano > 2100) {
+            throw new Error('Data fora dos limites permitidos');
+          }
+          
+          dataFormatada = `${ano}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
+        } else {
+          throw new Error('Formato de data inválido');
+        }
+      } catch (e) {
+        console.error('Erro ao formatar data:', e);
+        dataFormatada = '';
+      }
+
+      // Validar e formatar hora
+      let horaFormatada = '';
+      try {
+        if (visita.hora_inicio) {
+          const [horas, minutos] = visita.hora_inicio.split(':');
+          const horaNum = parseInt(horas);
+          const minutoNum = parseInt(minutos);
+          
+          if (isNaN(horaNum) || isNaN(minutoNum) || 
+              horaNum < 0 || horaNum > 23 || 
+              minutoNum < 0 || minutoNum > 59) {
+            throw new Error('Hora inválida');
+          }
+          
+          horaFormatada = `${horas.padStart(2, '0')}:${minutos.padStart(2, '0')}`;
+        }
+      } catch (e) {
+        console.error('Erro ao formatar hora:', e);
+        horaFormatada = '';
+      }
+
+      // Preencher campos
+      municipio.value = visita.municipio || '';
+      data.value = dataFormatada;
+      hora.value = horaFormatada;
+      local.value = visita.local || '';
+      tipoPesquisa.value = visita.tipo_pesquisa || 'MRS';
+      tipoInformante.value = visita.tipo_informante || 'prefeitura';
+      observacoes.value = visita.observacoes || '';
+
+      // Atualizar título do modal
+      document.querySelector('#modalNovaVisita .modal-title').textContent = 'Editar Visita';
+
+      // Mostrar o modal
+      const modalEdicao = new bootstrap.Modal(document.getElementById('modalNovaVisita'));
+      modalEdicao.show();
+
+      // Configurar o formulário para atualização
+      const form = document.getElementById('form-nova-visita');
+      const originalSubmit = form.onsubmit;
+
+      form.onsubmit = function(e) {
+        console.log('Submit do formulário de edição disparado!');
+        e.preventDefault();
+        // Validar campos obrigatórios
+        console.log('Validando campos obrigatórios...');
+        if (!municipio.value || !data.value || !hora.value || !local.value || !tipoPesquisa.value) {
+          console.log('Falha na validação de campos obrigatórios');
+          showToast('Por favor, preencha todos os campos obrigatórios', 'warning');
+          return;
+        }
+        // Validar data futura
+        console.log('Validando data...');
+        // Comparação manual de data ignorando fuso
+        const partesData = data.value.split('-'); // yyyy-mm-dd
+        const anoVisita = parseInt(partesData[0]);
+        const mesVisita = parseInt(partesData[1]);
+        const diaVisita = parseInt(partesData[2]);
+        const hoje = new Date();
+        const anoAtual = hoje.getFullYear();
+        // Removido validação de data passada para permitir registro histórico
+        // Agora é possível agendar visitas em qualquer data
+        // Validar tipo de pesquisa
+        console.log('Validando tipo de pesquisa...');
+        if (!['MRS', 'MAP', 'ambos'].includes(tipoPesquisa.value)) {
+          console.log('Falha na validação de tipo de pesquisa');
+          showToast('Tipo de pesquisa inválido', 'warning');
+          return;
+        }
+        // Usar valor direto (sempre será 'ambos' se selecionado)
+        let tipoPesquisaBackend = tipoPesquisa.value;
+        const payload = {
+          municipio: municipio.value,
+          data: data.value,
+          hora_inicio: hora.value,
+          hora_fim: hora.value,
+          local: local.value,
+          tipo_pesquisa: tipoPesquisaBackend,
+          tipo_informante: tipoInformante.value,
+          observacoes: observacoes.value
+        };
+        console.log('Enviando PUT para /api/visitas/' + visitaId, payload);
+        fetch(`/api/visitas/${visitaId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(async res => {
+          const result = await res.json();
+          if (res.ok) {
+            showToast('Visita atualizada com sucesso!', 'success');
+            
+            // Fechar modal primeiro para evitar travamento
+            const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalNovaVisita'));
+            if (modalInstance) {
+              modalInstance.hide();
+            }
+            
+            // Aguardar um pouco antes de resetar o form e atualizar visitas
+            setTimeout(() => {
+              form.reset();
+              atualizarVisitas();
+            }, 300);
+            
+          } else {
+            throw new Error(result.error || 'Erro ao atualizar visita');
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          showToast('Erro ao atualizar visita: ' + error.message, 'danger');
+        });
+      };
+
+      // Restaurar o comportamento original do formulário quando o modal for fechado
+      const modal = document.getElementById('modalNovaVisita');
+      const restoreSubmit = function() {
+        // Aguardar um pouco para evitar conflitos
+        setTimeout(() => {
+          form.onsubmit = originalSubmit;
+          document.querySelector('#modalNovaVisita .modal-title').textContent = 'Nova Visita';
+          // Limpar campos do formulário
+          form.reset();
+        }, 100);
+        
+        // Remover este event listener após uso
+        modal.removeEventListener('hidden.bs.modal', restoreSubmit);
+      };
+      
+      modal.addEventListener('hidden.bs.modal', restoreSubmit);
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+      showToast('Erro ao carregar dados da visita: ' + error.message, 'danger');
+    });
+}
+
+// Buscar visitas reais da API
+let visitasCache = [];
+async function atualizarVisitas() {
+  console.log('Chamando atualizarVisitas...');
+  
+  try {
+    // Usar a função fetchWithLoading do base.html
+    const data = await fetchWithLoading('/api/visitas');
+    
+    console.log('Dados recebidos de /api/visitas:', data);
+    
+    // Handle both old format (direct array) and new format (object with data property)
+    if (Array.isArray(data)) {
+      // Legacy format: direct array
+      visitasCache = data;
+      aplicarFiltrosVisitas();
+    } else if (data && Array.isArray(data.data)) {
+      // New format: object with data array and pagination
+      visitasCache = data.data;
+      aplicarFiltrosVisitas();
+    } else {
+      console.error('Dados inválidos recebidos:', data);
+      renderVisitas([]);
+    }
+  } catch (error) {
+    console.error('Erro crítico em atualizarVisitas:', error);
+    renderVisitas([]);
+  }
+}
+
+function normalizarTextoAcentos(texto) {
+  return (texto || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function aplicarFiltrosVisitas() {
+  let visitas = visitasCache.slice();
+  const municipio = document.getElementById('filtro-municipio').value;
+  const dataFiltro = document.getElementById('filtro-data').value;
+  const status = document.getElementById('filtro-status').value;
+
+  if (municipio) {
+    visitas = visitas.filter(v => v.municipio === municipio);
+  }
+  if (dataFiltro) {
+    // Converter data da visita para yyyy-mm-dd
+    visitas = visitas.filter(v => {
+      if (!v.data) return false;
+      const partes = v.data.split('/');
+      if (partes.length !== 3) return false;
+      const dataFormatada = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+      return dataFormatada === dataFiltro;
+    });
+  }
+  if (status) {
+    visitas = visitas.filter(v => normalizarTextoAcentos(v.status) === normalizarTextoAcentos(status));
+  }
+  renderVisitas(visitas);
+}
+
+document.getElementById('btn-filtrar').onclick = aplicarFiltrosVisitas;
+
+document.getElementById('filtro-municipio').onchange = aplicarFiltrosVisitas;
+document.getElementById('filtro-data').onchange = aplicarFiltrosVisitas;
+document.getElementById('filtro-status').onchange = aplicarFiltrosVisitas;
+
+// Botão para resetar filtros (opcional)
+if (!document.getElementById('btn-resetar-filtros')) {
+  const btnReset = document.createElement('button');
+  btnReset.className = 'btn btn-secondary w-100 mt-2';
+  btnReset.id = 'btn-resetar-filtros';
+  btnReset.textContent = 'Limpar Filtros';
+  btnReset.onclick = function() {
+    document.getElementById('filtro-municipio').value = '';
+    document.getElementById('filtro-data').value = '';
+    document.getElementById('filtro-status').value = '';
+    aplicarFiltrosVisitas();
+  };
+  document.querySelector('.row.g-3.mb-4 .col-md-3:last-child').appendChild(btnReset);
+}
+
+function renderVisitas(visitas) {
+  console.log('Chamando renderVisitas com:', visitas);
+  const container = document.getElementById('lista-visitas');
+  container.innerHTML = '';
+  if (!visitas.length) {
+    container.innerHTML = '<div class="text-center text-secondary">Nenhuma visita encontrada.</div>';
+    return;
+  }
+  visitas.forEach(v => {
+    console.log('Renderizando visita:', v);
+    const col = document.createElement('div');
+    col.className = 'col-md-6 col-lg-4';
+    const etapas = ETAPAS.map(e => e.nome);
+    const etapaAtual = getEtapaAtual(v);
+    col.innerHTML = `
+      <div class="card visita-card p-4 h-100 d-flex flex-column justify-content-between animate__animated animate__fadeInUp">
+        <div>
+          <div class="visita-card-header">
+            <div class="visita-card-municipio">${v.municipio}</div>
+            <div class="visita-card-status-excluir">
+            ${statusBadge(v.status)}
+              <button class="btn btn-sm btn-primary btn-editar-visita me-2" title="Editar visita"><i class="fas fa-edit"></i></button>
+              <button class="btn btn-sm btn-danger btn-excluir-visita" title="Excluir visita"><i class="fas fa-trash"></i></button>
+          </div>
+          </div>
+          <div class="visita-card-info-row">
+            <span class="visita-card-info"><i class="bi bi-calendar-event me-1"></i> ${v.data}</span>
+            <span class="visita-card-info"><i class="bi bi-clock me-1"></i> ${v.hora_inicio || '--:--'}</span>
+          </div>
+          <div class="mb-3 d-flex align-items-center gap-2 visita-card-info-text">
+            <i class="bi bi-geo-alt"></i> <span class="fw-semibold">${v.local || '-'} <span class="badge bg-secondary ms-2">${v.tipo_informante || 'prefeitura'}</span></span>
+          </div>
+          <div class="mb-3 d-flex align-items-center gap-2 visita-card-info-text">
+            <i class="bi bi-file-earmark-text"></i> <span class="fw-semibold">${v.tipo_pesquisa || 'MRS'}</span>
+          </div>
+          <div class="mb-3 d-flex align-items-center gap-2 visita-card-info-text">
+            <i class="bi bi-chat-left-text"></i> <span>${v.observacoes || 'Sem observações'}</span>
+          </div>
+          ${v.status === 'verificação whatsapp' || (v.verificacao_whatsapp && v.verificacao_whatsapp.telefone_cadastrado) ? `
+          <div class="mb-3 d-flex align-items-center gap-2 visita-card-info-text">
+            <i class="fab fa-whatsapp text-success"></i> 
+            <button class="btn btn-sm btn-outline-success" onclick="mostrarModalVerificacaoWhatsApp(${v.id})">
+              ${v.status === 'verificação whatsapp' ? 'Gerenciar Verificação' : 'Ver Status WhatsApp'}
+            </button>
+          </div>
+          ` : ''}
+          <div class="visita-card-info-block">
+            <label for="status-visita-${v.id}" class="form-label mb-0 me-2 visita-card-label">Status:</label>
+            <select class="form-select form-select-sm visita-card-select-status d-inline w-auto" id="status-visita-${v.id}">
+              ${STATUS_VISITA_COMPLETO.map(s => `<option value="${s}" ${v.status === s ? 'selected' : ''}>${s.charAt(0).toUpperCase() + s.slice(1)}</option>`).join('')}
+            </select>
+          </div>
+          <div class="mb-2">${renderTimelineAcoes(v.status, v.id)}</div>
+        </div>
+      </div>
+    `;
+    col.querySelector('.btn-excluir-visita').onclick = () => excluirVisita(v.id);
+    col.querySelector('.btn-editar-visita').onclick = () => editarVisita(v.id);
+    col.querySelector(`#status-visita-${v.id}`).onchange = function(e) {
+      const novoStatus = e.target.value;
+      fetch(`/api/visitas/${v.id}/status`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({status: novoStatus})
+      })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(data => {
+            throw new Error(data.error || 'Erro ao atualizar status');
+          });
+        }
+        return res.json();
+      })
+      .then(() => { 
+        atualizarVisitas(); 
+        showToast('Status atualizado com sucesso!', 'success'); 
+      })
+      .catch(error => {
+        console.error('Erro ao alterar status:', error);
+        showToast('Erro: ' + error.message, 'danger');
+        // Restaurar o valor anterior do dropdown
+        atualizarVisitas();
+      });
+    };
+    container.appendChild(col);
+  });
+  associarEventosTimeline();
+}
+
+// Função para excluir visita
+function excluirVisita(id) {
+    console.log('Tentando excluir visita com id:', id);
+    if (!confirm('Tem certeza que deseja excluir esta visita?')) return;
+    fetch(`/api/visitas/${id}`, {
+        method: 'DELETE'
+    })
+    .then(res => res.json())
+    .then(resp => {
+        console.log('Resposta da exclusão:', resp);
+        atualizarVisitas();
+        showToast('Visita excluída!', 'danger');
+    })
+    .catch(error => {
+        console.error('Erro ao excluir visita:', error);
+        showToast('Erro ao excluir visita', 'danger');
+    });
+}
+
+// Após renderizar as visitas, associar os eventos de clique às ações da timeline
+function associarEventosTimeline() {
+  document.querySelectorAll('.timeline-acoes').forEach(timeline => {
+    const visitaId = timeline.getAttribute('data-visita-id');
+    const status = timeline.closest('.card').querySelector('select[id^="status-visita-"]').value;
+    const acoes = getAcoesTimelinePorStatus(status, visitaId) || [];
+    timeline.querySelectorAll('.timeline-acao').forEach((el, idx) => {
+      el.onclick = () => {
+        if (!acoes[idx]) return; // Protege contra undefined/null
+        const acao = acoes[idx];
+        if (acao.label && acao.label.toLowerCase() === 'checklist' && typeof acao.etapa !== 'undefined') {
+          abrirChecklistModal(visitaId, acao.etapa);
+        } else if (acao.label && acao.label.toLowerCase() === 'limpar' && typeof acao.etapa !== 'undefined') {
+          if (acao.etapa === 0) excluirEtapa(visitaId, 'Antes da Visita');
+          else if (acao.etapa === 1) excluirEtapa(visitaId, 'Durante a Visita');
+          else if (acao.etapa === 2) excluirEtapa(visitaId, 'Após a Visita');
+        } else if (acao.label && (acao.label.toLowerCase().includes('whatsapp') || acao.label.toLowerCase().includes('verificar'))) {
+          if (typeof acao.action === 'function') {
+            acao.action();
+          }
+        } else if (acao.label && (acao.label.toLowerCase().includes('preparar') || acao.label.toLowerCase().includes('executar') || acao.label.toLowerCase().includes('concluir') || acao.label.toLowerCase().includes('finalizar') || acao.label.toLowerCase().includes('aguardar') || acao.label.toLowerCase().includes('follow-up') || acao.label.toLowerCase().includes('reagendar'))) {
+          if (typeof acao.action === 'function') {
+            acao.action();
+          } else if (typeof acao.action === 'string') {
+          mudarStatus(visitaId, acao.action.toString().match(/'([^']+)'/)[1]);
+          }
+        } else if (acao.label && acao.label.toLowerCase().includes('remarcar')) {
+          remarcarVisita(visitaId);
+        } else if (acao.label && acao.label.toLowerCase().includes('cancelar')) {
+          cancelarVisita(visitaId);
+        }
+      };
+    });
+  });
+}
+
+// Garante que o foco é removido do modal ao fechar
+const modalChecklist = document.getElementById('modalChecklist');
+if (modalChecklist) {
+  modalChecklist.addEventListener('hidden.bs.modal', function () {
+    // Move o foco para o botão principal ou outro elemento fora do modal
+    const btn = document.querySelector('.btn-primary');
+    if (btn) btn.focus();
+  });
+}
+
+// Integração Busca Contato robusta
+let contatosCadastrados = [];
+let clicandoSugestao = false;
+
+function carregarContatosParaVisita() {
+    fetch('/api/contatos')
+        .then(response => response.json())
+        .then(data => { contatosCadastrados = data; });
+}
+
+function normalizarTexto(texto) {
+    if (!texto) return '';
+    return texto.normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+}
+
+function mapTipoInformante(tipoFrontend) {
+    const mapeamento = {
+        'Prefeitura': 'prefeitura',
+        'Contratada': 'empresa_terceirizada',
+        'Entidade de Catadores': 'entidade_catadores',
+        'Outros': 'outros'
+    };
+    return mapeamento[tipoFrontend] || tipoFrontend;
+}
+
+function mostrarSugestoesInformante() {
+    const municipio = document.getElementById('municipio').value;
+    let tipoPesquisa = document.getElementById('tipo_pesquisa').value;
+    let tipoInformante = document.getElementById('tipo_informante').value;
+    let tipoEntidadeFiltro = mapTipoInformante(tipoInformante);
+    let sugestoesDiv = document.getElementById('sugestoesContatos');
+    
+    if (!municipio || !tipoPesquisa) {
+        if (sugestoesDiv) sugestoesDiv.style.display = 'none';
+        return;
+    }
+
+    if (!sugestoesDiv) {
+        sugestoesDiv = document.createElement('div');
+        sugestoesDiv.id = 'sugestoesContatos';
+        sugestoesDiv.className = 'list-group position-absolute w-100 mt-1';
+        sugestoesDiv.style.zIndex = '2000';
+        sugestoesDiv.style.maxHeight = '180px';
+        sugestoesDiv.style.overflowY = 'auto';
+        const localGroup = document.getElementById('local').parentElement;
+        localGroup.style.position = 'relative';
+        localGroup.appendChild(sugestoesDiv);
+    }
+
+    sugestoesDiv.innerHTML = '';
+    
+    // Filtrar contatos baseado nos critérios
+    let contatosFiltrados = contatosCadastrados.filter(c => {
+        const municipioMatch = normalizarTexto(c.municipio) === normalizarTexto(municipio);
+        const tipoEntidadeMatch = normalizarTexto(c.tipo_entidade) === normalizarTexto(tipoEntidadeFiltro);
+        const tipoPesquisaMatch = tipoPesquisa === 'ambos' || normalizarTexto(c.tipo_pesquisa) === normalizarTexto(tipoPesquisa);
+        
+        return municipioMatch && tipoEntidadeMatch && tipoPesquisaMatch;
+    });
+
+    // Criar sugestões para cada contato filtrado
+    contatosFiltrados.forEach(contato => {
+        // Verificar cada fonte de IA e criar opção apenas se tiver local
+        if (contato.local_chatgpt) {
+            const opcao = document.createElement('a');
+            opcao.href = '#';
+            opcao.className = 'list-group-item list-group-item-action bg-dark text-light';
+            opcao.style.border = '1px solid #5F5CFF';
+            opcao.textContent = `${contato.local_chatgpt} (ChatGPT)`;
+            configurarOpcaoSugestao(opcao, contato, 'ChatGPT');
+            sugestoesDiv.appendChild(opcao);
+        }
+        
+        if (contato.local_gemini) {
+            const opcao = document.createElement('a');
+            opcao.href = '#';
+            opcao.className = 'list-group-item list-group-item-action bg-dark text-light';
+            opcao.style.border = '1px solid #5F5CFF';
+            opcao.textContent = `${contato.local_gemini} (Gemini)`;
+            configurarOpcaoSugestao(opcao, contato, 'Gemini');
+            sugestoesDiv.appendChild(opcao);
+        }
+        
+        if (contato.local_grok) {
+            const opcao = document.createElement('a');
+            opcao.href = '#';
+            opcao.className = 'list-group-item list-group-item-action bg-dark text-light';
+            opcao.style.border = '1px solid #5F5CFF';
+            opcao.textContent = `${contato.local_grok} (Grok)`;
+            configurarOpcaoSugestao(opcao, contato, 'Grok');
+            sugestoesDiv.appendChild(opcao);
+        }
+        
+        if (contato.local_mais_provavel) {
+            const opcao = document.createElement('a');
+            opcao.href = '#';
+            opcao.className = 'list-group-item list-group-item-action bg-dark text-light';
+            opcao.style.border = '1px solid #5F5CFF';
+            opcao.textContent = `${contato.local_mais_provavel} (Mais Provável)`;
+            configurarOpcaoSugestao(opcao, contato, 'Mais Provável');
+            sugestoesDiv.appendChild(opcao);
+        }
+    });
+
+    sugestoesDiv.style.display = contatosFiltrados.length > 0 ? 'block' : 'none';
+}
+
+function configurarOpcaoSugestao(opcao, contato, fonte) {
+    opcao.onclick = function(e) {
+        e.preventDefault();
+        document.getElementById('local').value = this.textContent;
+        document.getElementById('local').focus(); // Permite edição após seleção
+        // Preencher observações com os dados da fonte selecionada
+        let observacoes = '';
+        switch(fonte) {
+            case 'ChatGPT':
+                observacoes = `Responsável: ${contato.responsavel_chatgpt || 'Não informado'}\n`;
+                observacoes += `Endereço: ${contato.endereco_chatgpt || 'Não informado'}\n`;
+                observacoes += `Contato: ${contato.contato_chatgpt || 'Não informado'}\n`;
+                observacoes += `Horário: ${contato.horario_chatgpt || 'Não informado'}`;
+                break;
+            case 'Gemini':
+                observacoes = `Responsável: ${contato.responsavel_gemini || 'Não informado'}\n`;
+                observacoes += `Endereço: ${contato.endereco_gemini || 'Não informado'}\n`;
+                observacoes += `Contato: ${contato.contato_gemini || 'Não informado'}\n`;
+                observacoes += `Horário: ${contato.horario_gemini || 'Não informado'}`;
+                break;
+            case 'Grok':
+                observacoes = `Responsável: ${contato.responsavel_grok || 'Não informado'}\n`;
+                observacoes += `Endereço: ${contato.endereco_grok || 'Não informado'}\n`;
+                observacoes += `Contato: ${contato.contato_grok || 'Não informado'}\n`;
+                observacoes += `Horário: ${contato.horario_grok || 'Não informado'}`;
+                break;
+            case 'Mais Provável':
+                observacoes = `Responsável: ${contato.responsavel_mais_provavel || 'Não informado'}\n`;
+                observacoes += `Endereço: ${contato.endereco_mais_provavel || 'Não informado'}\n`;
+                observacoes += `Contato: ${contato.contato_mais_provavel || 'Não informado'}\n`;
+                observacoes += `Horário: ${contato.horario_mais_provavel || 'Não informado'}`;
+                break;
+        }
+        document.getElementById('observacoes').value = observacoes;
+        document.getElementById('sugestoesContatos').style.display = 'none';
+    };
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded disparado!');
+    atualizarVisitas();
+    carregarContatosParaVisita();
+    // Delegação de eventos para fechar modal
+    document.body.addEventListener('click', function(e) {
+        // Fechar modal ao clicar em Cancelar ou X
+        if (e.target.matches('#modalNovaVisita .btn[data-dismiss="modal"]') || e.target.matches('#modalNovaVisita .close[data-dismiss="modal"]') || e.target.closest('#modalNovaVisita .close[data-dismiss="modal"]')) {
+            fecharModalNovaVisita();
+        }
+    });
+    // Eventos do campo local
+    const localInput = document.getElementById('local');
+    if (localInput) {
+        localInput.addEventListener('click', mostrarSugestoesInformante);
+        localInput.addEventListener('input', function() {
+            // Ao digitar, esconde as sugestões imediatamente
+            const sugestoesDiv = document.getElementById('sugestoesContatos');
+            if (sugestoesDiv) sugestoesDiv.style.display = 'none';
+        });
+        localInput.addEventListener('blur', function() {
+            setTimeout(function() {
+                const sugestoesDiv = document.getElementById('sugestoesContatos');
+                if (sugestoesDiv) sugestoesDiv.style.display = 'none';
+            }, 200);
+        });
+    }
+    // Submit do formulário de nova visita (criação)
+    const formNovaVisita = document.getElementById('form-nova-visita');
+    if (formNovaVisita) {
+        formNovaVisita.onsubmit = function(e) {
+            e.preventDefault();
+            const municipio = document.getElementById('municipio').value;
+            const data = document.getElementById('data').value;
+            const hora = document.getElementById('hora').value;
+            const local = document.getElementById('local').value;
+            const tipoPesquisa = document.getElementById('tipo_pesquisa').value;
+            const tipoInformante = document.getElementById('tipo_informante').value;
+            const observacoes = document.getElementById('observacoes').value;
+            const telefone = document.getElementById('telefone').value;
+            const pesquisadorResponsavel = document.getElementById('pesquisador_responsavel').value;
+            
+            // Validação mais robusta
+            const errors = [];
+            
+            if (!municipio) errors.push('Município é obrigatório');
+            if (!data) errors.push('Data é obrigatória');
+            if (!hora) errors.push('Horário é obrigatório');
+            if (!local) errors.push('Local é obrigatório');
+            if (!tipoPesquisa) errors.push('Tipo de pesquisa é obrigatório');
+            
+            // Validar data não pode ser no passado
+            const dataVisita = new Date(data);
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+            
+            if (dataVisita < hoje) {
+                errors.push('Data da visita não pode ser no passado');
+            }
+            
+            // Validar horário
+            const [horas, minutos] = hora.split(':').map(Number);
+            if (isNaN(horas) || isNaN(minutos) || horas < 0 || horas > 23 || minutos < 0 || minutos > 59) {
+                errors.push('Horário inválido');
+            }
+            
+            if (errors.length > 0) {
+                showToast('Erros de validação:\n' + errors.join('\n'), 'error');
+                return;
+            }
+            const payload = {
+                municipio,
+                data,
+                hora_inicio: hora,
+                hora_fim: hora,
+                local,
+                tipo_pesquisa: tipoPesquisa,
+                tipo_informante: tipoInformante,
+                observacoes,
+                telefone: telefone || null,
+                pesquisador_responsavel: pesquisadorResponsavel || 'Pesquisador IBGE'
+            };
+            fetch('/api/visitas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(async res => {
+                const result = await res.json();
+                if (res.ok) {
+                    showToast('Visita criada com sucesso!', 'success');
+                    formNovaVisita.reset();
+                    atualizarVisitas();
+                    const modalInstance = bootstrap.Modal.getInstance(document.getElementById('modalNovaVisita'));
+                    if (modalInstance) modalInstance.hide();
+                } else {
+                    showToast('Erro ao criar visita: ' + (result.error || 'Erro desconhecido.'), 'danger');
+                }
+            })
+            .catch(error => {
+                showToast('Erro ao criar visita: ' + error, 'danger');
+            });
+        };
+    }
+    // Adicionar evento para atualizar sugestões quando o tipo de informante for alterado
+    const tipoInformanteSelect = document.getElementById('tipo_informante');
+    if (tipoInformanteSelect) {
+        tipoInformanteSelect.addEventListener('change', function() {
+            if (document.getElementById('local').value) {
+                mostrarSugestoesInformante();
+            }
+        });
+    }
+
+    // Não mostrar sugestões automaticamente ao trocar município/tipo_pesquisa
+    // Só atualiza sugestões se clicar novamente no campo
+
+    // Opção 'MRS + MAP' já está definida no HTML
+});
+
+document.addEventListener('click', function(e) {
+    const sugestoesDiv = document.getElementById('sugestoesContatos');
+    setTimeout(function() {
+        // Não esconder sugestão se o clique for no campo local
+        if (sugestoesDiv && !sugestoesDiv.contains(e.target) && e.target !== document.getElementById('local') && !clicandoSugestao) {
+            sugestoesDiv.style.display = 'none';
+        }
+    }, 150);
+});
+
+// Fallback para fechar modal manualmente se Bootstrap não fechar
+function fecharModalNovaVisita() {
+    const modal = document.getElementById('modalNovaVisita');
+    if (modal) {
+        if (window.jQuery && $(modal).modal) {
+            $(modal).modal('hide'); // Bootstrap 4
+        }
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        document.body.classList.remove('modal-open');
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) backdrop.remove();
+    }
+}
+
+// ===== AUTOCOMPLETE INTELIGENTE PARA INFORMANTE =====
+let dadosContatos = [];
+let autocompleteFocusedIndex = -1;
+
+// Carregar dados de contatos para autocomplete
+async function carregarDadosAutocomplete() {
+    try {
+        const response = await fetch('/api/contatos_csv');
+        const data = await response.json();
+        dadosContatos = transformarDadosParaAutocomplete(data);
+        console.log(`Dados de autocomplete carregados: ${dadosContatos.length} contatos`);
+    } catch (error) {
+        console.error('Erro ao carregar dados para autocomplete:', error);
+        dadosContatos = [];
+    }
+}
+
+// Transformar dados CSV em formato para autocomplete
+function transformarDadosParaAutocomplete(dadosCSV) {
+    const contatos = [];
+    
+    dadosCSV.forEach(linha => {
+        if (!linha.municipio || !linha.campo) return;
+        
+        const municipio = linha.municipio.trim();
+        const campo = linha.campo.toLowerCase();
+        
+        // Só processar campo "Local"
+        if (campo.includes('local')) {
+            // Adicionar sugestões de cada IA
+            if (linha.chatgpt && linha.chatgpt.trim()) {
+                contatos.push({
+                    texto: linha.chatgpt.trim(),
+                    municipio: municipio,
+                    tipo_pesquisa: linha.tipo_pesquisa,
+                    fonte: 'chatgpt',
+                    fonte_display: 'ChatGPT'
+                });
+            }
+            
+            if (linha.gemini && linha.gemini.trim()) {
+                contatos.push({
+                    texto: linha.gemini.trim(),
+                    municipio: municipio,
+                    tipo_pesquisa: linha.tipo_pesquisa,
+                    fonte: 'gemini',
+                    fonte_display: 'Gemini'
+                });
+            }
+            
+            if (linha.grok && linha.grok.trim()) {
+                contatos.push({
+                    texto: linha.grok.trim(),
+                    municipio: municipio,
+                    tipo_pesquisa: linha.tipo_pesquisa,
+                    fonte: 'grok',
+                    fonte_display: 'Grok'
+                });
+            }
+            
+            if (linha.mais_provavel && linha.mais_provavel.trim()) {
+                contatos.push({
+                    texto: linha.mais_provavel.trim(),
+                    municipio: municipio,
+                    tipo_pesquisa: linha.tipo_pesquisa,
+                    fonte: 'mais-provavel',
+                    fonte_display: 'Mais Provável'
+                });
+            }
+        }
+    });
+    
+    return contatos;
+}
+
+// Filtrar sugestões baseado nos filtros selecionados
+function filtrarSugestoes(termoBusca = '') {
+    const municipioSelecionado = document.getElementById('municipio')?.value;
+    const tipoPesquisaSelecionado = document.getElementById('tipo_pesquisa')?.value;
+    const tipoInformanteSelecionado = document.getElementById('tipo_informante')?.value;
+    
+    let sugestoesFiltradas = dadosContatos.filter(contato => {
+        // Filtro por município
+        if (municipioSelecionado && contato.municipio !== municipioSelecionado) {
+            return false;
+        }
+        
+        // Filtro por tipo de pesquisa
+        if (tipoPesquisaSelecionado && tipoPesquisaSelecionado !== 'ambos') {
+            if (contato.tipo_pesquisa !== tipoPesquisaSelecionado) {
+                return false;
+            }
+        }
+        
+        // Filtro por tipo de informante (assumindo que é sempre prefeitura por enquanto)
+        // Pode ser expandido no futuro
+        
+        // Filtro por termo de busca
+        if (termoBusca) {
+            const textoLower = contato.texto.toLowerCase();
+            const termoLower = termoBusca.toLowerCase();
+            return textoLower.includes(termoLower);
+        }
+        
+        return true;
+    });
+    
+    // Remover duplicatas e organizar por tipo de pesquisa se AMBOS selecionado
+    const sugestoesUnicas = [];
+    const textosVistos = new Set();
+    
+    if (tipoPesquisaSelecionado === 'ambos') {
+        // Para AMBOS, organizar por tipo de pesquisa (MRS primeiro, depois MAP)
+        ['MRS', 'MAP'].forEach(tipo => {
+            const sugestoesTipo = sugestoesFiltradas.filter(s => s.tipo_pesquisa === tipo);
+            
+            // Primeiro adicionar "Mais Provável" do tipo atual
+            sugestoesTipo
+                .filter(s => s.fonte === 'mais-provavel')
+                .forEach(sugestao => {
+                    const chave = `${sugestao.texto.toLowerCase()}_${sugestao.tipo_pesquisa}`;
+                    if (!textosVistos.has(chave)) {
+                        textosVistos.add(chave);
+                        sugestoesUnicas.push(sugestao);
+                    }
+                });
+            
+            // Depois adicionar outras fontes do tipo atual
+            ['chatgpt', 'gemini', 'grok'].forEach(fonte => {
+                sugestoesTipo
+                    .filter(s => s.fonte === fonte)
+                    .forEach(sugestao => {
+                        const chave = `${sugestao.texto.toLowerCase()}_${sugestao.tipo_pesquisa}`;
+                        if (!textosVistos.has(chave)) {
+                            textosVistos.add(chave);
+                            sugestoesUnicas.push(sugestao);
+                        }
+                    });
+            });
+        });
+    } else {
+        // Para tipo específico, manter lógica original
+        // Primeiro adicionar "Mais Provável"
+        sugestoesFiltradas
+            .filter(s => s.fonte === 'mais-provavel')
+            .forEach(sugestao => {
+                if (!textosVistos.has(sugestao.texto.toLowerCase())) {
+                    textosVistos.add(sugestao.texto.toLowerCase());
+                    sugestoesUnicas.push(sugestao);
+                }
+            });
+        
+        // Depois adicionar outras fontes
+        ['chatgpt', 'gemini', 'grok'].forEach(fonte => {
+            sugestoesFiltradas
+                .filter(s => s.fonte === fonte)
+                .forEach(sugestao => {
+                    if (!textosVistos.has(sugestao.texto.toLowerCase())) {
+                        textosVistos.add(sugestao.texto.toLowerCase());
+                        sugestoesUnicas.push(sugestao);
+                    }
+                });
+        });
+    }
+    
+    // Limitar sugestões (mais para "ambos" para mostrar variedade)
+    const limite = tipoPesquisaSelecionado === 'ambos' ? 12 : 8;
+    return sugestoesUnicas.slice(0, limite);
+}
+
+// Mostrar dropdown de sugestões
+function mostrarDropdownAutocomplete(sugestoes) {
+    const dropdown = document.getElementById('localDropdown');
+    const input = document.getElementById('local');
+    
+    if (!dropdown || !input) return;
+    
+    dropdown.innerHTML = '';
+    autocompleteFocusedIndex = -1;
+    
+    if (sugestoes.length === 0) {
+        const municipio = document.getElementById('municipio')?.value;
+        const tipoPesquisa = document.getElementById('tipo_pesquisa')?.value;
+        
+        if (municipio || tipoPesquisa) {
+            dropdown.innerHTML = `
+                <div class="autocomplete-no-results">
+                    <i class="fas fa-search"></i>
+                    Nenhuma sugestão encontrada para os filtros selecionados
+                </div>
+            `;
+        } else {
+            dropdown.innerHTML = `
+                <div class="autocomplete-no-results">
+                    <i class="fas fa-info-circle"></i>
+                    Selecione município e tipo de pesquisa para ver sugestões
+                </div>
+            `;
+        }
+        dropdown.classList.add('show');
+        input.classList.add('autocomplete-active');
+        return;
+    }
+    
+    // Adicionar header
+    dropdown.innerHTML = `
+        <div class="autocomplete-header">
+            <i class="fas fa-lightbulb"></i>
+            Sugestões de Locais (${sugestoes.length})
+        </div>
+    `;
+    
+    // Adicionar sugestões
+    const tipoPesquisaSelecionado = document.getElementById('tipo_pesquisa')?.value;
+    
+    sugestoes.forEach((sugestao, index) => {
+        const item = document.createElement('div');
+        item.className = 'autocomplete-item';
+        item.setAttribute('data-index', index);
+        
+        // Mostrar tipo de pesquisa se ambos selecionado
+        const tipoIndicador = tipoPesquisaSelecionado === 'ambos' 
+            ? `<span class="autocomplete-tipo-pesquisa ${sugestao.tipo_pesquisa.toLowerCase()}">${sugestao.tipo_pesquisa}</span>`
+            : '';
+        
+        item.innerHTML = `
+            <div class="autocomplete-main-text">
+                ${sugestao.texto}
+                ${tipoIndicador}
+            </div>
+            <div class="autocomplete-source ${sugestao.fonte}">
+                ${sugestao.fonte_display}
+            </div>
+        `;
+        
+        item.addEventListener('click', () => selecionarSugestao(sugestao));
+        dropdown.appendChild(item);
+    });
+    
+    dropdown.classList.add('show');
+    input.classList.add('autocomplete-active');
+}
+
+// Esconder dropdown
+function esconderDropdownAutocomplete() {
+    const dropdown = document.getElementById('localDropdown');
+    const input = document.getElementById('local');
+    
+    if (dropdown) dropdown.classList.remove('show');
+    if (input) input.classList.remove('autocomplete-active');
+    autocompleteFocusedIndex = -1;
+}
+
+// Selecionar uma sugestão
+function selecionarSugestao(sugestao) {
+    const input = document.getElementById('local');
+    if (input) {
+        input.value = sugestao.texto;
+        esconderDropdownAutocomplete();
+        input.focus();
+    }
+}
+
+// Navegação por teclado
+function navegarAutocomplete(event) {
+    const dropdown = document.getElementById('localDropdown');
+    const items = dropdown.querySelectorAll('.autocomplete-item:not(.autocomplete-header)');
+    
+    if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        autocompleteFocusedIndex = Math.min(autocompleteFocusedIndex + 1, items.length - 1);
+        atualizarDestaque(items);
+    } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        autocompleteFocusedIndex = Math.max(autocompleteFocusedIndex - 1, -1);
+        atualizarDestaque(items);
+    } else if (event.key === 'Enter' && autocompleteFocusedIndex >= 0) {
+        event.preventDefault();
+        items[autocompleteFocusedIndex].click();
+    } else if (event.key === 'Escape') {
+        esconderDropdownAutocomplete();
+    }
+}
+
+// Atualizar destaque visual
+function atualizarDestaque(items) {
+    items.forEach((item, index) => {
+        if (index === autocompleteFocusedIndex) {
+            item.classList.add('highlighted');
+        } else {
+            item.classList.remove('highlighted');
+        }
+    });
+}
+
+// Processar parâmetros da URL vindos do mapa de progresso
+function processarParametrosURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const municipio = urlParams.get('municipio');
+    const data = urlParams.get('data');
+    
+    if (municipio) {
+        // Pré-selecionar município no filtro
+        const filtroMunicipio = document.getElementById('filtro-municipio');
+        if (filtroMunicipio) {
+            filtroMunicipio.value = municipio;
+        }
+        
+        // Pré-selecionar município no modal de nova visita
+        const municipioModal = document.getElementById('municipio');
+        if (municipioModal) {
+            municipioModal.value = municipio;
+        }
+        
+        // Mostrar toast informativo
+        console.log(`🎯 Município pré-selecionado: ${municipio}`);
+    }
+    
+    if (data) {
+        // Pré-selecionar data no filtro
+        const filtroData = document.getElementById('filtro-data');
+        if (filtroData) {
+            filtroData.value = data;
+        }
+        
+        // Pré-selecionar data no modal de nova visita
+        const dataModal = document.getElementById('data');
+        if (dataModal) {
+            dataModal.value = data;
+        }
+        
+        console.log(`📅 Data pré-selecionada: ${data}`);
+    }
+    
+    // Se ambos os parâmetros estão presentes, abrir modal automaticamente
+    if (municipio && data) {
+        setTimeout(() => {
+            const modalElement = document.getElementById('modalNovaVisita');
+            if (modalElement) {
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
+                
+                // Mostrar toast explicativo
+                setTimeout(() => {
+                    const toast = document.createElement('div');
+                    toast.className = 'toast-notification success';
+                    toast.innerHTML = `
+                        <i class="fas fa-info-circle"></i>
+                        Modal aberto com dados do mapa: ${municipio} - ${data}
+                    `;
+                    document.body.appendChild(toast);
+                    
+                    setTimeout(() => {
+                        toast.classList.add('show');
+                    }, 100);
+                    
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 3000);
+                }, 500);
+            }
+        }, 1000);
+    }
+}
+
+// Event listeners para o autocomplete
+document.addEventListener('DOMContentLoaded', function() {
+    // Processar parâmetros da URL vindos do mapa de progresso
+    processarParametrosURL();
+    
+    carregarDadosAutocomplete();
+    
+    const input = document.getElementById('local');
+    const municipioSelect = document.getElementById('municipio');
+    const tipoPesquisaSelect = document.getElementById('tipo_pesquisa');
+    const tipoInformanteSelect = document.getElementById('tipo_informante');
+    
+    if (input) {
+        // Mostrar sugestões ao focar
+        input.addEventListener('focus', function() {
+            const sugestoes = filtrarSugestoes(this.value);
+            mostrarDropdownAutocomplete(sugestoes);
+        });
+        
+        // Filtrar ao digitar
+        input.addEventListener('input', function() {
+            const sugestoes = filtrarSugestoes(this.value);
+            mostrarDropdownAutocomplete(sugestoes);
+        });
+        
+        // Navegação por teclado
+        input.addEventListener('keydown', navegarAutocomplete);
+    }
+    
+    // Atualizar sugestões quando filtros mudarem
+    [municipioSelect, tipoPesquisaSelect, tipoInformanteSelect].forEach(select => {
+        if (select) {
+            select.addEventListener('change', function() {
+                if (input && input === document.activeElement) {
+                    const sugestoes = filtrarSugestoes(input.value);
+                    mostrarDropdownAutocomplete(sugestoes);
+                }
+            });
+        }
+    });
+    
+    // Esconder dropdown ao clicar fora
+    document.addEventListener('click', function(event) {
+        const container = document.querySelector('.autocomplete-container');
+        if (container && !container.contains(event.target)) {
+            esconderDropdownAutocomplete();
+        }
+    });
+});
+
+document.getElementById('modalNovaVisita').addEventListener('shown.bs.modal', function() {
+    // Recarregar dados quando modal abrir
+    if (dadosContatos.length === 0) {
+        carregarDadosAutocomplete();
+    }
+});
+</script>
+{% endblock %} 

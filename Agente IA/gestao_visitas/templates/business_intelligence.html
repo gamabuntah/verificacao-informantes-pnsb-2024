@@ -1,0 +1,965 @@
+{% extends "base.html" %}
+
+{% block title %}Business Intelligence - PNSB 2024{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        background: linear-gradient(135deg, #0F1419 0%, #181A20 50%, #23263B 100%);
+        color: #F1F1F1;
+        min-height: 100vh;
+    }
+
+    .page-header {
+        background: rgba(35, 38, 59, 0.9);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(95, 92, 255, 0.2);
+        padding: 20px 0;
+        margin-bottom: 30px;
+    }
+
+    .bi-card {
+        background: linear-gradient(145deg, #23263B 0%, #2D3142 100%);
+        border: 1px solid rgba(95, 92, 255, 0.1);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .bi-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(95, 92, 255, 0.3);
+        box-shadow: 0 8px 25px rgba(95, 92, 255, 0.1);
+    }
+
+    .kpi-card {
+        background: #2D3142;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .kpi-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+    }
+
+    .kpi-card.status-critical::before {
+        background: linear-gradient(90deg, #dc3545 0%, #ff6b6b 100%);
+    }
+
+    .kpi-card.status-warning::before {
+        background: linear-gradient(90deg, #ffc107 0%, #ffeb3b 100%);
+    }
+
+    .kpi-value {
+        font-size: 2.2rem;
+        font-weight: bold;
+        color: #5F5CFF;
+        margin-bottom: 8px;
+        line-height: 1;
+    }
+
+    .kpi-value.critical {
+        color: #dc3545;
+    }
+
+    .kpi-value.warning {
+        color: #ffc107;
+    }
+
+    .kpi-label {
+        color: #B8BCC8;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+
+    .kpi-trend {
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+    }
+
+    .trend-up {
+        color: #28a745;
+    }
+
+    .trend-down {
+        color: #dc3545;
+    }
+
+    .trend-stable {
+        color: #6c757d;
+    }
+
+    .alert-item {
+        background: #2D3142;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-left: 4px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .alert-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .alert-item.severity-low {
+        border-left-color: #17a2b8;
+    }
+
+    .alert-item.severity-medium {
+        border-left-color: #ffc107;
+    }
+
+    .alert-item.severity-high {
+        border-left-color: #fd7e14;
+    }
+
+    .alert-item.severity-critical {
+        border-left-color: #dc3545;
+    }
+
+    .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 8px;
+        animation: pulse 2s infinite;
+    }
+
+    .status-online {
+        background: #28a745;
+    }
+
+    .status-warning {
+        background: #ffc107;
+    }
+
+    .status-error {
+        background: #dc3545;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 1; }
+        50% { opacity: 0.5; }
+        100% { opacity: 1; }
+    }
+
+    .auto-refresh-indicator {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(95, 92, 255, 0.2);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+
+    .auto-refresh-indicator.active {
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .prediction-card {
+        background: linear-gradient(145deg, #1a1d2e 0%, #2d3142 100%);
+        border: 1px solid rgba(110, 231, 183, 0.2);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-top: 20px;
+    }
+
+    .realtime-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .stat-item {
+        background: #3A3F54;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #6EE7B7;
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #B8BCC8;
+        text-transform: uppercase;
+    }
+
+    .btn-bi {
+        background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn-bi:hover {
+        background: linear-gradient(90deg, #6EE7B7 0%, #5F5CFF 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(95, 92, 255, 0.3);
+    }
+
+    .btn-bi:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .monitoring-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(35, 38, 59, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+        z-index: 10;
+    }
+
+    .loading-overlay.hidden {
+        display: none;
+    }
+
+    .trend-chart {
+        height: 200px;
+        margin-top: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="h3 mb-0 text-gradient">
+                    <i class="fas fa-brain me-2"></i>
+                    Business Intelligence Automatizado
+                </h1>
+                <p class="text-muted mb-0">
+                    <span class="status-indicator status-online"></span>
+                    Monitoramento em tempo real - PNSB 2024
+                </p>
+            </div>
+            <div class="col-md-4 text-end">
+                <div class="monitoring-controls">
+                    <button class="btn btn-bi btn-sm" id="refreshBtn" onclick="forceRefresh()">
+                        <i class="fas fa-sync-alt me-1"></i>
+                        Atualizar
+                    </button>
+                    <button class="btn btn-bi btn-sm" id="exportBtn" onclick="exportDashboard()">
+                        <i class="fas fa-download me-1"></i>
+                        Exportar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- KPIs Principais -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bi-card">
+                <div class="auto-refresh-indicator" id="autoRefreshIndicator">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h5 class="mb-3">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    KPIs Principais em Tempo Real
+                </h5>
+                <div class="row" id="kpiContainer">
+                    <!-- KPIs serão carregados dinamicamente -->
+                </div>
+                <div class="loading-overlay" id="kpiLoading">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando KPIs...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas e Previsões -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="bi-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Alertas Ativos
+                    <span class="badge bg-danger ms-2" id="alertCount">0</span>
+                </h5>
+                <div id="alertsContainer" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Alertas serão carregados dinamicamente -->
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="bi-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-crystal-ball me-2"></i>
+                    Previsões Inteligentes
+                </h5>
+                <div id="predictionsContainer">
+                    <!-- Previsões serão carregadas dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tendências e Estatísticas -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="bi-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Análise de Tendências
+                </h5>
+                <div class="chart-container">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bi-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-server me-2"></i>
+                    Status do Sistema
+                </h5>
+                <div class="realtime-stats" id="systemStats">
+                    <!-- Estatísticas serão carregadas dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Relatórios Automáticos -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bi-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-file-contract me-2"></i>
+                    Relatórios Executivos Automáticos
+                </h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <button class="btn btn-bi w-100 mb-2" onclick="generateExecutiveReport('weekly')">
+                            <i class="fas fa-calendar-week me-2"></i>
+                            Relatório Semanal
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-bi w-100 mb-2" onclick="generateExecutiveReport('monthly')">
+                            <i class="fas fa-calendar-alt me-2"></i>
+                            Relatório Mensal
+                        </button>
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-bi w-100 mb-2" onclick="generateExecutiveReport('quarterly')">
+                            <i class="fas fa-calendar me-2"></i>
+                            Relatório Trimestral
+                        </button>
+                    </div>
+                </div>
+                <div id="reportResults" class="mt-3" style="display: none;">
+                    <!-- Resultados dos relatórios -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalhes de Alerta -->
+<div class="modal fade" id="alertModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: #23263B; color: #F1F1F1;">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Alerta</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="alertDetails">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-bi" onclick="acknowledgeAlert()">
+                    <i class="fas fa-check me-1"></i>
+                    Reconhecer Alerta
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Variáveis globais
+let autoRefreshInterval = null;
+let trendsChart = null;
+let currentAlertId = null;
+let dashboardData = null;
+
+// Configurações
+const REFRESH_INTERVAL = 30000; // 30 segundos
+const ALERT_CHECK_INTERVAL = 10000; // 10 segundos
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🤖 Inicializando Business Intelligence...');
+    initializeDashboard();
+    startAutoRefresh();
+    initializeTrendsChart();
+});
+
+function initializeDashboard() {
+    loadDashboardData();
+}
+
+function loadDashboardData() {
+    showLoading(true);
+    
+    fetch('/api/bi/dashboard/realtime')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                dashboardData = data.data;
+                updateDashboard(data.data);
+            } else {
+                showError('Erro ao carregar dashboard: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar dashboard:', error);
+            showError('Erro de conexão ao carregar dashboard');
+        })
+        .finally(() => {
+            showLoading(false);
+        });
+}
+
+function updateDashboard(data) {
+    updateKPIs(data.main_kpis || []);
+    updateAlerts(data.active_alerts || []);
+    updatePredictions(data.predictions || {});
+    updateSystemStats(data.realtime_stats || {});
+    updateTrendsChart(data.trends || {});
+    
+    console.log('📊 Dashboard atualizado:', new Date().toLocaleTimeString());
+}
+
+function updateKPIs(kpis) {
+    const container = document.getElementById('kpiContainer');
+    
+    container.innerHTML = kpis.map(kpi => `
+        <div class="col-md-3 col-6 mb-3">
+            <div class="kpi-card status-${kpi.status}">
+                <div class="kpi-label">${kpi.name}</div>
+                <div class="kpi-value ${kpi.status}">${kpi.value}${kpi.unit}</div>
+                <div class="kpi-trend trend-${kpi.trend}">
+                    <i class="fas fa-arrow-${kpi.trend === 'up' ? 'up' : kpi.trend === 'down' ? 'down' : 'right'}"></i>
+                    ${kpi.trend === 'stable' ? 'Estável' : kpi.trend === 'up' ? 'Subindo' : 'Descendo'}
+                    ${kpi.target ? ` (Meta: ${kpi.target}${kpi.unit})` : ''}
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateAlerts(alerts) {
+    const container = document.getElementById('alertsContainer');
+    const countBadge = document.getElementById('alertCount');
+    
+    countBadge.textContent = alerts.length;
+    countBadge.className = `badge ms-2 ${alerts.length > 0 ? 'bg-danger' : 'bg-success'}`;
+    
+    if (alerts.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-muted py-4">
+                <i class="fas fa-check-circle fa-3x mb-3" style="color: #28a745;"></i>
+                <p>Nenhum alerta ativo</p>
+                <small>Sistema funcionando normalmente</small>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = alerts.map(alert => `
+        <div class="alert-item severity-${alert.severity}" onclick="showAlertDetails('${alert.id}')">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <strong>${alert.metric}</strong>
+                    <p class="mb-1 text-muted small">${alert.message}</p>
+                    <small class="text-muted">
+                        <i class="fas fa-clock me-1"></i>
+                        ${new Date(alert.timestamp).toLocaleString()}
+                    </small>
+                </div>
+                <span class="badge bg-${getSeverityColor(alert.severity)}">${alert.severity}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updatePredictions(predictions) {
+    const container = document.getElementById('predictionsContainer');
+    
+    const projectCompletion = predictions.project_completion || {};
+    const resourceNeeds = predictions.resource_needs || {};
+    const riskAssessment = predictions.risk_assessment || {};
+    
+    container.innerHTML = `
+        <div class="prediction-card">
+            <h6><i class="fas fa-calendar-check me-2"></i>Conclusão do Projeto</h6>
+            <p class="mb-1"><strong>Data Estimada:</strong> ${new Date(projectCompletion.estimated_date || '').toLocaleDateString()}</p>
+            <p class="mb-1"><strong>Confiança:</strong> ${projectCompletion.confidence || 'Média'}</p>
+            <small class="text-muted">${projectCompletion.current_pace || ''}</small>
+        </div>
+        
+        <div class="prediction-card">
+            <h6><i class="fas fa-users me-2"></i>Necessidades de Recursos</h6>
+            <p class="mb-1"><strong>Pessoal Adicional:</strong> ${resourceNeeds.additional_staff || 0} pessoa(s)</p>
+            <p class="mb-1"><strong>Orçamento:</strong> ${resourceNeeds.budget_forecast || 'Dentro do limite'}</p>
+            <small class="text-muted">Equipamentos: ${resourceNeeds.equipment_needs || 'Adequados'}</small>
+        </div>
+        
+        <div class="prediction-card">
+            <h6><i class="fas fa-shield-alt me-2"></i>Avaliação de Riscos</h6>
+            <p class="mb-1"><strong>Cronograma:</strong> <span class="badge bg-${getRiskColor(riskAssessment.schedule_risk)}">${riskAssessment.schedule_risk || 'Baixo'}</span></p>
+            <p class="mb-1"><strong>Qualidade:</strong> <span class="badge bg-${getRiskColor(riskAssessment.quality_risk)}">${riskAssessment.quality_risk || 'Baixo'}</span></p>
+            <p class="mb-0"><strong>Recursos:</strong> <span class="badge bg-${getRiskColor(riskAssessment.resource_risk)}">${riskAssessment.resource_risk || 'Baixo'}</span></p>
+        </div>
+    `;
+}
+
+function updateSystemStats(stats) {
+    const container = document.getElementById('systemStats');
+    
+    container.innerHTML = `
+        <div class="stat-item">
+            <div class="stat-value">${stats.active_users || 0}</div>
+            <div class="stat-label">Usuários Ativos</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">${stats.database_size_mb || 0}MB</div>
+            <div class="stat-label">Banco de Dados</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">${stats.api_response_time_ms || 0}ms</div>
+            <div class="stat-label">Tempo Resposta</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">${stats.cache_hit_rate || 0}%</div>
+            <div class="stat-label">Cache Hit Rate</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">${stats.storage_usage_percent || 0}%</div>
+            <div class="stat-label">Uso Armazenamento</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value status-indicator status-${stats.system_load === 'low' ? 'online' : 'warning'}"></div>
+            <div class="stat-label">Carga Sistema</div>
+        </div>
+    `;
+}
+
+function initializeTrendsChart() {
+    const ctx = document.getElementById('trendsChart').getContext('2d');
+    
+    trendsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: 'Taxa de Conclusão',
+                    data: [],
+                    borderColor: '#5F5CFF',
+                    backgroundColor: 'rgba(95, 92, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                },
+                {
+                    label: 'Eficiência',
+                    data: [],
+                    borderColor: '#6EE7B7',
+                    backgroundColor: 'rgba(110, 231, 183, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#F1F1F1'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#B8BCC8'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#B8BCC8'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function updateTrendsChart(trends) {
+    if (!trendsChart) return;
+    
+    // Simular dados históricos baseados nas tendências
+    const labels = [];
+    const completionData = [];
+    const efficiencyData = [];
+    
+    for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        labels.push(date.toLocaleDateString('pt-BR', { weekday: 'short' }));
+        
+        // Simular variação baseada nas tendências
+        completionData.push(65 + Math.random() * 10 - 5);
+        efficiencyData.push(82 + Math.random() * 8 - 4);
+    }
+    
+    trendsChart.data.labels = labels;
+    trendsChart.data.datasets[0].data = completionData;
+    trendsChart.data.datasets[1].data = efficiencyData;
+    trendsChart.update();
+}
+
+function startAutoRefresh() {
+    autoRefreshInterval = setInterval(() => {
+        const indicator = document.getElementById('autoRefreshIndicator');
+        indicator.classList.add('active');
+        
+        loadDashboardData();
+        
+        setTimeout(() => {
+            indicator.classList.remove('active');
+        }, 2000);
+        
+    }, REFRESH_INTERVAL);
+    
+    console.log('🔄 Auto-refresh iniciado (30s)');
+}
+
+function forceRefresh() {
+    const btn = document.getElementById('refreshBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spin fa-sync-alt me-1"></i>Atualizando...';
+    
+    fetch('/api/bi/monitoring/refresh', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                loadDashboardData();
+                showSuccess('Dados atualizados com sucesso!');
+            } else {
+                showError('Erro ao atualizar dados');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao forçar atualização:', error);
+            showError('Erro ao forçar atualização');
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sync-alt me-1"></i>Atualizar';
+        });
+}
+
+function showAlertDetails(alertId) {
+    currentAlertId = alertId;
+    
+    // Encontrar alerta nos dados atuais
+    const alert = dashboardData?.active_alerts?.find(a => a.id === alertId);
+    
+    if (!alert) {
+        showError('Alerta não encontrado');
+        return;
+    }
+    
+    document.getElementById('alertDetails').innerHTML = `
+        <div class="alert alert-${getSeverityColor(alert.severity)}">
+            <h6><strong>${alert.metric}</strong></h6>
+            <p>${alert.message}</p>
+            <hr>
+            <div class="row">
+                <div class="col-6">
+                    <strong>Valor Atual:</strong> ${alert.current_value}
+                </div>
+                <div class="col-6">
+                    <strong>Limite:</strong> ${alert.threshold}
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-6">
+                    <strong>Severidade:</strong> ${alert.severity}
+                </div>
+                <div class="col-6">
+                    <strong>Timestamp:</strong> ${new Date(alert.timestamp).toLocaleString()}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    new bootstrap.Modal(document.getElementById('alertModal')).show();
+}
+
+function acknowledgeAlert() {
+    if (!currentAlertId) return;
+    
+    fetch(`/api/bi/alerts/${currentAlertId}/acknowledge`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showSuccess('Alerta reconhecido com sucesso!');
+                bootstrap.Modal.getInstance(document.getElementById('alertModal')).hide();
+                loadDashboardData(); // Reload para atualizar status
+            } else {
+                showError('Erro ao reconhecer alerta');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao reconhecer alerta:', error);
+            showError('Erro ao reconhecer alerta');
+        });
+}
+
+function generateExecutiveReport(period) {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spin fa-sync-alt me-2"></i>Gerando...';
+    
+    fetch('/api/bi/reports/executive', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ period: period })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayReportResults(data.data);
+                showSuccess(`Relatório ${period} gerado com sucesso!`);
+            } else {
+                showError('Erro ao gerar relatório: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao gerar relatório:', error);
+            showError('Erro ao gerar relatório');
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        });
+}
+
+function displayReportResults(reportData) {
+    const container = document.getElementById('reportResults');
+    
+    container.innerHTML = `
+        <div class="alert alert-success">
+            <h6><i class="fas fa-file-alt me-2"></i>Relatório Gerado</h6>
+            <p><strong>ID:</strong> ${reportData.report_id}</p>
+            <p><strong>Período:</strong> ${reportData.period}</p>
+            <p><strong>Gerado em:</strong> ${new Date(reportData.generated_at).toLocaleString()}</p>
+            <hr>
+            <h6>Resumo Executivo:</h6>
+            <ul>
+                <li>Total de Entidades: ${reportData.summary.total_entities}</li>
+                <li>Total de Visitas: ${reportData.summary.total_visits}</li>
+                <li>Taxa de Conclusão: ${reportData.summary.completion_percentage.toFixed(1)}%</li>
+                <li>Alertas Ativos: ${reportData.summary.active_alerts_count}</li>
+                <li>Status Geral: ${reportData.summary.overall_status}</li>
+            </ul>
+            
+            <h6>Recomendações:</h6>
+            <ul>
+                ${reportData.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+            </ul>
+        </div>
+    `;
+    
+    container.style.display = 'block';
+}
+
+function exportDashboard() {
+    const btn = document.getElementById('exportBtn');
+    btn.disabled = true;
+    
+    fetch('/api/bi/export/dashboard', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ format: 'json' })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Criar e baixar arquivo
+                const blob = new Blob([JSON.stringify(data.data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `dashboard_bi_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                showSuccess('Dashboard exportado com sucesso!');
+            } else {
+                showError('Erro ao exportar dashboard');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao exportar:', error);
+            showError('Erro ao exportar dashboard');
+        })
+        .finally(() => {
+            btn.disabled = false;
+        });
+}
+
+// Funções utilitárias
+function getSeverityColor(severity) {
+    const colors = {
+        'low': 'info',
+        'medium': 'warning',
+        'high': 'danger',
+        'critical': 'danger'
+    };
+    return colors[severity] || 'secondary';
+}
+
+function getRiskColor(risk) {
+    const colors = {
+        'low': 'success',
+        'medium': 'warning',
+        'high': 'danger'
+    };
+    return colors[risk] || 'secondary';
+}
+
+function showLoading(show) {
+    const loading = document.getElementById('kpiLoading');
+    if (loading) {
+        loading.classList.toggle('hidden', !show);
+    }
+}
+
+function showSuccess(message) {
+    showToast(message, 'success');
+}
+
+function showError(message) {
+    showToast(message, 'danger');
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+        ${message}
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// Cleanup ao sair da página
+window.addEventListener('beforeunload', function() {
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{
+  "data_analise": "2025-07-09T09:25:38.687263",
+  "total_visitas": 7,
+  "recomendacoes": [
+    {
+      "id": 2,
+      "municipio": "Bombinhas",
+      "local": "Prefeitura - Vigilância Sanitária",
+      "data_visita": "2025-06-25 00:00:00.000000",
+      "situacao": "compromisso_nao_cumprido",
+      "proxima_acao": "verificação whatsapp",
+      "prioridade": "alta",
+      "proximo_status": "verificação whatsapp",
+      "observacoes": "Leonardo da Vig Sanitária - Prefeitura ficou de responder o questionário, junto com a SINISA"
+    },
+    {
+      "id": 3,
+      "municipio": "Bombinhas",
+      "local": "Captação - Prefeitura",
+      "data_visita": "2025-06-25 00:00:00.000000",
+      "situacao": "compromisso_nao_cumprido",
+      "proxima_acao": "verificação whatsapp",
+      "prioridade": "alta",
+      "proximo_status": "verificação whatsapp",
+      "observacoes": "Raul do departamento de captação ficou de responder o questionário."
+    },
+    {
+      "id": 4,
+      "municipio": "Porto Belo",
+      "local": "Prefeitura",
+      "data_visita": "2025-06-25 00:00:00.000000",
+      "situacao": "compromisso_nao_cumprido",
+      "proxima_acao": "verificação whatsapp",
+      "prioridade": "alta",
+      "proximo_status": "verificação whatsapp",
+      "observacoes": "Fernando da Secretaria de Obras ficou de responder os 2 questionários junto com o Victor do Controle Interno. Jessie (Contratos e Licitações) auxiliou"
+    },
+    {
+      "id": 5,
+      "municipio": "Balneário Piçarras",
+      "local": "Secretaria Municipal de Obras (SMO)",
+      "data_visita": "2025-06-26 00:00:00.000000",
+      "situacao": "compromisso_nao_cumprido",
+      "proxima_acao": "verificação whatsapp",
+      "prioridade": "alta",
+      "proximo_status": "verificação whatsapp",
+      "observacoes": "Arthur, secretário de obras vai responder os dois questionários"
+    },
+    {
+      "id": 6,
+      "municipio": "Penha",
+      "local": "Secretaria de Obras ou Serviços Urbanos",
+      "data_visita": "2025-06-26 00:00:00.000000",
+      "situacao": "compromisso_nao_cumprido",
+      "proxima_acao": "verificação whatsapp",
+      "prioridade": "alta",
+      "proximo_status": "verificação whatsapp",
+      "observacoes": "Fernanda ficou de responder ambos os questionários"
+    },
+    {
+      "id": 7,
+      "municipio": "Ilhota",
+      "local": "Mayra - Gabinete",
+      "data_visita": "2025-06-27 00:00:00.000000",
+      "situacao": "compromisso_nao_cumprido",
+      "proxima_acao": "verificação whatsapp",
+      "prioridade": "alta",
+      "proximo_status": "verificação whatsapp",
+      "observacoes": "Mayra irá responder o questionário MRS (Verificar o contato dela com Eurico)"
+    },
+    {
+      "id": 8,
+      "municipio": "Ilhota",
+      "local": "Planejamento - Prefeitura",
+      "data_visita": "2025-06-27 00:00:00.000000",
+      "situacao": "compromisso_nao_cumprido",
+      "proxima_acao": "verificação whatsapp",
+      "prioridade": "alta",
+      "proximo_status": "verificação whatsapp",
+      "observacoes": "Camila do Planejamento ficou de responder o MAP"
+    }
+  ],
+  "resumo_prioridade": {
+    "alta": 7,
+    "media": 0,
+    "baixa": 0
+  },
+  "resumo_acoes": {
+    "verificação whatsapp": 7
+  }
+}

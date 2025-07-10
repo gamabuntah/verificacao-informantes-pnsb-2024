@@ -1,0 +1,691 @@
+{% extends 'base.html' %}
+
+{% block title %}Relatórios - Gestão de Visitas PNSB{% endblock %}
+
+{% block head %}
+<style>
+.template-card {
+    background: #23263B;
+    border: 2px solid #2D3142;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.template-card:hover {
+    border-color: #5F5CFF;
+    transform: translateY(-2px);
+}
+
+.template-card.active {
+    border-color: #6EE7B7;
+    background: linear-gradient(135deg, rgba(95, 92, 255, 0.1), rgba(110, 231, 183, 0.1));
+}
+
+.template-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.template-icon i {
+    color: white;
+    font-size: 20px;
+}
+
+.template-content h6 {
+    color: #F1F1F1;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.template-content p {
+    font-size: 14px;
+    margin-bottom: 0;
+}
+
+.btn-success-custom {
+    background: linear-gradient(90deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-success-custom:hover {
+    background: linear-gradient(90deg, #20c997, #28a745);
+    transform: translateY(-2px);
+}
+
+.btn-warning-custom {
+    background: linear-gradient(90deg, #ffc107, #fd7e14);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-warning-custom:hover {
+    background: linear-gradient(90deg, #fd7e14, #ffc107);
+    transform: translateY(-2px);
+}
+
+.btn-info-custom {
+    background: linear-gradient(90deg, #17a2b8, #007bff);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-info-custom:hover {
+    background: linear-gradient(90deg, #007bff, #17a2b8);
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="fw-bold mb-0">📊 Relatórios de Visitas</h2>
+        <small class="text-muted" id="periodo-info">Últimos 30 dias</small>
+    </div>
+    <div class="d-flex gap-2">
+        <button class="btn-success-custom" onclick="exportarPDF()">
+            <i class="fas fa-file-pdf"></i> Exportar PDF
+        </button>
+        <button class="btn-warning-custom" onclick="exportarExcel()">
+            <i class="fas fa-file-excel"></i> Exportar Excel
+        </button>
+        <button class="btn-info-custom" onclick="compartilharRelatorio()">
+            <i class="fas fa-share-alt"></i> Compartilhar
+        </button>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <label for="periodo-relatorio" class="form-label">Período</label>
+        <select class="form-select bg-dark text-light" id="periodo-relatorio">
+            <option value="hoje">Hoje</option>
+            <option value="semana">Esta Semana</option>
+            <option value="mes">Este Mês</option>
+            <option value="ultimos30" selected>Últimos 30 dias</option>
+            <option value="custom">Personalizado</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-none" id="filtros-custom">
+        <label for="data-inicio" class="form-label">Data Início</label>
+        <input type="date" class="form-control bg-dark text-light mb-2" id="data-inicio">
+        <label for="data-fim" class="form-label">Data Fim</label>
+        <input type="date" class="form-control bg-dark text-light" id="data-fim">
+    </div>
+    <div class="col-md-3">
+        <label for="filtro-municipio" class="form-label">Município</label>
+        <select class="form-select bg-dark text-light" id="filtro-municipio">
+            <option value="">Todos os Municípios</option>
+            <option>Balneário Camboriú</option>
+            <option>Balneário Piçarras</option>
+            <option>Bombinhas</option>
+            <option>Camboriú</option>
+            <option>Itajaí</option>
+            <option>Itapema</option>
+            <option>Luiz Alves</option>
+            <option>Navegantes</option>
+            <option>Penha</option>
+            <option>Porto Belo</option>
+            <option>Ilhota</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-primary w-100" id="btn-gerar-relatorio">
+            <i class="fas fa-sync"></i> Gerar Relatório
+        </button>
+    </div>
+</div>
+
+<!-- Templates de Relatórios -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="template-card" onclick="selecionarTemplate('executivo')">
+            <div class="template-icon">
+                <i class="fas fa-chart-pie"></i>
+            </div>
+            <div class="template-content">
+                <h6>Relatório Executivo</h6>
+                <p class="text-muted">Visão geral com métricas principais</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="template-card" onclick="selecionarTemplate('detalhado')">
+            <div class="template-icon">
+                <i class="fas fa-list-alt"></i>
+            </div>
+            <div class="template-content">
+                <h6>Relatório Detalhado</h6>
+                <p class="text-muted">Lista completa de todas as visitas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="template-card" onclick="selecionarTemplate('analise')">
+            <div class="template-icon">
+                <i class="fas fa-analytics"></i>
+            </div>
+            <div class="template-content">
+                <h6>Análise de Performance</h6>
+                <p class="text-muted">Análise comparativa e tendências</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card p-4">
+            <h6>Total de Visitas</h6>
+            <h2 class="fw-bold" id="total-visitas">--</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4">
+            <h6>Realizadas</h6>
+            <h2 class="fw-bold text-success" id="total-realizadas">--</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4">
+            <h6>Entidades PNSB</h6>
+            <h2 class="fw-bold text-info" id="total-entidades">--</h2>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-4">
+            <h6>Compliance PNSB</h6>
+            <h2 class="fw-bold text-primary" id="compliance-geral">--%</h2>
+        </div>
+    </div>
+</div>
+
+<!-- Métricas PNSB Avançadas -->
+<div class="row g-4 mb-4">
+    <div class="col-md-2">
+        <div class="card p-3 bg-gradient" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
+            <h6 class="text-white mb-1">P1 Crítica</h6>
+            <h4 class="text-white fw-bold mb-0" id="entidades-p1">--</h4>
+            <small class="text-white opacity-75">Prefeituras + UF</small>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card p-3 bg-gradient" style="background: linear-gradient(135deg, #ffa726, #ff9800);">
+            <h6 class="text-white mb-1">P2 Importante</h6>
+            <h4 class="text-white fw-bold mb-0" id="entidades-p2">--</h4>
+            <small class="text-white opacity-75">Campo</small>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="card p-3 bg-gradient" style="background: linear-gradient(135deg, #66bb6a, #4caf50);">
+            <h6 class="text-white mb-1">P3 Opcional</h6>
+            <h4 class="text-white fw-bold mb-0" id="entidades-p3">--</h4>
+            <small class="text-white opacity-75">Referência</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 bg-gradient" style="background: linear-gradient(135deg, #42a5f5, #2196f3);">
+            <h6 class="text-white mb-1">♻️ MRS</h6>
+            <h4 class="text-white fw-bold mb-0" id="questionarios-mrs">--</h4>
+            <small class="text-white opacity-75">Questionários obrigatórios</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 bg-gradient" style="background: linear-gradient(135deg, #26c6da, #00bcd4);">
+            <h6 class="text-white mb-1">💧 MAP</h6>
+            <h4 class="text-white fw-bold mb-0" id="questionarios-map">--</h4>
+            <small class="text-white opacity-75">Questionários obrigatórios</small>
+        </div>
+    </div>
+</div>
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card p-4 h-100">
+            <h5 class="card-title mb-3">Prioridades PNSB</h5>
+            <canvas id="grafico-status" height="180"></canvas>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card p-4 h-100">
+            <h5 class="card-title mb-3">Questionários MRS/MAP por Município</h5>
+            <canvas id="grafico-municipio" height="180"></canvas>
+        </div>
+    </div>
+</div>
+<div class="card p-4 mt-4">
+    <h5 class="card-title mb-3">Detalhamento das Visitas</h5>
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle" id="tabela-visitas">
+            <thead>
+                <tr>
+                    <th>Município</th>
+                    <th>Data</th>
+                    <th>Horário</th>
+                    <th>Status</th>
+                    <th>Informante</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas preenchidas via JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+let relatorioAtual = {};
+let templateSelecionado = 'executivo';
+let chartStatus = null;
+let chartMunicipio = null;
+
+// Selecionar template de relatório
+function selecionarTemplate(template) {
+    // Remover classe active de todos os cards
+    document.querySelectorAll('.template-card').forEach(card => {
+        card.classList.remove('active');
+    });
+    
+    // Adicionar classe active ao card selecionado
+    event.currentTarget.classList.add('active');
+    templateSelecionado = template;
+    
+    showToast(`Template "${template}" selecionado`, 'info');
+}
+
+// Exportar relatório em PDF
+async function exportarPDF() {
+    try {
+        if (!relatorioAtual || Object.keys(relatorioAtual).length === 0) {
+            showToast('Gere um relatório antes de exportar', 'warning');
+            return;
+        }
+        
+        showToast('Gerando PDF...', 'info');
+        
+        const parametros = obterParametrosAtivos();
+        const response = await fetch('/api/extended/relatorios/exportar-pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                template: templateSelecionado,
+                dados: relatorioAtual,
+                filtros: parametros
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Erro ao gerar PDF');
+        }
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `relatorio_pnsb_${templateSelecionado}_${new Date().toISOString().split('T')[0]}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showToast('PDF baixado com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao exportar PDF:', error);
+        showToast('Erro ao exportar PDF', 'danger');
+    }
+}
+
+// Exportar relatório em Excel
+async function exportarExcel() {
+    try {
+        if (!relatorioAtual || Object.keys(relatorioAtual).length === 0) {
+            showToast('Gere um relatório antes de exportar', 'warning');
+            return;
+        }
+        
+        showToast('Gerando Excel...', 'info');
+        
+        const parametros = obterParametrosAtivos();
+        const response = await fetch('/api/extended/relatorios/exportar-excel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                template: templateSelecionado,
+                dados: relatorioAtual,
+                filtros: parametros
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('Erro ao gerar Excel');
+        }
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = `relatorio_pnsb_${templateSelecionado}_${new Date().toISOString().split('T')[0]}.xlsx`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        
+        showToast('Excel baixado com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao exportar Excel:', error);
+        showToast('Erro ao exportar Excel', 'danger');
+    }
+}
+
+// Compartilhar relatório
+async function compartilharRelatorio() {
+    try {
+        if (!relatorioAtual || Object.keys(relatorioAtual).length === 0) {
+            showToast('Gere um relatório antes de compartilhar', 'warning');
+            return;
+        }
+        
+        showToast('Gerando link de compartilhamento...', 'info');
+        
+        const parametros = obterParametrosAtivos();
+        const response = await fetch('/api/extended/relatorios/compartilhar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                template: templateSelecionado,
+                dados: relatorioAtual,
+                filtros: parametros
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Copiar link para clipboard
+            await navigator.clipboard.writeText(result.data.link);
+            showToast('Link copiado para área de transferência!', 'success');
+        } else {
+            throw new Error(result.message || 'Erro ao gerar link');
+        }
+    } catch (error) {
+        console.error('Erro ao compartilhar:', error);
+        showToast('Erro ao compartilhar relatório', 'danger');
+    }
+}
+
+function obterParametrosAtivos() {
+    const periodo = document.getElementById('periodo-relatorio').value;
+    const municipio = document.getElementById('filtro-municipio').value;
+    let dataInicio = '';
+    let dataFim = '';
+    
+    if (periodo === 'custom') {
+        dataInicio = document.getElementById('data-inicio').value;
+        dataFim = document.getElementById('data-fim').value;
+    }
+    
+    return {
+        periodo,
+        municipio,
+        dataInicio,
+        dataFim
+    };
+}
+
+function showToast(message, type) {
+    // Implementação simples de toast - pode ser melhorada
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+function carregarRelatorio(periodo, inicio = '', fim = '') {
+    let url = `/api/relatorios/${periodo}`;
+    let periodoTexto = '';
+    
+    if (periodo === 'custom' && inicio && fim) {
+        url += `?inicio=${inicio}&fim=${fim}`;
+        periodoTexto = `${inicio} a ${fim}`;
+    } else if (periodo === 'hoje') {
+        periodoTexto = 'Hoje';
+    } else if (periodo === 'semana') {
+        periodoTexto = 'Esta semana';
+    } else if (periodo === 'mes') {
+        periodoTexto = 'Este mês';
+    } else if (periodo === 'ultimos30') {
+        periodoTexto = 'Últimos 30 dias';
+    }
+    
+    // Atualizar indicador de período
+    document.getElementById('periodo-info').textContent = periodoTexto;
+    
+    fetch(url)
+      .then(res => res.json())
+      .then(relatorio => {
+        // Armazenar dados para exportação
+        relatorioAtual = relatorio;
+        
+        // Processar dados do resumo
+        const resumo = relatorio.resumo || {};
+        const porStatus = resumo.por_status || {};
+        const porMunicipio = resumo.por_municipio || {};
+        
+        // Dados PNSB
+        const entidadesPnsb = resumo.entidades_identificadas || {};
+        const questionarios = resumo.questionarios_obrigatorios || {};
+        const prioridades = resumo.prioridades || {};
+        const compliance = resumo.compliance_pnsb || {};
+        
+        // Calcular totais básicos
+        const totalRealizadas = (porStatus.realizada || 0) + (porStatus.finalizada || 0) + (porStatus['questionários validados'] || 0);
+        const totalPendentes = (porStatus.agendada || 0) + (porStatus['em andamento'] || 0);
+        
+        // Atualizar métricas básicas
+        document.getElementById('total-visitas').textContent = resumo.total_visitas || 0;
+        document.getElementById('total-realizadas').textContent = totalRealizadas;
+        document.getElementById('total-entidades').textContent = entidadesPnsb.total || 0;
+        document.getElementById('compliance-geral').textContent = Math.round(compliance.cobertura_municipios || 0) + '%';
+        
+        // Atualizar métricas PNSB avançadas
+        document.getElementById('entidades-p1').textContent = prioridades.p1_critica || 0;
+        document.getElementById('entidades-p2').textContent = prioridades.p2_importante || 0;
+        document.getElementById('entidades-p3').textContent = prioridades.p3_opcional || 0;
+        document.getElementById('questionarios-mrs').textContent = questionarios.mrs_obrigatorio || 0;
+        document.getElementById('questionarios-map').textContent = questionarios.map_obrigatorio || 0;
+        
+        // Destruir gráficos existentes para evitar travamento
+        if (chartStatus) {
+            chartStatus.destroy();
+        }
+        if (chartMunicipio) {
+            chartMunicipio.destroy();
+        }
+        
+        // Gráfico por prioridades PNSB
+        chartStatus = new Chart(document.getElementById('grafico-status').getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['P1 Crítica', 'P2 Importante', 'P3 Opcional'],
+                datasets: [{
+                    data: [
+                        prioridades.p1_critica || 0,
+                        prioridades.p2_importante || 0,
+                        prioridades.p3_opcional || 0
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 107, 107, 0.8)',
+                        'rgba(255, 167, 38, 0.8)',
+                        'rgba(102, 187, 106, 0.8)'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: { color: '#F1F1F1', font: { size: 14 } }
+                    }
+                }
+            }
+        });
+        // Gráfico por questionários MRS/MAP
+        const entidadesPorMunicipio = entidadesPnsb.por_municipio || {};
+        const municipiosLabels = Object.keys(entidadesPorMunicipio);
+        const mrsData = municipiosLabels.map(m => entidadesPorMunicipio[m]?.mrs_obrigatorio || 0);
+        const mapData = municipiosLabels.map(m => entidadesPorMunicipio[m]?.map_obrigatorio || 0);
+        
+        chartMunicipio = new Chart(document.getElementById('grafico-municipio').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: municipiosLabels,
+                datasets: [{
+                    label: 'MRS',
+                    data: mrsData,
+                    backgroundColor: 'rgba(66, 165, 245, 0.8)'
+                }, {
+                    label: 'MAP',
+                    data: mapData,
+                    backgroundColor: 'rgba(38, 198, 218, 0.8)'
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: { color: '#F1F1F1', font: { size: 14 } }
+                    }
+                },
+                scales: {
+                    x: { 
+                        ticks: { 
+                            color: '#F1F1F1',
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    },
+                    y: { 
+                        ticks: { color: '#F1F1F1' },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        // Tabela detalhada com informações PNSB
+        const tbody = document.querySelector('#tabela-visitas tbody');
+        tbody.innerHTML = '';
+        
+        // Obter visitas dos detalhes
+        const visitas = relatorio.detalhes || [];
+        
+        visitas.forEach(detalhe => {
+            if (detalhe && detalhe.dados_visita) {
+                const v = detalhe.dados_visita;
+                const tr = document.createElement('tr');
+                
+                // Adicionar classe baseada no status
+                const statusClass = v.status === 'realizada' || v.status === 'finalizada' || v.status === 'questionários validados' ? 'success' : 
+                                   v.status === 'agendada' ? 'warning' : 'primary';
+                
+                tr.innerHTML = `
+                    <td>${v.municipio || '-'}</td>
+                    <td>${v.data || '-'}</td>
+                    <td>${v.hora_inicio || '--:--'}</td>
+                    <td><span class="badge bg-${statusClass}">${v.status || '-'}</span></td>
+                    <td>${v.informante || '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            }
+        });
+        
+        if (visitas.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">Nenhuma visita encontrada no período.</td></tr>';
+        }
+      })
+      .catch(error => {
+        console.error('Erro ao carregar relatório:', error);
+        document.getElementById('total-visitas').textContent = 0;
+        document.getElementById('total-realizadas').textContent = 0;
+        document.getElementById('total-pendentes').textContent = 0;
+        document.querySelector('#tabela-visitas tbody').innerHTML = '<tr><td colspan="5" class="text-center text-secondary">Erro ao carregar relatório.</td></tr>';
+        
+        // Mostrar toast de erro
+        if (typeof showToast === 'function') {
+            showToast('Erro ao carregar relatório', 'danger');
+        }
+      });
+}
+// Filtro de período customizado
+const periodo = document.getElementById('periodo-relatorio');
+const filtrosCustom = document.getElementById('filtros-custom');
+const btnRelatorio = document.getElementById('btn-gerar-relatorio');
+periodo.onchange = function() {
+    if (this.value === 'custom') {
+        filtrosCustom.classList.remove('d-none');
+    } else {
+        filtrosCustom.classList.add('d-none');
+    }
+};
+btnRelatorio.onclick = function() {
+    if (periodo.value === 'custom') {
+        const inicio = document.getElementById('data-inicio').value;
+        const fim = document.getElementById('data-fim').value;
+        carregarRelatorio('custom', inicio, fim);
+    } else if (periodo.value === 'ultimos30') {
+        // Carregar últimos 30 dias
+        const hoje = new Date();
+        const inicio = new Date(hoje.getTime() - 30 * 24 * 60 * 60 * 1000);
+        const inicioStr = inicio.toISOString().split('T')[0];
+        const fimStr = hoje.toISOString().split('T')[0];
+        carregarRelatorio('custom', inicioStr, fimStr);
+    } else {
+        carregarRelatorio(periodo.value);
+    }
+};
+// Carregar relatório inicial - últimos 30 dias
+window.addEventListener('load', function() {
+    // Aguardar um pouco para garantir que tudo foi carregado
+    setTimeout(function() {
+        const hoje = new Date();
+        const inicio = new Date(hoje.getTime() - 30 * 24 * 60 * 60 * 1000);
+        const inicioStr = inicio.toISOString().split('T')[0];
+        const fimStr = hoje.toISOString().split('T')[0];
+        
+        console.log('Carregando relatório automático:', inicioStr, 'a', fimStr);
+        carregarRelatorio('custom', inicioStr, fimStr);
+    }, 1000);
+});
+</script>
+{% endblock %} 

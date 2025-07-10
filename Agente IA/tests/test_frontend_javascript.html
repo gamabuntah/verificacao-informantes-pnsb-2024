@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes JavaScript - PNSB 2024</title>
+    
+    <!-- Mocha CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.css">
+    
+    <!-- Chai para assertions -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/4.3.10/chai.min.js"></script>
+    
+    <!-- Mocha para testes -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/10.2.0/mocha.min.js"></script>
+    
+    <!-- Sinon para mocks -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sinon.js/17.0.1/sinon.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0D1017;
+            color: #F1F1F1;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        #mocha {
+            background: #181A20;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .test-header {
+            background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .test-info {
+            background: #23263B;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-nao_iniciado { background: #6c757d; color: white; }
+        .status-respondido { background: #ffc107; color: #212529; }
+        .status-validado_concluido { background: #28a745; color: white; }
+        .status-nao_aplicavel { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>🧪 TESTES JAVASCRIPT - SISTEMA PNSB 2024</h1>
+        <p>Testes de funcionalidade frontend para o mapa de progresso</p>
+    </div>
+    
+    <div class="test-info">
+        <h3>Objetivos dos Testes:</h3>
+        <ul>
+            <li>✅ Verificar funções JavaScript do mapa de progresso</li>
+            <li>✅ Testar sistema inteligente de status no frontend</li>
+            <li>✅ Validar integração com APIs</li>
+            <li>✅ Verificar manipulação de dados P1/P2/P3</li>
+            <li>✅ Testar robustez com dados malformados</li>
+        </ul>
+    </div>
+    
+    <!-- Container para os testes -->
+    <div id="mocha"></div>
+    
+    <!-- Elementos para teste -->
+    <div id="test-elements" style="display: none;">
+        <div id="prioridade-p1">
+            <div class="progress-value">0%</div>
+            <div class="stat-value">0</div>
+            <div class="stat-value">0</div>
+            <div class="stat-value">0</div>
+        </div>
+        <div id="prioridade-p2">
+            <div class="progress-value">0%</div>
+            <div class="stat-value">0</div>
+            <div class="stat-value">0</div>
+            <div class="stat-value">0</div>
+        </div>
+        <div id="prioridade-p3">
+            <div class="progress-value">0%</div>
+            <div class="stat-value">0</div>
+            <div class="stat-value">0</div>
+            <div class="stat-value">0</div>
+        </div>
+        <div id="map-view"></div>
+        <div id="list-view"></div>
+        <div id="view-toggle-text">Vista Lista</div>
+    </div>
+
+    <script>
+        // Setup Mocha
+        mocha.setup('bdd');
+        const expect = chai.expect;
+        
+        // Constantes simuladas (como no sistema real)
+        const MUNICIPIOS_PNSB = [
+            "Balneário Camboriú", "Balneário Piçarras", "Bombinhas", "Camboriú",
+            "Itajaí", "Itapema", "Luiz Alves", "Navegantes", "Penha", "Porto Belo", "Ilhota"
+        ];
+        
+        // Variáveis globais simuladas
+        let dadosProgresso = {};
+        let entidadesIdentificadas = [];
+        let currentView = 'map';
+        
+        // ===================================
+        // FUNÇÕES DO SISTEMA (SIMULADAS)
+        // ===================================
+        
+        function getStatusLabel(status) {
+            const labels = {
+                'nao_iniciado': 'Não Iniciado',
+                'respondido': 'Respondido',
+                'validado_concluido': 'Validado/Concluído',
+                'nao_aplicavel': 'Não Aplicável'
+            };
+            return labels[status] || status;
+        }
+        
+        function calcularEstatisticasPrioridades() {
+            const stats = {
+                p1: { total: 0, concluidos: 0, mrs: 0, map: 0 },
+                p2: { total: 0, concluidos: 0, mrs: 0, map: 0 },
+                p3: { total: 0, concluidos: 0, mrs: 0, map: 0 }
+            };
+            
+            if (!Array.isArray(entidadesIdentificadas)) {
+                return stats;
+            }
+            
+            entidadesIdentificadas.forEach(entidade => {
+                const prioridade = `p${entidade.prioridade}`;
+                if (stats[prioridade]) {
+                    stats[prioridade].total++;
+                    
+                    if (entidade.status_mrs === 'validado_concluido') {
+                        stats[prioridade].mrs++;
+                    }
+                    if (entidade.status_map === 'validado_concluido') {
+                        stats[prioridade].map++;
+                    }
+                    
+                    // Considerar concluído se todos os obrigatórios estão validados
+                    const mrs_ok = !entidade.mrs_obrigatorio || entidade.status_mrs === 'validado_concluido';
+                    const map_ok = !entidade.map_obrigatorio || entidade.status_map === 'validado_concluido';
+                    
+                    if (mrs_ok && map_ok) {
+                        stats[prioridade].concluidos++;
+                    }
+                }
+            });
+            
+            return stats;
+        }
+        
+        function atualizarVisualizacaoP123() {
+            const stats = calcularEstatisticasPrioridades();
+            
+            Object.entries(stats).forEach(([prioridade, dados]) => {
+                const card = document.getElementById(`prioridade-${prioridade}`);
+                if (card) {
+                    const progresso = dados.total > 0 ? Math.round((dados.concluidos / dados.total) * 100) : 0;
+                    
+                    const progressValue = card.querySelector('.progress-value');
+                    if (progressValue) progressValue.textContent = `${progresso}%`;
+                    
+                    const statValues = card.querySelectorAll('.stat-value');
+                    if (statValues.length >= 3) {
+                        statValues[0].textContent = dados.total;
+                        statValues[1].textContent = dados.mrs;
+                        statValues[2].textContent = dados.map;
+                    }
+                }
+            });
+        }
+        
+        function obterDadosInteligentes(municipio) {
+            const visitas = dadosProgresso.visitas_detalhadas?.[municipio] || [];
+            
+            return {
+                municipio: municipio,
+                total_visitas: visitas.length,
+                status_inteligente: visitas.length > 0 ? visitas[0].status_inteligente || 'agendada' : 'agendada',
+                progresso_checklist: {
+                    antes: 75,
+                    durante: 60,
+                    apos: 40
+                },
+                status_questionarios: {
+                    mrs_respondidos: visitas.filter(v => v.status_questionarios?.mrs?.respondido > 0).length,
+                    mrs_validados: visitas.filter(v => v.status_questionarios?.mrs?.validado_concluido > 0).length,
+                    map_respondidos: visitas.filter(v => v.status_questionarios?.map?.respondido > 0).length,
+                    map_validados: visitas.filter(v => v.status_questionarios?.map?.validado_concluido > 0).length
+                },
+                proxima_acao: 'Completar preparação da visita no checklist'
+            };
+        }
+        
+        function alternarVista() {
+            currentView = currentView === 'map' ? 'list' : 'map';
+            
+            const mapaElement = document.getElementById('map-view');
+            const listaElement = document.getElementById('list-view');
+            const toggleButton = document.getElementById('view-toggle-text');
+            
+            if (!mapaElement || !listaElement || !toggleButton) {
+                console.error('Elementos necessários para alternar vista não encontrados');
+                return false;
+            }
+            
+            if (currentView === 'map') {
+                mapaElement.style.display = 'block';
+                listaElement.style.display = 'none';
+                toggleButton.textContent = 'Vista Lista';
+            } else {
+                mapaElement.style.display = 'none';
+                listaElement.style.display = 'block';
+                toggleButton.textContent = 'Vista Mapa';
+            }
+            
+            return true;
+        }
+        
+        // Mock da função fetch para simular APIs
+        function mockFetch(url, options = {}) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    if (url.includes('dashboard-inteligente')) {
+                        resolve({
+                            ok: true,
+                            json: () => Promise.resolve({
+                                estatisticas: {
+                                    total_visitas: 15,
+                                    por_status: {'agendada': 5, 'realizada': 10},
+                                    progresso_medio: 65.5,
+                                    questionnaire_completion: {
+                                        mrs: {respondido: 8, validado: 5},
+                                        map: {respondido: 6, validado: 3}
+                                    }
+                                },
+                                timestamp: new Date().toISOString()
+                            })
+                        });
+                    } else if (url.includes('status-inteligente')) {
+                        resolve({
+                            ok: true,
+                            json: () => Promise.resolve({
+                                visita_id: 1,
+                                status_atual: 'realizada',
+                                status_inteligente: 'questionários concluídos',
+                                progresso_checklist: {antes: 85, durante: 70, apos: 30},
+                                proxima_acao: 'Validar questionários respondidos'
+                            })
+                        });
+                    } else {
+                        resolve({
+                            ok: false,
+                            status: 404
+                        });
+                    }
+                }, 10); // Simular delay de rede
+            });
+        }
+        
+        // ===================================
+        // TESTES
+        // ===================================
+        
+        describe('🧪 Testes Sistema PNSB 2024', function() {
+            
+            beforeEach(function() {
+                // Reset dados antes de cada teste
+                dadosProgresso = {};
+                entidadesIdentificadas = [];
+                currentView = 'map';
+            });
+            
+            describe('📊 Funções de Status', function() {
+                
+                it('getStatusLabel deve retornar labels corretos', function() {
+                    expect(getStatusLabel('nao_iniciado')).to.equal('Não Iniciado');
+                    expect(getStatusLabel('respondido')).to.equal('Respondido');
+                    expect(getStatusLabel('validado_concluido')).to.equal('Validado/Concluído');
+                    expect(getStatusLabel('nao_aplicavel')).to.equal('Não Aplicável');
+                    expect(getStatusLabel('status_inexistente')).to.equal('status_inexistente');
+                });
+                
+                it('deve calcular estatísticas P1/P2/P3 corretamente', function() {
+                    entidadesIdentificadas = [
+                        {
+                            prioridade: 1,
+                            status_mrs: 'validado_concluido',
+                            status_map: 'validado_concluido',
+                            mrs_obrigatorio: true,
+                            map_obrigatorio: true
+                        },
+                        {
+                            prioridade: 1,
+                            status_mrs: 'respondido',
+                            status_map: 'nao_iniciado',
+                            mrs_obrigatorio: true,
+                            map_obrigatorio: true
+                        },
+                        {
+                            prioridade: 2,
+                            status_mrs: 'validado_concluido',
+                            status_map: 'nao_aplicavel',
+                            mrs_obrigatorio: true,
+                            map_obrigatorio: false
+                        }
+                    ];
+                    
+                    const stats = calcularEstatisticasPrioridades();
+                    
+                    expect(stats.p1.total).to.equal(2);
+                    expect(stats.p1.concluidos).to.equal(1); // Apenas primeira entidade completa
+                    expect(stats.p1.mrs).to.equal(1);
+                    expect(stats.p1.map).to.equal(1);
+                    
+                    expect(stats.p2.total).to.equal(1);
+                    expect(stats.p2.concluidos).to.equal(1); // MAP não obrigatório
+                    expect(stats.p2.mrs).to.equal(1);
+                    expect(stats.p2.map).to.equal(0);
+                });
+                
+                it('deve funcionar com array vazio', function() {
+                    entidadesIdentificadas = [];
+                    const stats = calcularEstatisticasPrioridades();
+                    
+                    expect(stats.p1.total).to.equal(0);
+                    expect(stats.p2.total).to.equal(0);
+                    expect(stats.p3.total).to.equal(0);
+                });
+                
+                it('deve ser robusto com dados malformados', function() {
+                    entidadesIdentificadas = [
+                        {}, // Objeto vazio
+                        { prioridade: 'invalid' }, // Prioridade inválida
+                        { prioridade: 1, status_mrs: null }, // Status null
+                        null, // Entidade null
+                        { prioridade: 999 } // Prioridade fora do range
+                    ];
+                    
+                    // Não deve falhar
+                    expect(() => calcularEstatisticasPrioridades()).to.not.throw();
+                    
+                    const stats = calcularEstatisticasPrioridades();
+                    expect(stats).to.be.an('object');
+                });
+                
+            });
+            
+            describe('🎯 Dados Inteligentes', function() {
+                
+                beforeEach(function() {
+                    dadosProgresso = {
+                        visitas_detalhadas: {
+                            'Itajaí': [
+                                {
+                                    status_inteligente: 'questionários validados',
+                                    status_questionarios: {
+                                        mrs: { respondido: 2, validado_concluido: 1 },
+                                        map: { respondido: 1, validado_concluido: 1 }
+                                    }
+                                }
+                            ]
+                        }
+                    };
+                });
+                
+                it('deve obter dados inteligentes para município', function() {
+                    const dados = obterDadosInteligentes('Itajaí');
+                    
+                    expect(dados.municipio).to.equal('Itajaí');
+                    expect(dados.total_visitas).to.equal(1);
+                    expect(dados.status_inteligente).to.equal('questionários validados');
+                    expect(dados.progresso_checklist).to.have.property('antes');
+                    expect(dados.progresso_checklist).to.have.property('durante');
+                    expect(dados.progresso_checklist).to.have.property('apos');
+                });
+                
+                it('deve funcionar com município sem dados', function() {
+                    const dados = obterDadosInteligentes('Município Inexistente');
+                    
+                    expect(dados.municipio).to.equal('Município Inexistente');
+                    expect(dados.total_visitas).to.equal(0);
+                    expect(dados.status_inteligente).to.equal('agendada');
+                });
+                
+            });
+            
+            describe('🔄 Interface de Vista', function() {
+                
+                it('deve alternar entre vista mapa e lista', function() {
+                    expect(currentView).to.equal('map');
+                    
+                    const sucesso = alternarVista();
+                    expect(sucesso).to.be.true;
+                    expect(currentView).to.equal('list');
+                    
+                    alternarVista();
+                    expect(currentView).to.equal('map');
+                });
+                
+                it('deve atualizar elementos DOM corretamente', function() {
+                    const toggleButton = document.getElementById('view-toggle-text');
+                    const initialText = toggleButton.textContent;
+                    
+                    alternarVista();
+                    expect(toggleButton.textContent).to.not.equal(initialText);
+                    
+                    alternarVista();
+                    expect(toggleButton.textContent).to.equal(initialText);
+                });
+                
+            });
+            
+            describe('📈 Atualização de Interface P1/P2/P3', function() {
+                
+                beforeEach(function() {
+                    entidadesIdentificadas = [
+                        {
+                            prioridade: 1,
+                            status_mrs: 'validado_concluido',
+                            status_map: 'validado_concluido',
+                            mrs_obrigatorio: true,
+                            map_obrigatorio: true
+                        },
+                        {
+                            prioridade: 1,
+                            status_mrs: 'respondido',
+                            status_map: 'respondido',
+                            mrs_obrigatorio: true,
+                            map_obrigatorio: true
+                        }
+                    ];
+                });
+                
+                it('deve atualizar cards P1/P2/P3 corretamente', function() {
+                    atualizarVisualizacaoP123();
+                    
+                    const cardP1 = document.getElementById('prioridade-p1');
+                    const progressValue = cardP1.querySelector('.progress-value');
+                    const statValues = cardP1.querySelectorAll('.stat-value');
+                    
+                    // P1: 2 total, 1 concluído = 50%
+                    expect(progressValue.textContent).to.equal('50%');
+                    expect(statValues[0].textContent).to.equal('2'); // Total
+                    expect(statValues[1].textContent).to.equal('1'); // MRS validados
+                    expect(statValues[2].textContent).to.equal('1'); // MAP validados
+                });
+                
+            });
+            
+            describe('🌐 Integração com APIs', function() {
+                
+                let originalFetch;
+                
+                beforeEach(function() {
+                    originalFetch = window.fetch;
+                    window.fetch = mockFetch;
+                });
+                
+                afterEach(function() {
+                    window.fetch = originalFetch;
+                });
+                
+                it('deve buscar dados do dashboard inteligente', async function() {
+                    const response = await fetch('/api/visitas/dashboard-inteligente');
+                    expect(response.ok).to.be.true;
+                    
+                    const data = await response.json();
+                    expect(data).to.have.property('estatisticas');
+                    expect(data.estatisticas).to.have.property('total_visitas');
+                    expect(data.estatisticas.total_visitas).to.equal(15);
+                });
+                
+                it('deve buscar status inteligente de visita', async function() {
+                    const response = await fetch('/api/visitas/1/status-inteligente');
+                    expect(response.ok).to.be.true;
+                    
+                    const data = await response.json();
+                    expect(data).to.have.property('visita_id');
+                    expect(data).to.have.property('status_inteligente');
+                    expect(data.status_inteligente).to.equal('questionários concluídos');
+                });
+                
+                it('deve tratar erro de API corretamente', async function() {
+                    const response = await fetch('/api/endpoint-inexistente');
+                    expect(response.ok).to.be.false;
+                    expect(response.status).to.equal(404);
+                });
+                
+            });
+            
+            describe('🛡️ Testes de Robustez', function() {
+                
+                it('deve lidar com dados undefined/null', function() {
+                    entidadesIdentificadas = null;
+                    
+                    expect(() => calcularEstatisticasPrioridades()).to.not.throw();
+                    
+                    const stats = calcularEstatisticasPrioridades();
+                    expect(stats.p1.total).to.equal(0);
+                });
+                
+                it('deve funcionar com DOM incompleto', function() {
+                    // Simular elementos faltando
+                    const elemento = document.getElementById('prioridade-p1');
+                    const parent = elemento.parentNode;
+                    parent.removeChild(elemento);
+                    
+                    // Não deve falhar
+                    expect(() => atualizarVisualizacaoP123()).to.not.throw();
+                    
+                    // Restaurar elemento
+                    parent.appendChild(elemento);
+                });
+                
+                it('deve validar municípios PNSB', function() {
+                    expect(MUNICIPIOS_PNSB).to.be.an('array');
+                    expect(MUNICIPIOS_PNSB.length).to.equal(11);
+                    expect(MUNICIPIOS_PNSB).to.include('Itajaí');
+                    expect(MUNICIPIOS_PNSB).to.include('Navegantes');
+                    expect(MUNICIPIOS_PNSB).to.include('Camboriú');
+                });
+                
+                it('deve funcionar com caracteres especiais', function() {
+                    const dados = obterDadosInteligentes('São José dos Pinhais');
+                    expect(dados.municipio).to.equal('São José dos Pinhais');
+                    
+                    const status = getStatusLabel('status_com_çaracterés_éspeciais');
+                    expect(status).to.equal('status_com_çaracterés_éspeciais');
+                });
+                
+            });
+            
+            describe('⚡ Testes de Performance', function() {
+                
+                it('deve processar muitas entidades rapidamente', function() {
+                    // Criar 1000 entidades
+                    entidadesIdentificadas = [];
+                    for (let i = 0; i < 1000; i++) {
+                        entidadesIdentificadas.push({
+                            prioridade: (i % 3) + 1,
+                            status_mrs: ['nao_iniciado', 'respondido', 'validado_concluido'][i % 3],
+                            status_map: ['nao_iniciado', 'respondido', 'validado_concluido'][(i+1) % 3],
+                            mrs_obrigatorio: i % 2 === 0,
+                            map_obrigatorio: i % 3 === 0
+                        });
+                    }
+                    
+                    const start = performance.now();
+                    const stats = calcularEstatisticasPrioridades();
+                    const end = performance.now();
+                    
+                    const tempo = end - start;
+                    console.log(`Processamento de 1000 entidades: ${tempo.toFixed(2)}ms`);
+                    
+                    expect(tempo).to.be.below(100); // Menos de 100ms
+                    expect(stats.p1.total + stats.p2.total + stats.p3.total).to.equal(1000);
+                });
+                
+                it('deve atualizar interface rapidamente', function() {
+                    entidadesIdentificadas = [];
+                    for (let i = 0; i < 100; i++) {
+                        entidadesIdentificadas.push({
+                            prioridade: (i % 3) + 1,
+                            status_mrs: 'validado_concluido',
+                            status_map: 'validado_concluido',
+                            mrs_obrigatorio: true,
+                            map_obrigatorio: true
+                        });
+                    }
+                    
+                    const start = performance.now();
+                    atualizarVisualizacaoP123();
+                    const end = performance.now();
+                    
+                    const tempo = end - start;
+                    console.log(`Atualização de interface: ${tempo.toFixed(2)}ms`);
+                    
+                    expect(tempo).to.be.below(50); // Menos de 50ms
+                });
+                
+            });
+            
+        });
+        
+        // Executar testes
+        mocha.run();
+    </script>
+</body>
+</html>

@@ -1,0 +1,979 @@
+{% extends "base.html" %}
+
+{% block title %}Assistente de Abordagem - Sistema PNSB{% endblock %}
+
+{% block head %}
+<style>
+.assistant-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.step-container {
+    background: #23263B;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+    border: 2px solid #2D3142;
+    transition: all 0.3s ease;
+}
+
+.step-container.active {
+    border-color: #5F5CFF;
+    box-shadow: 0 0 20px rgba(95, 92, 255, 0.3);
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    margin-right: 15px;
+}
+
+.step-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #F1F1F1;
+    margin: 0;
+}
+
+.step-description {
+    color: #E9ECEF;
+    margin-left: 55px;
+    margin-bottom: 20px;
+}
+
+.informant-card {
+    background: #2D3142;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.informant-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.informant-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #F1F1F1;
+}
+
+.informant-role {
+    color: #6EE7B7;
+    font-size: 14px;
+}
+
+.informant-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    color: #E9ECEF;
+    font-size: 14px;
+}
+
+.detail-item i {
+    width: 20px;
+    color: #5F5CFF;
+    margin-right: 8px;
+}
+
+.personality-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.personality-tag {
+    background: rgba(95, 92, 255, 0.2);
+    color: #5F5CFF;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.script-container {
+    background: #2D3142;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.script-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.script-content {
+    background: #181A20;
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 4px solid #6EE7B7;
+    margin-bottom: 15px;
+}
+
+.script-text {
+    color: #F1F1F1;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.key-points {
+    background: rgba(110, 231, 183, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.key-points h6 {
+    color: #6EE7B7;
+    margin-bottom: 10px;
+}
+
+.key-points ul {
+    color: #F1F1F1;
+    margin: 0;
+    padding-left: 20px;
+}
+
+.objection-card {
+    background: #2D3142;
+    border: 1px solid #dc3545;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.objection-title {
+    color: #dc3545;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.objection-response {
+    color: #F1F1F1;
+    font-size: 14px;
+}
+
+.checklist-container {
+    background: #2D3142;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #3A3F54;
+}
+
+.checklist-item:last-child {
+    border-bottom: none;
+}
+
+.checklist-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 15px;
+    accent-color: #5F5CFF;
+}
+
+.checklist-item label {
+    color: #F1F1F1;
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.checklist-item.completed label {
+    text-decoration: line-through;
+    color: #E9ECEF;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.btn-primary-custom {
+    background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(95, 92, 255, 0.4);
+}
+
+.btn-secondary-custom {
+    background: #B0B3C7;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary-custom:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.tips-container {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.tips-title {
+    color: #ffc107;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.tips-title i {
+    margin-right: 8px;
+}
+
+.tip-item {
+    color: #F1F1F1;
+    font-size: 14px;
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.tip-item:before {
+    content: "💡";
+    position: absolute;
+    left: 0;
+}
+
+.progress-indicator {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.progress-step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2D3142;
+    color: #E9ECEF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 15px;
+    font-weight: bold;
+    position: relative;
+}
+
+.progress-step.completed {
+    background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+    color: white;
+}
+
+.progress-step.active {
+    background: #ffc107;
+    color: #212529;
+}
+
+.progress-step:not(:last-child):after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: 30px;
+    height: 2px;
+    background: #2D3142;
+    transform: translateY(-50%);
+}
+
+.progress-step.completed:not(:last-child):after {
+    background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+}
+
+.floating-assistant {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(95, 92, 255, 0.4);
+    z-index: 1000;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 4px 15px rgba(95, 92, 255, 0.4); }
+    50% { box-shadow: 0 4px 25px rgba(95, 92, 255, 0.8); }
+    100% { box-shadow: 0 4px 15px rgba(95, 92, 255, 0.4); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="assistant-container">
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+        <h2 class="fw-bold mb-0">🤝 Assistente de Abordagem</h2>
+        <div class="d-flex gap-2">
+            <button class="btn-primary-custom" onclick="iniciarNovaAbordagem()">
+                <i class="fas fa-plus"></i> Nova Abordagem
+            </button>
+            <button class="btn-secondary-custom" onclick="consultarHistorico()">
+                <i class="fas fa-history"></i> Histórico
+            </button>
+        </div>
+    </div>
+
+    <!-- Indicador de Progresso -->
+    <div class="progress-indicator">
+        <div class="progress-step completed" id="step-1">1</div>
+        <div class="progress-step active" id="step-2">2</div>
+        <div class="progress-step" id="step-3">3</div>
+        <div class="progress-step" id="step-4">4</div>
+        <div class="progress-step" id="step-5">5</div>
+    </div>
+
+    <!-- Etapa 1: Seleção do Informante -->
+    <div class="step-container" id="etapa-1" style="display: none;">
+        <div class="step-header">
+            <div class="step-number">1</div>
+            <h3 class="step-title">Seleção do Informante</h3>
+        </div>
+        <p class="step-description">Escolha o informante e município para preparar a abordagem personalizada</p>
+        
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Município</label>
+                <select class="form-select bg-dark text-light" id="select-municipio">
+                    <option value="">Selecione o município</option>
+                    <option>Balneário Camboriú</option>
+                    <option>Balneário Piçarras</option>
+                    <option>Bombinhas</option>
+                    <option>Camboriú</option>
+                    <option>Itajaí</option>
+                    <option>Itapema</option>
+                    <option>Luiz Alves</option>
+                    <option>Navegantes</option>
+                    <option>Penha</option>
+                    <option>Porto Belo</option>
+                    <option>Ilhota</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Nome do Informante</label>
+                <input type="text" class="form-control bg-dark text-light" id="input-informante" placeholder="Digite o nome do informante">
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn-primary-custom" onclick="proximaEtapa(2)">
+                Próximo <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Etapa 2: Perfil do Informante -->
+    <div class="step-container active" id="etapa-2">
+        <div class="step-header">
+            <div class="step-number">2</div>
+            <h3 class="step-title">Perfil do Informante</h3>
+        </div>
+        <p class="step-description">Análise inteligente do perfil e histórico do informante</p>
+        
+        <div class="informant-card">
+            <div class="informant-header">
+                <div>
+                    <div class="informant-name" id="profile-name">João Silva Santos</div>
+                    <div class="informant-role" id="profile-role">Secretário Municipal de Meio Ambiente</div>
+                </div>
+                <div class="personality-tags" id="profile-tags">
+                    <span class="personality-tag">Cooperativo</span>
+                    <span class="personality-tag">Detalhista</span>
+                    <span class="personality-tag">Formal</span>
+                </div>
+            </div>
+            
+            <div class="informant-details">
+                <div class="detail-item">
+                    <i class="fas fa-phone"></i>
+                    <span id="profile-phone">(47) 9876-5432</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-envelope"></i>
+                    <span id="profile-email">joao.silva@prefeitura.sc.gov.br</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-clock"></i>
+                    <span id="profile-hours">Melhor horário: 14h-16h</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-calendar"></i>
+                    <span id="profile-lastcontact">Último contato: 15/12/2024</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span id="profile-success">Taxa de sucesso: 85%</span>
+                </div>
+                <div class="detail-item">
+                    <i class="fas fa-language"></i>
+                    <span id="profile-communication">Estilo: Formal e técnico</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-secondary-custom" onclick="etapaAnterior(1)">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button class="btn-primary-custom" onclick="proximaEtapa(3)">
+                Próximo <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Etapa 3: Script Personalizado -->
+    <div class="step-container" id="etapa-3" style="display: none;">
+        <div class="step-header">
+            <div class="step-number">3</div>
+            <h3 class="step-title">Script Personalizado</h3>
+        </div>
+        <p class="step-description">Script de abordagem gerado pela IA baseado no perfil do informante</p>
+        
+        <div class="script-container">
+            <div class="script-header">
+                <h6 class="text-light">Script de Abertura</h6>
+                <button class="btn btn-sm btn-outline-info" onclick="regenerarScript()">
+                    <i class="fas fa-sync"></i> Regenerar
+                </button>
+            </div>
+            
+            <div class="script-content">
+                <div class="script-text" id="script-abertura">
+                    "Bom dia, Sr. João Silva. Meu nome é [SEU NOME], sou pesquisador do IBGE responsável pela Pesquisa Nacional de Saneamento Básico 2024. Como conversamos anteriormente, gostaria de agendar uma visita para coletarmos as informações sobre o manejo de resíduos sólidos do município. Sei que o senhor valoriza a precisão dos dados, por isso preparei um questionário estruturado que otimizará nosso tempo. Qual seria a melhor data e horário para nossa reunião?"
+                </div>
+            </div>
+            
+            <div class="key-points">
+                <h6><i class="fas fa-key"></i> Pontos-Chave a Mencionar</h6>
+                <ul id="pontos-chave">
+                    <li>Importância nacional da pesquisa PNSB</li>
+                    <li>Dados serão usados para políticas públicas</li>
+                    <li>Compromisso com a confidencialidade</li>
+                    <li>Duração estimada: 45-60 minutos</li>
+                    <li>Possibilidade de visita técnica às instalações</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-secondary-custom" onclick="etapaAnterior(2)">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button class="btn-primary-custom" onclick="proximaEtapa(4)">
+                Próximo <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Etapa 4: Preparação para Objeções -->
+    <div class="step-container" id="etapa-4" style="display: none;">
+        <div class="step-header">
+            <div class="step-number">4</div>
+            <h3 class="step-title">Preparação para Objeções</h3>
+        </div>
+        <p class="step-description">Argumentos preparados para as principais objeções esperadas</p>
+        
+        <div id="objections-container">
+            <div class="objection-card">
+                <div class="objection-title">"Não temos tempo para a pesquisa"</div>
+                <div class="objection-response">
+                    "Compreendo perfeitamente a agenda apertada. A pesquisa é estruturada para otimizar o tempo - podemos realizar em etapas ou até mesmo de forma remota para algumas seções. O importante é que os dados do município sejam representados adequadamente nas políticas nacionais de saneamento."
+                </div>
+            </div>
+            
+            <div class="objection-card">
+                <div class="objection-title">"Já fornecemos esses dados em outras pesquisas"</div>
+                <div class="objection-response">
+                    "A PNSB tem metodologia específica e é a única pesquisa oficial sobre saneamento no país. Os dados anteriores nos ajudam a validar informações, mas precisamos de dados atualizados para retratar a realidade atual do município."
+                </div>
+            </div>
+            
+            <div class="objection-card">
+                <div class="objection-title">"Alguns dados são confidenciais"</div>
+                <div class="objection-response">
+                    "O IBGE garante total confidencialidade e sigilo estatístico. Os dados individuais jamais são divulgados - apenas dados agregados e estatísticas gerais. Temos protocolo rigoroso de proteção de dados seguindo a LGPD."
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-secondary-custom" onclick="etapaAnterior(3)">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button class="btn-primary-custom" onclick="proximaEtapa(5)">
+                Próximo <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Etapa 5: Checklist de Preparação -->
+    <div class="step-container" id="etapa-5" style="display: none;">
+        <div class="step-header">
+            <div class="step-number">5</div>
+            <h3 class="step-title">Checklist de Preparação</h3>
+        </div>
+        <p class="step-description">Verificações finais antes da abordagem</p>
+        
+        <div class="checklist-container">
+            <div class="checklist-item">
+                <input type="checkbox" id="check-1">
+                <label for="check-1">Revisar perfil do informante e histórico de contatos</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-2">
+                <label for="check-2">Preparar documentos oficiais (carta IBGE, credencial)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-3">
+                <label for="check-3">Verificar dados de contato atualizados</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-4">
+                <label for="check-4">Definir horário preferencial baseado no perfil</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-5">
+                <label for="check-5">Preparar questionário específico (MRS/MAP)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-6">
+                <label for="check-6">Ensaiar script de abertura</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-7">
+                <label for="check-7">Preparar respostas para objeções comuns</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="check-8">
+                <label for="check-8">Configurar sistema para registro da abordagem</label>
+            </div>
+        </div>
+
+        <div class="tips-container">
+            <div class="tips-title">
+                <i class="fas fa-lightbulb"></i>
+                Dicas Importantes
+            </div>
+            <div class="tip-item">Mantenha um tom profissional mas amigável</div>
+            <div class="tip-item">Seja flexível com horários e formato da reunião</div>
+            <div class="tip-item">Enfatize a importância nacional da pesquisa</div>
+            <div class="tip-item">Registre todas as interações no sistema</div>
+            <div class="tip-item">Tenha sempre um plano B preparado</div>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-secondary-custom" onclick="etapaAnterior(4)">
+                <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button class="btn-primary-custom" onclick="iniciarAbordagem()">
+                <i class="fas fa-phone"></i> Iniciar Abordagem
+            </button>
+            <button class="btn-secondary-custom" onclick="salvarPreparacao()">
+                <i class="fas fa-save"></i> Salvar Preparação
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Assistente Flutuante -->
+<div class="floating-assistant" onclick="toggleAssistenteFlutuante()" title="Assistente IA">
+    <i class="fas fa-robot"></i>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let etapaAtual = 2;
+let dadosAbordagem = {
+    municipio: '',
+    informante: '',
+    perfil: {},
+    script: '',
+    checklist: []
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarAssistente();
+    carregarPerfilInformante();
+});
+
+function inicializarAssistente() {
+    // Adicionar listeners para checkboxes
+    document.querySelectorAll('#etapa-5 input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const item = this.closest('.checklist-item');
+            if (this.checked) {
+                item.classList.add('completed');
+            } else {
+                item.classList.remove('completed');
+            }
+            verificarProgressoChecklist();
+        });
+    });
+}
+
+function proximaEtapa(proxima) {
+    // Ocultar etapa atual
+    document.getElementById(`etapa-${etapaAtual}`).style.display = 'none';
+    document.getElementById(`etapa-${etapaAtual}`).classList.remove('active');
+    document.getElementById(`step-${etapaAtual}`).classList.remove('active');
+    document.getElementById(`step-${etapaAtual}`).classList.add('completed');
+    
+    // Mostrar próxima etapa
+    etapaAtual = proxima;
+    document.getElementById(`etapa-${etapaAtual}`).style.display = 'block';
+    document.getElementById(`etapa-${etapaAtual}`).classList.add('active');
+    document.getElementById(`step-${etapaAtual}`).classList.add('active');
+    
+    // Carregar dados específicos da etapa
+    switch(etapaAtual) {
+        case 3:
+            gerarScript();
+            break;
+        case 4:
+            carregarObjecoes();
+            break;
+        case 5:
+            verificarPreparacao();
+            break;
+    }
+    
+    // Scroll suave para o topo
+    document.querySelector('.step-container.active').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+    });
+}
+
+function etapaAnterior(anterior) {
+    // Ocultar etapa atual
+    document.getElementById(`etapa-${etapaAtual}`).style.display = 'none';
+    document.getElementById(`etapa-${etapaAtual}`).classList.remove('active');
+    document.getElementById(`step-${etapaAtual}`).classList.remove('active');
+    
+    // Mostrar etapa anterior
+    etapaAtual = anterior;
+    document.getElementById(`etapa-${etapaAtual}`).style.display = 'block';
+    document.getElementById(`etapa-${etapaAtual}`).classList.add('active');
+    document.getElementById(`step-${etapaAtual}`).classList.add('active');
+    document.getElementById(`step-${etapaAtual}`).classList.remove('completed');
+    
+    // Scroll suave para o topo
+    document.querySelector('.step-container.active').scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+    });
+}
+
+async function carregarPerfilInformante() {
+    try {
+        // Simular carregamento do perfil
+        showToast('Carregando perfil do informante...', 'info');
+        
+        // Em produção, buscar do endpoint real
+        // const response = await fetch('/api/pnsb/perfil-informante/João Silva Santos/Itajaí');
+        
+        // Dados simulados para demonstração
+        const perfil = {
+            nome: 'João Silva Santos',
+            cargo: 'Secretário Municipal de Meio Ambiente',
+            municipio: 'Itajaí',
+            telefone: '(47) 9876-5432',
+            email: 'joao.silva@prefeitura.sc.gov.br',
+            melhor_horario: '14h-16h',
+            ultimo_contato: '15/12/2024',
+            taxa_sucesso: '85%',
+            estilo_comunicacao: 'Formal e técnico',
+            personalidade: ['Cooperativo', 'Detalhista', 'Formal'],
+            historico_abordagens: [
+                { data: '15/12/2024', resultado: 'Sucesso', observacoes: 'Muito receptivo' },
+                { data: '03/11/2024', resultado: 'Reagendado', observacoes: 'Solicitou nova data' }
+            ]
+        };
+        
+        dadosAbordagem.perfil = perfil;
+        atualizarInterfacePerfil(perfil);
+        
+        showToast('Perfil carregado com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao carregar perfil:', error);
+        showToast('Erro ao carregar perfil do informante', 'danger');
+    }
+}
+
+function atualizarInterfacePerfil(perfil) {
+    document.getElementById('profile-name').textContent = perfil.nome;
+    document.getElementById('profile-role').textContent = perfil.cargo;
+    document.getElementById('profile-phone').textContent = perfil.telefone;
+    document.getElementById('profile-email').textContent = perfil.email;
+    document.getElementById('profile-hours').textContent = `Melhor horário: ${perfil.melhor_horario}`;
+    document.getElementById('profile-lastcontact').textContent = `Último contato: ${perfil.ultimo_contato}`;
+    document.getElementById('profile-success').textContent = `Taxa de sucesso: ${perfil.taxa_sucesso}`;
+    document.getElementById('profile-communication').textContent = `Estilo: ${perfil.estilo_comunicacao}`;
+    
+    // Atualizar tags de personalidade
+    const tagsContainer = document.getElementById('profile-tags');
+    tagsContainer.innerHTML = '';
+    perfil.personalidade.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'personality-tag';
+        span.textContent = tag;
+        tagsContainer.appendChild(span);
+    });
+}
+
+async function gerarScript() {
+    try {
+        showToast('Gerando script personalizado...', 'info');
+        
+        // Simular geração de script pela IA
+        setTimeout(() => {
+            const scripts = [
+                {
+                    abertura: `"Bom dia, ${dadosAbordagem.perfil.nome}. Meu nome é [SEU NOME], sou pesquisador do IBGE responsável pela Pesquisa Nacional de Saneamento Básico 2024. Como conversamos anteriormente, gostaria de agendar uma visita para coletarmos as informações sobre o manejo de resíduos sólidos do município. Sei que o senhor valoriza a precisão dos dados, por isso preparei um questionário estruturado que otimizará nosso tempo. Qual seria a melhor data e horário para nossa reunião?"`,
+                    pontos: [
+                        'Importância nacional da pesquisa PNSB',
+                        'Dados serão usados para políticas públicas',
+                        'Compromisso com a confidencialidade',
+                        'Duração estimada: 45-60 minutos',
+                        'Possibilidade de visita técnica às instalações'
+                    ]
+                },
+                {
+                    abertura: `"Olá, ${dadosAbordagem.perfil.nome}. Espero que esteja bem. Sou [SEU NOME] do IBGE e gostaria de dar continuidade ao nosso processo da Pesquisa Nacional de Saneamento Básico. Preparei uma abordagem técnica focada nos aspectos que são de maior interesse para a gestão municipal. Quando seria conveniente para realizarmos nossa coleta de dados?"`,
+                    pontos: [
+                        'Foco na gestão técnica municipal',
+                        'Dados comparativos com outros municípios',
+                        'Relatório técnico personalizado',
+                        'Flexibilidade na metodologia',
+                        'Suporte técnico contínuo'
+                    ]
+                }
+            ];
+            
+            const scriptEscolhido = scripts[Math.floor(Math.random() * scripts.length)];
+            
+            document.getElementById('script-abertura').textContent = scriptEscolhido.abertura;
+            
+            const pontosContainer = document.getElementById('pontos-chave');
+            pontosContainer.innerHTML = '';
+            scriptEscolhido.pontos.forEach(ponto => {
+                const li = document.createElement('li');
+                li.textContent = ponto;
+                pontosContainer.appendChild(li);
+            });
+            
+            dadosAbordagem.script = scriptEscolhido;
+            showToast('Script gerado com sucesso!', 'success');
+        }, 1500);
+        
+    } catch (error) {
+        console.error('Erro ao gerar script:', error);
+        showToast('Erro ao gerar script', 'danger');
+    }
+}
+
+function regenerarScript() {
+    gerarScript();
+}
+
+function carregarObjecoes() {
+    // Objeções já estão carregadas no HTML
+    // Aqui poderia buscar objeções específicas do perfil
+    showToast('Objeções comuns carregadas', 'info');
+}
+
+function verificarPreparacao() {
+    const checkboxes = document.querySelectorAll('#etapa-5 input[type="checkbox"]');
+    let totalMarcados = 0;
+    
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            totalMarcados++;
+        }
+    });
+    
+    const progresso = Math.round((totalMarcados / checkboxes.length) * 100);
+    
+    if (progresso === 100) {
+        showToast('Preparação completa! Pronto para abordagem.', 'success');
+    } else if (progresso >= 75) {
+        showToast(`Preparação quase completa (${progresso}%)`, 'warning');
+    } else {
+        showToast(`Complete o checklist de preparação (${progresso}%)`, 'info');
+    }
+}
+
+function verificarProgressoChecklist() {
+    verificarPreparacao();
+}
+
+function iniciarAbordagem() {
+    const checkboxes = document.querySelectorAll('#etapa-5 input[type="checkbox"]');
+    const totalMarcados = Array.from(checkboxes).filter(cb => cb.checked).length;
+    
+    if (totalMarcados < checkboxes.length * 0.8) {
+        showToast('Complete pelo menos 80% do checklist antes de iniciar', 'warning');
+        return;
+    }
+    
+    showToast('Iniciando abordagem...', 'info');
+    
+    setTimeout(() => {
+        if (confirm('Deseja registrar esta abordagem no sistema e abrir a tela de agendamento?')) {
+            // Registrar abordagem
+            registrarAbordagem();
+            // Redirecionar para agendamento
+            window.location.href = '/visitas?informante=' + encodeURIComponent(dadosAbordagem.perfil.nome);
+        }
+    }, 1000);
+}
+
+async function registrarAbordagem() {
+    try {
+        const abordagem = {
+            informante_nome: dadosAbordagem.perfil.nome,
+            municipio: dadosAbordagem.perfil.municipio,
+            dados_tentativa: {
+                data_abordagem: new Date().toISOString(),
+                tipo_abordagem: 'telefonica_assistida',
+                script_utilizado: dadosAbordagem.script,
+                preparacao_completa: true,
+                checklist_items: Array.from(document.querySelectorAll('#etapa-5 input[type="checkbox"]'))
+                    .map((cb, index) => ({
+                        item: cb.nextElementSibling.textContent,
+                        completed: cb.checked
+                    }))
+            }
+        };
+        
+        // Em produção, enviar para API
+        // await fetch('/api/pnsb/perfil-informante/registrar-tentativa', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(abordagem)
+        // });
+        
+        showToast('Abordagem registrada com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao registrar abordagem:', error);
+        showToast('Erro ao registrar abordagem', 'danger');
+    }
+}
+
+function salvarPreparacao() {
+    showToast('Preparação salva! Você pode continuar depois.', 'success');
+}
+
+function iniciarNovaAbordagem() {
+    // Reset do assistente
+    etapaAtual = 1;
+    
+    // Ocultar todas as etapas
+    for (let i = 1; i <= 5; i++) {
+        document.getElementById(`etapa-${i}`).style.display = 'none';
+        document.getElementById(`etapa-${i}`).classList.remove('active');
+        document.getElementById(`step-${i}`).className = 'progress-step';
+    }
+    
+    // Mostrar primeira etapa
+    document.getElementById('etapa-1').style.display = 'block';
+    document.getElementById('etapa-1').classList.add('active');
+    document.getElementById('step-1').classList.add('active');
+    
+    // Limpar dados
+    dadosAbordagem = {
+        municipio: '',
+        informante: '',
+        perfil: {},
+        script: '',
+        checklist: []
+    };
+    
+    showToast('Nova abordagem iniciada', 'info');
+}
+
+function consultarHistorico() {
+    showToast('Abrindo histórico de abordagens...', 'info');
+    // Implementar interface de histórico
+}
+
+function toggleAssistenteFlutuante() {
+    showToast('Assistente IA: Como posso ajudar?', 'info');
+    // Implementar chat com assistente
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
+{% endblock %}

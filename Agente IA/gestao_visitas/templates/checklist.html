@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+
+{% block title %}Checklist - Gestão de Visitas PNSB{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(120deg, #23263B 0%, #181A20 100%);
+    }
+    .checklist-card {
+        background: #23263B;
+        border-radius: 20px;
+        box-shadow: 0 4px 24px 0 rgba(0,0,0,0.10);
+        border: 1.5px solid #2D3142;
+        padding: 2.5rem 2rem;
+        margin-bottom: 2.5rem;
+        transition: box-shadow 0.2s;
+    }
+    .checklist-card:hover {
+        box-shadow: 0 8px 32px 0 rgba(95,92,255,0.15);
+    }
+    .checklist-title {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #6EE7B7;
+        margin-bottom: 2.5rem;
+        letter-spacing: 1px;
+        text-align: center;
+        text-shadow: 0 2px 8px #181A20;
+    }
+    .checklist-section-title {
+        font-size: 1.35rem;
+        font-weight: 700;
+        color: #5F5CFF;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid #35395a;
+        padding-bottom: 0.5rem;
+    }
+    .checklist-checkbox {
+        accent-color: #5F5CFF;
+        width: 1.4rem;
+        height: 1.4rem;
+        margin-right: 0.7rem;
+        border-radius: 6px;
+        border: 2px solid #6EE7B7;
+        background: #181A20;
+        transition: box-shadow 0.2s;
+    }
+    .checklist-checkbox:checked {
+        box-shadow: 0 0 0 3px #6EE7B7;
+    }
+    .checklist-label {
+        font-size: 1.1rem;
+        color: #F1F1F1;
+        font-weight: 500;
+        letter-spacing: 0.2px;
+    }
+    .checklist-btn {
+        background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 700;
+        padding: 0.9rem 2.5rem;
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 2px 8px rgba(95,92,255,0.10);
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .checklist-btn:hover {
+        background: linear-gradient(90deg, #6EE7B7 0%, #5F5CFF 100%);
+        box-shadow: 0 4px 16px rgba(95,92,255,0.18);
+    }
+    .checklist-observacoes {
+        background: #181A20;
+        color: #F1F1F1;
+        border-radius: 12px;
+        border: 1.5px solid #35395a;
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        width: 100%;
+        min-height: 80px;
+        margin-top: 0.5rem;
+    }
+    .checklist-bloco-titulo {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: #fff;
+        margin: 2.5rem 0 1.5rem 0;
+        letter-spacing: 1px;
+        text-shadow: 0 2px 8px #181A20;
+        border-left: 6px solid #5F5CFF;
+        padding-left: 1rem;
+    }
+</style>
+<div class="container mx-auto px-4 py-8">
+    <h1 class="checklist-title">Checklist da Visita</h1>
+    <form id="checklistForm" class="space-y-10 max-w-4xl mx-auto">
+        <!-- BLOCO 1: Antes de Sair para a Visita -->
+        <div class="checklist-bloco-titulo">Antes de Sair para a Visita</div>
+        <div class="checklist-card">
+            <h2 class="checklist-section-title">Identificação e Documentação</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <label class="flex items-center"><input type="checkbox" id="cracha_ibge" name="cracha_ibge" class="checklist-checkbox"> <span class="checklist-label">Apresentação com crachá do IBGE</span></label>
+                <label class="flex items-center"><input type="checkbox" id="recibo_entrega" name="recibo_entrega" class="checklist-checkbox"> <span class="checklist-label">Recibo de entrega/devolução (preencher e levar)</span></label>
+            </div>
+        </div>
+        <div class="checklist-card">
+            <h2 class="checklist-section-title">Materiais Impressos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <label class="flex items-center"><input type="checkbox" id="questionario_mrs_impresso" name="questionario_mrs_impresso" class="checklist-checkbox"> <span class="checklist-label">Questionário MRS Impresso</span></label>
+                <label class="flex items-center"><input type="checkbox" id="questionario_map_impresso" name="questionario_map_impresso" class="checklist-checkbox"> <span class="checklist-label">Questionário MAP Impresso</span></label>
+            </div>
+        </div>
+        <div class="checklist-card">
+            <h2 class="checklist-section-title">Materiais Digitais</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <label class="flex items-center"><input type="checkbox" id="carta_oficial" name="carta_oficial" class="checklist-checkbox"> <span class="checklist-label">Carta Oficial Informante</span></label>
+                <label class="flex items-center"><input type="checkbox" id="questionario_mrs_digital" name="questionario_mrs_digital" class="checklist-checkbox"> <span class="checklist-label">Questionário MRS em PDF Editável</span></label>
+                <label class="flex items-center"><input type="checkbox" id="questionario_map_digital" name="questionario_map_digital" class="checklist-checkbox"> <span class="checklist-label">Questionário MAP em PDF Editável</span></label>
+                <label class="flex items-center"><input type="checkbox" id="manual_pnsb" name="manual_pnsb" class="checklist-checkbox"> <span class="checklist-label">Manual PNSB 2024</span></label>
+                <label class="flex items-center"><input type="checkbox" id="guia_site_externo" name="guia_site_externo" class="checklist-checkbox"> <span class="checklist-label">Guia de Acesso ao Site Externo</span></label>
+                <label class="flex items-center"><input type="checkbox" id="card_contato" name="card_contato" class="checklist-checkbox"> <span class="checklist-label">Card Contato IBGE</span></label>
+                <label class="flex items-center"><input type="checkbox" id="audio_explicativo" name="audio_explicativo" class="checklist-checkbox"> <span class="checklist-label">Áudio Explicativo sobre o Questionário</span></label>
+            </div>
+        </div>
+        <!-- BLOCO 2: Durante a Visita -->
+        <div class="checklist-bloco-titulo">Durante a Visita</div>
+        <div class="checklist-card">
+            <h2 class="checklist-section-title">Orientações Realizadas</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <label class="flex items-center"><input type="checkbox" id="explicacao_objetivo" name="explicacao_objetivo" class="checklist-checkbox"> <span class="checklist-label">Explicação do Objetivo da Pesquisa</span></label>
+                <label class="flex items-center"><input type="checkbox" id="explicacao_estrutura" name="explicacao_estrutura" class="checklist-checkbox"> <span class="checklist-label">Explicação da Estrutura do Questionário</span></label>
+                <label class="flex items-center"><input type="checkbox" id="explicacao_data_referencia" name="explicacao_data_referencia" class="checklist-checkbox"> <span class="checklist-label">Explicação da Data de Referência</span></label>
+                <label class="flex items-center"><input type="checkbox" id="explicacao_prestador" name="explicacao_prestador" class="checklist-checkbox"> <span class="checklist-label">Explicação sobre Prestadores de Serviço</span></label>
+                <label class="flex items-center"><input type="checkbox" id="explicacao_servicos" name="explicacao_servicos" class="checklist-checkbox"> <span class="checklist-label">Explicação sobre Serviços Incluídos</span></label>
+                <label class="flex items-center"><input type="checkbox" id="explicacao_site_externo" name="explicacao_site_externo" class="checklist-checkbox"> <span class="checklist-label">Explicação do Site Externo (online)</span></label>
+                <label class="flex items-center"><input type="checkbox" id="explicacao_pdf_editavel" name="explicacao_pdf_editavel" class="checklist-checkbox"> <span class="checklist-label">Explicação do PDF Editável</span></label>
+            </div>
+        </div>
+        <!-- BLOCO 3: Após/Retorno da Visita -->
+        <div class="checklist-bloco-titulo">Após/Retorno da Visita</div>
+        <div class="checklist-card">
+            <h2 class="checklist-section-title">Confirmações e Validações</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <label class="flex items-center"><input type="checkbox" id="assinatura_informante" name="assinatura_informante" class="checklist-checkbox"> <span class="checklist-label">Assinatura do Informante (no recibo)</span></label>
+                <label class="flex items-center"><input type="checkbox" id="validacao_prestadores" name="validacao_prestadores" class="checklist-checkbox"> <span class="checklist-label">Validação dos Prestadores</span></label>
+                <label class="flex items-center"><input type="checkbox" id="combinacao_entrega" name="combinacao_entrega" class="checklist-checkbox"> <span class="checklist-label">Combinação de Entrega</span></label>
+                <label class="flex items-center"><input type="checkbox" id="combinacao_acompanhamento" name="combinacao_acompanhamento" class="checklist-checkbox"> <span class="checklist-label">Combinação de Acompanhamento</span></label>
+            </div>
+        </div>
+        <div class="checklist-card">
+            <h2 class="checklist-section-title">Observações</h2>
+            <textarea id="observacoes" name="observacoes" rows="4" class="checklist-observacoes"></textarea>
+        </div>
+        <div class="flex justify-end">
+            <button type="submit" class="checklist-btn">
+                Salvar Checklist
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+{% set visita_id = visita_id or visita.id or visitaId %}
+document.addEventListener('DOMContentLoaded', function() {
+    // Carrega o checklist salvo da visita correta
+    const visitaId = {{ visita_id|tojson }};
+    fetch(`/api/checklist/${visitaId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data) {
+                for (const key in data) {
+                    const input = document.getElementById(key);
+                    if (input && typeof data[key] === 'boolean') {
+                        input.checked = data[key];
+                    }
+                    if (key === 'observacoes') {
+                        document.getElementById('observacoes').value = data[key] || '';
+                    }
+                }
+            }
+        });
+});
+
+document.getElementById('checklistForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const visitaId = {{ visita_id|tojson }};
+    const formData = new FormData(e.target);
+    const data = {};
+    for (let [key, value] of formData.entries()) {
+        if (key === 'observacoes') {
+            data[key] = value;
+        } else {
+            data[key] = true;
+        }
+    }
+    document.querySelectorAll('input[type="checkbox"]').forEach(input => {
+        if (!formData.has(input.name)) {
+            data[input.name] = false;
+        }
+    });
+    try {
+        const response = await fetch(`/api/checklist/${visitaId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({dados: data, etapa: 'Completo'})
+        });
+        if (response.ok) {
+            alert('Checklist salvo com sucesso!');
+        } else {
+            alert('Erro ao salvar checklist');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        alert('Erro ao salvar checklist');
+    }
+});
+
+function salvarChecklist(visitaId, etapaIndex) {
+  const etapa = etapas[etapaIndex];
+  const dados = coletarDadosEtapa(etapaIndex);
+  fetch(`/api/checklist/${visitaId}`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({etapa: etapa, dados: dados})
+  }).then(() => { showToast('Checklist salvo!', 'success'); atualizarVisitas(); });
+}
+
+function limparChecklistEtapa(visitaId, etapaIndex) {
+  const etapa = etapas[etapaIndex];
+  fetch(`/api/checklist/${visitaId}/${encodeURIComponent(etapa)}`, {
+    method: 'DELETE'
+  }).then(() => { showToast('Etapa limpa!', 'warning'); atualizarVisitas(); });
+}
+
+function avancarEtapa(visitaId, etapaIndex) {
+  salvarChecklist(visitaId, etapaIndex);
+  abrirChecklistModal(visitaId, etapaIndex + 1);
+}
+
+function voltarEtapa(visitaId, etapaIndex) {
+  salvarChecklist(visitaId, etapaIndex);
+  abrirChecklistModal(visitaId, etapaIndex - 1);
+}
+</script>
+{% endblock %} 

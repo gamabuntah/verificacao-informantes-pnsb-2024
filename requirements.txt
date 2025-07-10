@@ -1,0 +1,21 @@
+flask==3.0.2
+flask-sqlalchemy==3.1.1
+flask-migrate==4.0.5
+python-dotenv==1.0.1
+pandas==2.3.0
+requests==2.31.0
+openpyxl==3.1.2
+xlrd==2.0.1
+xlwt==1.3.0
+xlsxwriter==3.2.0
+python-dateutil==2.8.2
+pytz==2024.1
+tzdata==2025.2
+
+# Dependências para testes
+pytest==7.4.3
+pytest-flask==1.3.0
+pytest-cov==4.1.0
+
+# Dependências de segurança e validação
+werkzeug==3.0.1 

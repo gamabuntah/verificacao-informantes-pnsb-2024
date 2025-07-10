@@ -1,0 +1,489 @@
+{% extends 'base.html' %}
+{% block title %}WhatsApp Business - Configuração{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <h2 class="fw-bold mb-0">📱 WhatsApp Business - PNSB 2024</h2>
+    <div class="d-flex gap-2">
+        <button class="btn-primary-custom" onclick="testarConexao()">
+            <i class="fas fa-wifi"></i> Testar Conexão
+        </button>
+        <button class="btn-outline-custom" onclick="abrirModalConfig()">
+            <i class="fas fa-cog"></i> Configurações
+        </button>
+    </div>
+</div>
+
+<!-- Status Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div id="statusIcon" class="mb-3">
+                    <i class="fas fa-circle text-warning fa-2x"></i>
+                </div>
+                <h5 class="card-title">Status da API</h5>
+                <p id="statusText" class="text-muted">Verificando...</p>
+                <button class="btn btn-sm btn-outline-primary" onclick="verificarStatus()">
+                    <i class="fas fa-sync"></i> Atualizar
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-paper-plane text-info fa-2x"></i>
+                </div>
+                <h5 class="card-title">Mensagens Hoje</h5>
+                <p id="mensagensHoje" class="h4 text-info">0</p>
+                <small class="text-muted">Última atualização: <span id="ultimaAtualizacao">--</span></small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-check-circle text-success fa-2x"></i>
+                </div>
+                <h5 class="card-title">Taxa de Entrega</h5>
+                <p id="taxaEntrega" class="h4 text-success">0%</p>
+                <small class="text-muted">Base: últimas 24h</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="fas fa-eye text-primary fa-2x"></i>
+                </div>
+                <h5 class="card-title">Taxa de Leitura</h5>
+                <p id="taxaLeitura" class="h4 text-primary">0%</p>
+                <small class="text-muted">Mensagens visualizadas</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Templates Disponíveis -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent border-0 py-3">
+                <h5 class="mb-0">📄 Templates Disponíveis</h5>
+            </div>
+            <div class="card-body">
+                <div id="templatesContainer" class="row g-3">
+                    <!-- Templates serão carregados via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Envio Manual -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent border-0 py-3">
+                <h5 class="mb-0">✉️ Envio Manual de Mensagem</h5>
+            </div>
+            <div class="card-body">
+                <form id="formEnvioManual">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Telefone</label>
+                            <input type="tel" class="form-control" id="telefoneManual" placeholder="+55 11 99999-9999" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Template</label>
+                            <select class="form-select" id="templateManual" required>
+                                <option value="">Selecione um template...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Visita (opcional)</label>
+                            <input type="number" class="form-control" id="visitaIdManual" placeholder="ID da visita">
+                        </div>
+                    </div>
+                    
+                    <div id="variaveisContainer" class="mt-3" style="display: none;">
+                        <h6>Variáveis do Template:</h6>
+                        <div id="variaveisInputs" class="row g-2"></div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Enviar Mensagem
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="limparFormulario()">
+                            <i class="fas fa-times"></i> Limpar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Envio em Lote -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent border-0 py-3">
+                <h5 class="mb-0">📤 Envio em Lote para Visitas</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Dica:</strong> Selecione visitas agendadas para enviar mensagens de agendamento automaticamente.
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Filtrar por Status</label>
+                        <select class="form-select" id="filtroStatusLote">
+                            <option value="agendada">Agendadas</option>
+                            <option value="em preparação">Em Preparação</option>
+                            <option value="todas">Todas as Visitas</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Filtrar por Município</label>
+                        <select class="form-select" id="filtroMunicipioLote">
+                            <option value="">Todos os municípios</option>
+                            <!-- Municípios serão carregados via JS -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <button class="btn btn-outline-primary" onclick="carregarVisitasLote()">
+                        <i class="fas fa-search"></i> Buscar Visitas
+                    </button>
+                </div>
+                
+                <div id="visitasLoteContainer" class="mt-4" style="display: none;">
+                    <h6>Visitas Encontradas:</h6>
+                    <div id="visitasLoteList" class="border rounded p-3" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Visitas serão listadas aqui -->
+                    </div>
+                    
+                    <div class="mt-3">
+                        <button class="btn btn-success" onclick="enviarLoteAgendamentos()">
+                            <i class="fas fa-paper-plane"></i> Enviar Agendamentos Selecionados
+                        </button>
+                        <button class="btn btn-outline-warning" onclick="enviarLoteLembretes()">
+                            <i class="fas fa-bell"></i> Enviar Lembretes Selecionados
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Configuração -->
+<div class="modal fade" id="modalConfig" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">⚙️ Configuração WhatsApp Business</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Atenção:</strong> As configurações devem ser definidas via variáveis de ambiente por segurança.
+                </div>
+                
+                <h6>Variáveis de Ambiente Necessárias:</h6>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <code>WHATSAPP_ACCESS_TOKEN</code>
+                        <span id="tokenStatus" class="badge bg-secondary">Não verificado</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <code>WHATSAPP_PHONE_NUMBER_ID</code>
+                        <span id="phoneStatus" class="badge bg-secondary">Não verificado</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <code>WHATSAPP_BUSINESS_ACCOUNT_ID</code>
+                        <span id="businessStatus" class="badge bg-secondary">Não verificado</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <code>WHATSAPP_WEBHOOK_VERIFY_TOKEN</code>
+                        <span id="webhookStatus" class="badge bg-secondary">Não verificado</span>
+                    </li>
+                </ul>
+                
+                <div class="mt-4">
+                    <h6>Como Configurar:</h6>
+                    <ol>
+                        <li>Acesse o <a href="https://developers.facebook.com/" target="_blank">Facebook Developers</a></li>
+                        <li>Crie um app para WhatsApp Business</li>
+                        <li>Configure o webhook apontando para: <code>/api/whatsapp/webhook</code></li>
+                        <li>Obtenha o Access Token e Phone Number ID</li>
+                        <li>Configure as variáveis de ambiente no sistema</li>
+                    </ol>
+                </div>
+                
+                <div class="mt-3">
+                    <label class="form-label">Teste de Conexão (Telefone):</label>
+                    <div class="input-group">
+                        <input type="tel" class="form-control" id="telefoneTestConfig" placeholder="+55 11 99999-9999">
+                        <button class="btn btn-outline-primary" onclick="testarConexaoConfig()">
+                            <i class="fas fa-test-tube"></i> Testar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Toast para notificações -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+    <div id="toastWhatsApp" class="toast align-items-center border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastWhatsAppMsg"></div>
+            <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let templates = {};
+let visitasLote = [];
+
+document.addEventListener('DOMContentLoaded', function() {
+    verificarStatus();
+    carregarTemplates();
+    carregarMunicipios();
+    carregarEstatisticas();
+});
+
+async function verificarStatus() {
+    try {
+        const response = await fetch('/api/whatsapp/config/status');
+        const data = await response.json();
+        
+        const icon = document.getElementById('statusIcon');
+        const text = document.getElementById('statusText');
+        
+        if (data.configurado) {
+            icon.innerHTML = '<i class="fas fa-circle text-success fa-2x"></i>';
+            text.textContent = 'Conectado';
+            text.className = 'text-success';
+        } else {
+            icon.innerHTML = '<i class="fas fa-circle text-danger fa-2x"></i>';
+            text.textContent = 'Desconectado';
+            text.className = 'text-danger';
+        }
+        
+        // Atualizar status no modal de config
+        if (data.detalhes) {
+            document.getElementById('tokenStatus').className = `badge ${data.detalhes.access_token ? 'bg-success' : 'bg-danger'}`;
+            document.getElementById('tokenStatus').textContent = data.detalhes.access_token ? 'Configurado' : 'Não configurado';
+            
+            document.getElementById('phoneStatus').className = `badge ${data.detalhes.phone_number_id ? 'bg-success' : 'bg-danger'}`;
+            document.getElementById('phoneStatus').textContent = data.detalhes.phone_number_id ? 'Configurado' : 'Não configurado';
+            
+            document.getElementById('businessStatus').className = `badge ${data.detalhes.business_account_id ? 'bg-success' : 'bg-danger'}`;
+            document.getElementById('businessStatus').textContent = data.detalhes.business_account_id ? 'Configurado' : 'Não configurado';
+            
+            document.getElementById('webhookStatus').className = `badge ${data.detalhes.webhook_verify_token ? 'bg-success' : 'bg-danger'}`;
+            document.getElementById('webhookStatus').textContent = data.detalhes.webhook_verify_token ? 'Configurado' : 'Não configurado';
+        }
+        
+    } catch (error) {
+        console.error('Erro ao verificar status:', error);
+        showToast('Erro ao verificar status da API', 'danger');
+    }
+}
+
+async function carregarTemplates() {
+    try {
+        const response = await fetch('/api/whatsapp/templates');
+        const data = await response.json();
+        
+        templates = data.templates;
+        
+        // Renderizar templates na página
+        const container = document.getElementById('templatesContainer');
+        container.innerHTML = '';
+        
+        // Atualizar select do envio manual
+        const select = document.getElementById('templateManual');
+        select.innerHTML = '<option value="">Selecione um template...</option>';
+        
+        Object.keys(templates).forEach(nome => {
+            const template = templates[nome];
+            
+            // Card do template
+            const card = document.createElement('div');
+            card.className = 'col-md-6 col-lg-4';
+            card.innerHTML = `
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h6 class="card-title">${template.nome}</h6>
+                        <p class="card-text text-muted small">${template.tipo}</p>
+                        <p class="card-text">${template.corpo.substring(0, 100)}...</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">${template.variaveis.length} variáveis</small>
+                            <button class="btn btn-sm btn-outline-primary" onclick="visualizarTemplate('${nome}')">
+                                Ver Detalhes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+            
+            // Option no select
+            const option = document.createElement('option');
+            option.value = nome;
+            option.textContent = `${template.nome} (${template.tipo})`;
+            select.appendChild(option);
+        });
+        
+    } catch (error) {
+        console.error('Erro ao carregar templates:', error);
+        showToast('Erro ao carregar templates', 'danger');
+    }
+}
+
+function atualizarVariaveis() {
+    const templateSelecionado = document.getElementById('templateManual').value;
+    const container = document.getElementById('variaveisContainer');
+    const inputsContainer = document.getElementById('variaveisInputs');
+    
+    if (!templateSelecionado || !templates[templateSelecionado]) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    const template = templates[templateSelecionado];
+    container.style.display = 'block';
+    inputsContainer.innerHTML = '';
+    
+    template.variaveis.forEach(variavel => {
+        const div = document.createElement('div');
+        div.className = 'col-md-6';
+        div.innerHTML = `
+            <label class="form-label">${variavel}</label>
+            <input type="text" class="form-control" name="var_${variavel}" placeholder="Digite ${variavel}...">
+        `;
+        inputsContainer.appendChild(div);
+    });
+}
+
+// Event listener para mudança de template
+document.getElementById('templateManual').addEventListener('change', atualizarVariaveis);
+
+async function carregarEstatisticas() {
+    try {
+        const response = await fetch('/api/whatsapp/stats');
+        const data = await response.json();
+        
+        document.getElementById('mensagensHoje').textContent = data.mensagens_enviadas_hoje || 0;
+        document.getElementById('taxaEntrega').textContent = `${data.taxa_entrega || 0}%`;
+        document.getElementById('taxaLeitura').textContent = `${data.taxa_leitura || 0}%`;
+        document.getElementById('ultimaAtualizacao').textContent = new Date().toLocaleTimeString();
+        
+    } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+    }
+}
+
+function carregarMunicipios() {
+    const municipios = [
+        'Balneário Camboriú', 'Balneário Piçarras', 'Bombinhas', 'Camboriú',
+        'Itajaí', 'Itapema', 'Luiz Alves', 'Navegantes', 'Penha', 'Porto Belo', 'Ilhota'
+    ];
+    
+    const select = document.getElementById('filtroMunicipioLote');
+    municipios.forEach(municipio => {
+        const option = document.createElement('option');
+        option.value = municipio;
+        option.textContent = municipio;
+        select.appendChild(option);
+    });
+}
+
+function abrirModalConfig() {
+    const modal = new bootstrap.Modal(document.getElementById('modalConfig'));
+    modal.show();
+    verificarStatus();
+}
+
+function testarConexao() {
+    const telefone = prompt('Digite um telefone para teste (formato: +55 11 99999-9999):');
+    if (!telefone) return;
+    
+    testarConexaoComTelefone(telefone);
+}
+
+function testarConexaoConfig() {
+    const telefone = document.getElementById('telefoneTestConfig').value;
+    if (!telefone) {
+        showToast('Digite um telefone para teste', 'warning');
+        return;
+    }
+    
+    testarConexaoComTelefone(telefone);
+}
+
+async function testarConexaoComTelefone(telefone) {
+    try {
+        showToast('Enviando mensagem de teste...', 'info');
+        
+        const response = await fetch('/api/whatsapp/test/connection', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({telefone_teste: telefone})
+        });
+        
+        const data = await response.json();
+        
+        if (data.resultado?.sucesso) {
+            showToast('Teste realizado com sucesso! Verifique o WhatsApp.', 'success');
+        } else {
+            showToast(`Erro no teste: ${data.resultado?.erro || 'Erro desconhecido'}`, 'danger');
+        }
+        
+    } catch (error) {
+        console.error('Erro no teste:', error);
+        showToast('Erro ao testar conexão', 'danger');
+    }
+}
+
+// Implementar demais funções (envio manual, lote, etc.)
+function showToast(message, type = 'primary') {
+    const toast = document.getElementById('toastWhatsApp');
+    const toastMsg = document.getElementById('toastWhatsAppMsg');
+    
+    toast.className = `toast align-items-center text-bg-${type} border-0`;
+    toastMsg.textContent = message;
+    
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+}
+
+function limparFormulario() {
+    document.getElementById('formEnvioManual').reset();
+    document.getElementById('variaveisContainer').style.display = 'none';
+}
+
+// Atualizar estatísticas a cada 30 segundos
+setInterval(carregarEstatisticas, 30000);
+</script>
+{% endblock %}

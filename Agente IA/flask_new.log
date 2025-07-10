@@ -1,0 +1,264 @@
+⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250706_232015
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+ * Serving Flask app 'app'
+ * Debug mode: on
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+INFO:werkzeug: * Detected change in '/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/services/route_optimizer.py', reloading
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250706_232019
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+🛑 Sistema de backup automático parado
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+INFO:werkzeug: * Detected change in '/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/services/route_optimizer.py', reloading
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250706_232254
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+🛑 Sistema de backup automático parado
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:24:06] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:26:05] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:26:07] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:26:07] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:21] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/icons/icon-base.svg HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "GET /mapa-progresso HTTP/1.1" 200 -
+Traceback (most recent call last):
+Traceback (most recent call last):
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: unable to open database file
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+sqlite3.OperationalError: unable to open database file
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/app.py", line 1065, in get_progresso_mapa
+    progresso = ProgressoQuestionarios.calcular_progresso_municipio(municipio)
+
+The above exception was the direct cause of the following exception:
+
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/models/questionarios_obrigatorios.py", line 602, in calcular_progresso_municipio
+    totais_esperados = ProgressoQuestionarios.calcular_totais_esperados_dinamicos(municipio)
+Traceback (most recent call last):
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/models/questionarios_obrigatorios.py", line 540, in calcular_totais_esperados_dinamicos
+    ProgressoQuestionarios.garantir_prefeitura_completa(municipio)
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/app.py", line 313, in get_visitas
+    visitas = query.all()
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 2772, in all
+    return self._iter().all()
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 2907, in _iter
+    result = self.session.execute(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/models/questionarios_obrigatorios.py", line 485, in garantir_prefeitura_completa
+    ).first()
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 2823, in first
+    return self.limit(1)._iter().first()
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1943, in _execute_context
+    self._handle_dbapi_exception(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2124, in _handle_dbapi_exception
+    util.raise_(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/util/compat.py", line 208, in raise_
+    raise exception
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/orm/query.py", line 2907, in _iter
+    result = self.session.execute(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/orm/session.py", line 1712, in execute
+    result = conn._execute_20(statement, params or {}, execution_options)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) unable to open database file
+[SQL: SELECT visitas.id AS visitas_id, visitas.municipio AS visitas_municipio, visitas.data AS visitas_data, visitas.hora_inicio AS visitas_hora_inicio, visitas.hora_fim AS visitas_hora_fim, visitas.local AS visitas_local, visitas.tipo_pesquisa AS visitas_tipo_pesquisa, visitas.status AS visitas_status, visitas.observacoes AS visitas_observacoes, visitas.data_criacao AS visitas_data_criacao, visitas.data_atualizacao AS visitas_data_atualizacao, visitas.tipo_informante AS visitas_tipo_informante, visitas.pesquisador_responsavel AS visitas_pesquisador_responsavel, visitas.entidade_nome AS visitas_entidade_nome, visitas.entidade_cnpj AS visitas_entidade_cnpj, visitas.entidade_categoria AS visitas_entidade_categoria, visitas.responsavel_cargo AS visitas_responsavel_cargo, visitas.entidade_endereco AS visitas_entidade_endereco, visitas.entidade_servicos AS visitas_entidade_servicos, visitas.telefone_responsavel AS visitas_telefone_responsavel, visitas.email_enviado_em AS visitas_email_enviado_em, visitas.whatsapp_verificacao_enviado AS visitas_whatsapp_verificacao_enviado, visitas.whatsapp_resposta_recebida AS visitas_whatsapp_resposta_recebida, visitas.email_recebido_confirmado AS visitas_email_recebido_confirmado 
+FROM visitas ORDER BY visitas.data ASC, visitas.hora_inicio ASC
+ LIMIT ? OFFSET ?]
+[parameters: (100, 0)]
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1705, in _execute_20
+    return meth(self, args_10style, kwargs_10style, execution_options)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/sql/elements.py", line 333, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1572, in _execute_clauseelement
+    ret = self._execute_context(
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "[35m[1mGET /api/visitas HTTP/1.1[0m" 500 -
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1943, in _execute_context
+    self._handle_dbapi_exception(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 2124, in _handle_dbapi_exception
+    util.raise_(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/util/compat.py", line 208, in raise_
+    raise exception
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/base.py", line 1900, in _execute_context
+    self.dialect.do_execute(
+  File "/home/ggmob/.local/lib/python3.10/site-packages/sqlalchemy/engine/default.py", line 736, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) unable to open database file
+[SQL: SELECT entidades_identificadas.id AS entidades_identificadas_id, entidades_identificadas.municipio AS entidades_identificadas_municipio, entidades_identificadas.tipo_entidade AS entidades_identificadas_tipo_entidade, entidades_identificadas.prioridade AS entidades_identificadas_prioridade, entidades_identificadas.categoria_prioridade AS entidades_identificadas_categoria_prioridade, entidades_identificadas.origem_lista_uf AS entidades_identificadas_origem_lista_uf, entidades_identificadas.origem_prefeitura AS entidades_identificadas_origem_prefeitura, entidades_identificadas.codigo_uf AS entidades_identificadas_codigo_uf, entidades_identificadas.nome_entidade AS entidades_identificadas_nome_entidade, entidades_identificadas.cnpj AS entidades_identificadas_cnpj, entidades_identificadas.endereco AS entidades_identificadas_endereco, entidades_identificadas.telefone AS entidades_identificadas_telefone, entidades_identificadas.email AS entidades_identificadas_email, entidades_identificadas.responsavel AS entidades_identificadas_responsavel, entidades_identificadas.endereco_original AS entidades_identificadas_endereco_original, entidades_identificadas.endereco_formatado AS entidades_identificadas_endereco_formatado, entidades_identificadas.latitude AS entidades_identificadas_latitude, entidades_identificadas.longitude AS entidades_identificadas_longitude, entidades_identificadas.place_id AS entidades_identificadas_place_id, entidades_identificadas.plus_code AS entidades_identificadas_plus_code, entidades_identificadas.geocodificado_em AS entidades_identificadas_geocodificado_em, entidades_identificadas.geocodificacao_confianca AS entidades_identificadas_geocodificacao_confianca, entidades_identificadas.geocodificacao_fonte AS entidades_identificadas_geocodificacao_fonte, entidades_identificadas.geocodificacao_status AS entidades_identificadas_geocodificacao_status, entidades_identificadas.mrs_obrigatorio AS entidades_identificadas_mrs_obrigatorio, entidades_identificadas.map_obrigatorio AS entidades_identificadas_map_obrigatorio, entidades_identificadas.status_mrs AS entidades_identificadas_status_mrs, entidades_identificadas.status_map AS entidades_identificadas_status_map, entidades_identificadas.identificado_em AS entidades_identificadas_identificado_em, entidades_identificadas.atualizado_em AS entidades_identificadas_atualizado_em, entidades_identificadas.fonte_identificacao AS entidades_identificadas_fonte_identificacao, entidades_identificadas.visita_id AS entidades_identificadas_visita_id, entidades_identificadas.observacoes AS entidades_identificadas_observacoes, entidades_identificadas.validado_em AS entidades_identificadas_validado_em, entidades_identificadas.validado_por AS entidades_identificadas_validado_por 
+FROM entidades_identificadas 
+WHERE entidades_identificadas.municipio = ? AND entidades_identificadas.tipo_entidade = ? AND entidades_identificadas.prioridade = ? AND entidades_identificadas.origem_prefeitura = 1 AND entidades_identificadas.mrs_obrigatorio = 1 AND entidades_identificadas.map_obrigatorio = 1
+ LIMIT ? OFFSET ?]
+[parameters: ('Balneário Camboriú', 'prefeitura', 1, 1, 0)]
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:22] "[35m[1mGET /api/visitas/progresso-mapa HTTP/1.1[0m" 500 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:23] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:23] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:23] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:23] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:23] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:23] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:23] "GET /static/icons/icon-base.svg HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:23] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:25] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:26] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:26] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:26] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:26] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:31] "GET /api/google-maps-config HTTP/1.1" 200 -
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Databases de cache offline inicializados
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Google Maps API inicializada para cache offline
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.route_optimizer:🗺️ Google Maps API inicializada e testada com sucesso
+INFO:gestao_visitas.services.route_optimizer:🗺️ Iniciando otimização Nível 3 com 3 pontos
+INFO:gestao_visitas.services.route_optimizer:🕰️ Buscando horários de atendimento reais...
+INFO:gestao_visitas.services.route_optimizer:🔍 Buscando horários para: Porto Belo - Prefeitura, Porto Belo, SC, Brazil
+INFO:gestao_visitas.services.route_optimizer:✅ Horários encontrados para Porto Belo - Prefeitura: {'is_open_now': False, 'weekday_text': ['Monday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Tuesday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Wednesday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Thursday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Friday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Saturday: Closed', 'Sunday: Closed'], 'periods': [{'close': {'day': 1, 'time': '1200'}, 'open': {'day': 1, 'time': '0800'}}, {'close': {'day': 1, 'time': '1700'}, 'open': {'day': 1, 'time': '1300'}}, {'close': {'day': 2, 'time': '1200'}, 'open': {'day': 2, 'time': '0800'}}, {'close': {'day': 2, 'time': '1700'}, 'open': {'day': 2, 'time': '1300'}}, {'close': {'day': 3, 'time': '1200'}, 'open': {'day': 3, 'time': '0800'}}, {'close': {'day': 3, 'time': '1700'}, 'open': {'day': 3, 'time': '1300'}}, {'close': {'day': 4, 'time': '1200'}, 'open': {'day': 4, 'time': '0800'}}, {'close': {'day': 4, 'time': '1700'}, 'open': {'day': 4, 'time': '1300'}}, {'close': {'day': 5, 'time': '1200'}, 'open': {'day': 5, 'time': '0800'}}, {'close': {'day': 5, 'time': '1700'}, 'open': {'day': 5, 'time': '1300'}}], 'today_open': '08:00', 'today_close': '12:00', 'is_open_target_day': True}
+INFO:gestao_visitas.services.route_optimizer:🔍 Buscando horários para: Bombinhas - Prefeitura - Vigilância Sanitária, Bombinhas, SC, Brazil
+INFO:gestao_visitas.services.route_optimizer:✅ Horários encontrados para Bombinhas - Prefeitura - Vigilância Sanitária: {'is_open_now': False, 'weekday_text': ['Monday: 12:00\u2009–\u20095:00\u202fPM', 'Tuesday: 12:00\u2009–\u20095:00\u202fPM', 'Wednesday: 12:00\u2009–\u20095:00\u202fPM', 'Thursday: 12:00\u2009–\u20095:00\u202fPM', 'Friday: 12:00\u2009–\u20095:00\u202fPM', 'Saturday: Closed', 'Sunday: Closed'], 'periods': [{'close': {'day': 1, 'time': '1700'}, 'open': {'day': 1, 'time': '1200'}}, {'close': {'day': 2, 'time': '1700'}, 'open': {'day': 2, 'time': '1200'}}, {'close': {'day': 3, 'time': '1700'}, 'open': {'day': 3, 'time': '1200'}}, {'close': {'day': 4, 'time': '1700'}, 'open': {'day': 4, 'time': '1200'}}, {'close': {'day': 5, 'time': '1700'}, 'open': {'day': 5, 'time': '1200'}}], 'today_open': '12:00', 'today_close': '17:00', 'is_open_target_day': True}
+INFO:gestao_visitas.services.route_optimizer:🔍 Buscando horários para: Bombinhas - Captação - Prefeitura, Bombinhas, SC, Brazil
+INFO:gestao_visitas.services.route_optimizer:✅ Horários encontrados para Bombinhas - Captação - Prefeitura: {'is_open_now': False, 'weekday_text': ['Monday: 12:00\u2009–\u20096:00\u202fPM', 'Tuesday: 12:00\u2009–\u20096:00\u202fPM', 'Wednesday: 12:00\u2009–\u20096:00\u202fPM', 'Thursday: 12:00\u2009–\u20096:00\u202fPM', 'Friday: 12:00\u2009–\u20096:00\u202fPM', 'Saturday: Closed', 'Sunday: Closed'], 'periods': [{'close': {'day': 1, 'time': '1800'}, 'open': {'day': 1, 'time': '1200'}}, {'close': {'day': 2, 'time': '1800'}, 'open': {'day': 2, 'time': '1200'}}, {'close': {'day': 3, 'time': '1800'}, 'open': {'day': 3, 'time': '1200'}}, {'close': {'day': 4, 'time': '1800'}, 'open': {'day': 4, 'time': '1200'}}, {'close': {'day': 5, 'time': '1800'}, 'open': {'day': 5, 'time': '1200'}}], 'today_open': '12:00', 'today_close': '18:00', 'is_open_target_day': True}
+INFO:gestao_visitas.services.route_optimizer:✅ Matriz do Google Maps obtida: 3x3
+INFO:gestao_visitas.services.route_optimizer:🕰️ Ajustando visita para abertura: 12:00
+INFO:gestao_visitas.services.route_optimizer:🔍 COMPARAÇÃO DE PONTOS:
+INFO:gestao_visitas.services.route_optimizer:   optimized_points: ['Porto Belo', 'Bombinhas', 'Bombinhas']
+INFO:gestao_visitas.services.route_optimizer:   route_with_schedule: ['Porto Belo', 'Bombinhas', 'Bombinhas']
+INFO:gestao_visitas.services.route_optimizer:🔍 CALCULANDO ESTATÍSTICAS com 3 visitas
+INFO:gestao_visitas.services.route_optimizer:🔍 MATRIX DISTANCES type: <class 'list'>
+INFO:gestao_visitas.services.route_optimizer:🔍 MATRIX DURATIONS type: <class 'list'>
+CRITICAL:gestao_visitas.services.route_optimizer:🚨 DISTÂNCIA FINAL CALCULADA: 8.59km
+INFO:gestao_visitas.services.route_optimizer:✅ Otimização Nível 3 concluída com sucesso
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:27:35] "POST /api/otimizar-rotas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [06/Jul/2025 23:29:24] "GET /api/alertas/criticos HTTP/1.1" 200 -
+💾 Backup automático criado: 20250706_232531
+🛑 Sistema de backup automático parado

@@ -1,0 +1,1646 @@
+{% extends "base.html" %}
+
+{% block title %}Material de Apoio PNSB{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header da página -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="page-header">
+                <h1 class="h3 mb-3">
+                    <i class="fas fa-book-open text-primary me-2"></i>
+                    Material de Apoio PNSB
+                </h1>
+                <p class="text-muted">Central de conhecimento e recursos para a Pesquisa Nacional de Saneamento Básico 2024</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de navegação principal -->
+    <div class="row mb-4">
+        <div class="col-lg-6 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm hover-card" onclick="openChatIA()">
+                <div class="card-body text-center py-4">
+                    <div class="feature-icon bg-primary bg-gradient mb-3">
+                        <i class="fas fa-robot text-white fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-primary">Chat IA PNSB</h5>
+                    <p class="card-text text-muted">Assistente inteligente especializado em PNSB com acesso ao manual oficial e materiais técnicos</p>
+                    <span class="badge bg-success">Alta Prioridade</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm hover-card" onclick="openBiblioteca()">
+                <div class="card-body text-center py-4">
+                    <div class="feature-icon bg-info bg-gradient mb-3">
+                        <i class="fas fa-library text-white fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-info">Biblioteca Digital</h5>
+                    <p class="card-text text-muted">Acesso aos documentos oficiais, manuais, questionários e legislação do PNSB</p>
+                    <span class="badge bg-success">Alta Prioridade</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm hover-card" onclick="openBusca()">
+                <div class="card-body text-center py-4">
+                    <div class="feature-icon bg-warning bg-gradient mb-3">
+                        <i class="fas fa-search text-white fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-warning">Busca Inteligente</h5>
+                    <p class="card-text text-muted">Pesquisa unificada em todos os materiais com filtros avançados e tags temáticas</p>
+                    <span class="badge bg-warning">Média Prioridade</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm hover-card" onclick="openRecursos()">
+                <div class="card-body text-center py-4">
+                    <div class="feature-icon bg-success bg-gradient mb-3">
+                        <i class="fas fa-tools text-white fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-success">Recursos Práticos</h5>
+                    <p class="card-text text-muted">Calculadoras, tabelas de referência, modelos de documentos e glossário PNSB</p>
+                    <span class="badge bg-warning">Média Prioridade</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm hover-card" onclick="openTreinamento()">
+                <div class="card-body text-center py-4">
+                    <div class="feature-icon bg-secondary bg-gradient mb-3">
+                        <i class="fas fa-graduation-cap text-white fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-secondary">Centro de Treinamento</h5>
+                    <p class="card-text text-muted">Tutoriais, vídeos explicativos, simuladores e checklists de preparação</p>
+                    <span class="badge bg-secondary">Baixa Prioridade</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm hover-card" onclick="openComunidade()">
+                <div class="card-body text-center py-4">
+                    <div class="feature-icon bg-purple bg-gradient mb-3">
+                        <i class="fas fa-users text-white fa-2x"></i>
+                    </div>
+                    <h5 class="card-title text-purple">Comunidade</h5>
+                    <p class="card-text text-muted">Fórum de dúvidas, casos de sucesso e base de conhecimento colaborativa</p>
+                    <span class="badge bg-secondary">Baixa Prioridade</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de conteúdo dinâmico -->
+    <div class="row">
+        <div class="col-12">
+            <div id="content-area" class="card border-0 shadow-sm" style="display: none;">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0" id="content-title">Carregando...</h5>
+                        <button type="button" class="btn-close" onclick="closeContent()"></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="content-body">
+                        <!-- Conteúdo será carregado aqui -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal do Chat IA -->
+<div class="modal fade" id="chatModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-robot me-2"></i>
+                    Chat IA PNSB Especializado
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Chat será implementado aqui -->
+                <div id="chat-area">
+                    <div class="chat-container">
+                        <div class="chat-header">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="avatar bg-primary rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="fas fa-robot text-white"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">Assistente PNSB</h6>
+                                    <small class="text-muted">Especializado no Manual PNSB 2024</small>
+                                </div>
+                                <div class="ms-auto">
+                                    <span class="badge bg-success" id="chat-status">🟢 Online</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-messages" id="chat-messages" style="height: 400px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; background: #f8f9fa; color: #333333;">
+                            <div class="message ai-message" style="color: #1976d2;">
+                                <div class="message-content" style="color: inherit;">
+                                    <strong>🤖 Assistente PNSB:</strong><br>
+                                    Olá! Sou seu assistente especializado na Pesquisa Nacional de Saneamento Básico 2024. 
+                                    Posso ajudá-lo com dúvidas sobre:
+                                    <ul class="mt-2 mb-0" style="color: inherit;">
+                                        <li>Manual e procedimentos PNSB</li>
+                                        <li>Preenchimento de questionários</li>
+                                        <li>Legislação de saneamento</li>
+                                        <li>Técnicas de coleta de dados</li>
+                                        <li>Interpretação de resultados</li>
+                                    </ul>
+                                    Como posso ajudá-lo hoje?
+                                </div>
+                                <small class="text-muted" style="color: #6c757d;">Agora mesmo</small>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input mt-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="chat-input" placeholder="Digite sua pergunta sobre PNSB..." onkeypress="handleChatKeyPress(event)">
+                                <button class="btn btn-primary" type="button" onclick="sendChatMessage()">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            <div class="mt-2">
+                                <small class="text-muted">
+                                    💡 Exemplos: "Como preencher o questionário de resíduos sólidos?", "Qual a legislação sobre coleta seletiva?"
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.hover-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.bg-purple {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.text-purple {
+    color: #667eea;
+}
+
+.page-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+}
+
+.chat-container {
+    background: white;
+    border-radius: 10px;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: white;
+    border: 1px solid #e9ecef;
+    color: #333333; /* Texto escuro legível */
+}
+
+.ai-message {
+    background: #e3f2fd;
+    border-color: #2196f3;
+    color: #1976d2; /* Azul escuro para contraste */
+}
+
+.user-message {
+    background: #f3e5f5;
+    border-color: #9c27b0;
+    margin-left: 20%;
+    color: #7b1fa2; /* Roxo escuro para contraste */
+}
+
+.message-content {
+    margin-bottom: 5px;
+    color: inherit;
+}
+
+.message-content strong {
+    color: inherit;
+}
+
+#chat-messages {
+    background: #f8f9fa;
+    color: #333333;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+/* Estilos para Recursos Práticos */
+.calculadora-card, .tabela-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    border: 1px solid #dee2e6;
+}
+
+.calculadora-card:hover, .tabela-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.nav-tabs .nav-link {
+    color: #495057;
+    border: none;
+    background: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+.nav-tabs .nav-link:hover:not(.active) {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+#resultado-calculo .card {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.table-responsive {
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.table thead th {
+    border-top: none;
+    font-weight: 600;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .page-header {
+        padding: 1.5rem;
+    }
+    
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .chat-messages {
+        height: 300px;
+    }
+    
+    .calculadora-card, .tabela-card {
+        margin-bottom: 1rem;
+    }
+    
+    .nav-tabs {
+        font-size: 0.9rem;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 0.5rem 0.75rem;
+    }
+}
+</style>
+
+<script>
+// Funções de navegação
+function openChatIA() {
+    const modal = new bootstrap.Modal(document.getElementById('chatModal'));
+    modal.show();
+}
+
+function openBiblioteca() {
+    showContent('Biblioteca Digital', 'biblioteca');
+}
+
+function openBusca() {
+    showContent('Busca Inteligente', 'busca');
+}
+
+function openRecursos() {
+    showContent('Recursos Práticos', 'recursos');
+}
+
+function openTreinamento() {
+    showContent('Centro de Treinamento', 'treinamento');
+}
+
+function openComunidade() {
+    showContent('Comunidade de Prática', 'comunidade');
+}
+
+function showContent(title, type) {
+    document.getElementById('content-title').textContent = title;
+    document.getElementById('content-area').style.display = 'block';
+    
+    // Scroll para a área de conteúdo
+    document.getElementById('content-area').scrollIntoView({ behavior: 'smooth' });
+    
+    // Carregar conteúdo específico
+    loadContentByType(type);
+}
+
+function closeContent() {
+    document.getElementById('content-area').style.display = 'none';
+}
+
+function loadContentByType(type) {
+    const contentBody = document.getElementById('content-body');
+    
+    // Mostrar loading
+    contentBody.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p class="mt-2 text-muted">Carregando ${type}...</p>
+        </div>
+    `;
+    
+    // Simular carregamento e mostrar conteúdo
+    setTimeout(() => {
+        switch(type) {
+            case 'biblioteca':
+                loadBibliotecaContent();
+                break;
+            case 'busca':
+                loadBuscaContent();
+                break;
+            case 'recursos':
+                loadRecursosContent();
+                break;
+            case 'treinamento':
+                loadTreinamentoContent();
+                break;
+            case 'comunidade':
+                loadComunidadeContent();
+                break;
+            default:
+                contentBody.innerHTML = '<p class="text-center text-muted">Conteúdo em desenvolvimento...</p>';
+        }
+    }, 1000);
+}
+
+// Chat IA Functions
+function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    // Adicionar mensagem do usuário
+    addChatMessage(message, 'user');
+    input.value = '';
+    
+    // Mostrar indicador de digitação
+    showTypingIndicator();
+    
+    // Simular resposta da IA
+    setTimeout(() => {
+        hideTypingIndicator();
+        processAIResponse(message);
+    }, 2000);
+}
+
+function handleChatKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendChatMessage();
+    }
+}
+
+function addChatMessage(message, sender) {
+    const chatMessages = document.getElementById('chat-messages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}-message`;
+    
+    const now = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    
+    if (sender === 'user') {
+        messageDiv.style.color = '#7b1fa2';
+        messageDiv.innerHTML = `
+            <div class="message-content" style="color: inherit;">
+                <strong>👤 Você:</strong><br>
+                ${message}
+            </div>
+            <small class="text-muted" style="color: #6c757d;">${now}</small>
+        `;
+    } else {
+        messageDiv.style.color = '#1976d2';
+        messageDiv.innerHTML = `
+            <div class="message-content" style="color: inherit;">
+                <strong>🤖 Assistente PNSB:</strong><br>
+                ${message}
+            </div>
+            <small class="text-muted" style="color: #6c757d;">${now}</small>
+        `;
+    }
+    
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTypingIndicator() {
+    const chatMessages = document.getElementById('chat-messages');
+    const typingDiv = document.createElement('div');
+    typingDiv.id = 'typing-indicator';
+    typingDiv.className = 'message ai-message';
+    typingDiv.innerHTML = `
+        <div class="message-content">
+            <strong>🤖 Assistente PNSB:</strong><br>
+            <span class="typing-dots">
+                <span>.</span><span>.</span><span>.</span>
+            </span>
+            <em class="text-muted">digitando...</em>
+        </div>
+    `;
+    
+    chatMessages.appendChild(typingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const typingIndicator = document.getElementById('typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.remove();
+    }
+}
+
+async function processAIResponse(userMessage) {
+    try {
+        // Construir contexto PNSB específico
+        const context = buildPNSBManualContext(userMessage);
+        
+        const response = await fetch('/api/material-apoio/chat/manual', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: userMessage,
+                context: context
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            addChatMessage(result.data.response, 'ai');
+        } else {
+            // Fallback para resposta local
+            const fallbackResponse = generatePNSBFallbackResponse(userMessage);
+            addChatMessage(fallbackResponse, 'ai');
+        }
+        
+    } catch (error) {
+        console.error('Erro no chat:', error);
+        const errorResponse = 'Desculpe, estou com dificuldades técnicas. Posso ajudá-lo com informações básicas sobre PNSB ou tente novamente em alguns instantes.';
+        addChatMessage(errorResponse, 'ai');
+    }
+}
+
+function buildPNSBManualContext(userMessage) {
+    return `Você é um assistente especializado na Pesquisa Nacional de Saneamento Básico (PNSB) 2024 do IBGE.
+
+CONTEXTO ESPECÍFICO:
+- Manual PNSB 2024: Pesquisa sobre saneamento básico nos municípios brasileiros
+- Foco principal: Manejo de resíduos sólidos e águas pluviais urbanas
+- Público-alvo: Pesquisadores, técnicos e gestores municipais
+- Metodologia: Entrevistas presenciais com informantes qualificados
+- Âmbito: Municípios brasileiros, especialmente região Sul
+
+TEMAS PRINCIPAIS DO MANUAL:
+1. Resíduos Sólidos: coleta, tratamento, disposição final
+2. Águas Pluviais: drenagem urbana, manejo de águas de chuva
+3. Questionários: preenchimento correto e técnicas de entrevista
+4. Legislação: Marco Legal do Saneamento, PNRS
+5. Indicadores: cálculos e interpretação de dados
+
+PERGUNTA DO USUÁRIO: ${userMessage}
+
+Forneça uma resposta técnica, precisa e baseada nas diretrizes do PNSB 2024. Use linguagem profissional mas acessível.`;
+}
+
+function generatePNSBFallbackResponse(userMessage) {
+    const messageLower = userMessage.toLowerCase();
+    
+    if (messageLower.includes('residuo') || messageLower.includes('lixo') || messageLower.includes('coleta')) {
+        return 'Sobre resíduos sólidos no PNSB 2024: A pesquisa abrange coleta domiciliar, coleta seletiva, tratamento e disposição final. É importante verificar se o município possui Plano Municipal de Gestão Integrada de Resíduos Sólidos e qual a cobertura dos serviços de coleta.';
+    }
+    
+    if (messageLower.includes('agua') || messageLower.includes('pluvial') || messageLower.includes('drenagem')) {
+        return 'Sobre águas pluviais no PNSB 2024: Investiga-se o manejo de águas de chuva, sistemas de drenagem urbana, problemas de alagamentos e medidas de controle. Verificar se há Plano Municipal de Drenagem e Manejo das Águas Pluviais Urbanas.';
+    }
+    
+    if (messageLower.includes('questionario') || messageLower.includes('entrevista')) {
+        return 'Sobre questionários PNSB: Devem ser preenchidos durante entrevista presencial com informante qualificado da prefeitura. Atenção aos códigos de resposta, consistência dos dados e documentação de apoio necessária.';
+    }
+    
+    if (messageLower.includes('legisla') || messageLower.includes('marco') || messageLower.includes('lei')) {
+        return 'Legislação PNSB: Baseia-se no Marco Legal do Saneamento (Lei 14.026/2020), Política Nacional de Resíduos Sólidos (Lei 12.305/2010) e diretrizes nacionais para saneamento básico (Lei 11.445/2007).';
+    }
+    
+    return 'Para informações específicas sobre PNSB 2024, recomendo consultar o manual oficial ou entrar em contato com a coordenação da pesquisa. Posso ajudar com dúvidas sobre procedimentos gerais, questionários e metodologia da pesquisa.';
+}
+
+// Placeholder functions para conteúdos futuros
+async function loadBibliotecaContent() {
+    const contentBody = document.getElementById('content-body');
+    
+    try {
+        // Carregar lista de documentos da API
+        const response = await fetch('/api/material-apoio/biblioteca/documentos');
+        const result = await response.json();
+        
+        if (result.success) {
+            const docs = result.data;
+            
+            contentBody.innerHTML = `
+                <div class="biblioteca-header mb-4">
+                    <h5>📚 Biblioteca Digital PNSB</h5>
+                    <p class="text-muted">Documentos oficiais, manuais, questionários e legislação</p>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Buscar documentos..." id="search-docs">
+                                <button class="btn btn-outline-secondary" type="button" onclick="searchDocuments()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" id="filter-category">
+                                <option value="">Todas as categorias</option>
+                                <option value="Manual Oficial">Manuais</option>
+                                <option value="Questionário">Questionários</option>
+                                <option value="Legislação">Legislação</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <h6>📋 Documentos Oficiais</h6>
+                        <div class="document-list">
+                            ${renderDocumentList(docs.manuais)}
+                        </div>
+                        
+                        <h6 class="mt-4">📝 Questionários</h6>
+                        <div class="document-list">
+                            ${renderDocumentList(docs.questionarios)}
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h6>⚖️ Legislação</h6>
+                        <div class="document-list">
+                            ${renderDocumentList(docs.legislacao)}
+                        </div>
+                        
+                        <h6 class="mt-4">📊 Tabelas de Referência</h6>
+                        <div class="document-list">
+                            <div class="list-group-item">
+                                <i class="fas fa-table text-info me-2"></i>
+                                <span>Códigos IBGE Municipais</span>
+                                <span class="badge bg-info ms-auto">Em breve</span>
+                            </div>
+                            <div class="list-group-item">
+                                <i class="fas fa-list text-info me-2"></i>
+                                <span>Classificação de Resíduos</span>
+                                <span class="badge bg-info ms-auto">Em breve</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <h6>🎓 Material de Treinamento</h6>
+                        <div class="document-list">
+                            <div class="list-group-item">
+                                <i class="fas fa-video text-warning me-2"></i>
+                                <span>Vídeo: Como realizar entrevistas</span>
+                                <span class="badge bg-warning ms-auto">Em breve</span>
+                            </div>
+                            <div class="list-group-item">
+                                <i class="fas fa-file-powerpoint text-warning me-2"></i>
+                                <span>Apresentação PNSB 2024</span>
+                                <span class="badge bg-warning ms-auto">Em breve</span>
+                            </div>
+                        </div>
+                        
+                        <h6 class="mt-4">📋 Modelos</h6>
+                        <div class="document-list">
+                            <div class="list-group-item">
+                                <i class="fas fa-file-word text-primary me-2"></i>
+                                <span>Modelo de Relatório</span>
+                                <span class="badge bg-primary ms-auto">Em breve</span>
+                            </div>
+                            <div class="list-group-item">
+                                <i class="fas fa-file-excel text-success me-2"></i>
+                                <span>Planilha de Controle</span>
+                                <span class="badge bg-success ms-auto">Em breve</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="biblioteca-stats mt-4 p-3 bg-light rounded">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <h5 class="text-primary">${docs.manuais.length}</h5>
+                            <small class="text-muted">Manuais</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-warning">${docs.questionarios.length}</h5>
+                            <small class="text-muted">Questionários</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-info">${docs.legislacao.length}</h5>
+                            <small class="text-muted">Leis</small>
+                        </div>
+                        <div class="col-md-3">
+                            <h5 class="text-success">15</h5>
+                            <small class="text-muted">Total Planejado</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            contentBody.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Erro ao carregar biblioteca: ${result.message}
+                </div>
+            `;
+        }
+        
+    } catch (error) {
+        console.error('Erro ao carregar biblioteca:', error);
+        contentBody.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-times-circle me-2"></i>
+                Erro ao conectar com a biblioteca digital.
+            </div>
+        `;
+    }
+}
+
+function renderDocumentList(documents) {
+    return documents.map(doc => {
+        const statusColor = doc.status === 'disponivel' ? 'success' : 'warning';
+        const statusText = doc.status === 'disponivel' ? 'Disponível' : 'Em breve';
+        const icon = getDocumentIcon(doc.formato);
+        
+        return `
+            <div class="list-group-item list-group-item-action document-item" 
+                 data-doc-id="${doc.id}" 
+                 onclick="${doc.status === 'disponivel' ? `downloadDocument('${doc.id}')` : 'void(0)'}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="${icon} me-2"></i>
+                        <div>
+                            <div class="document-title">${doc.titulo}</div>
+                            <small class="text-muted">${doc.categoria} • ${doc.tamanho}</small>
+                        </div>
+                    </div>
+                    <span class="badge bg-${statusColor}">${statusText}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function getDocumentIcon(formato) {
+    switch(formato) {
+        case 'PDF': return 'fas fa-file-pdf text-danger';
+        case 'DOC': return 'fas fa-file-word text-primary';
+        case 'XLS': return 'fas fa-file-excel text-success';
+        case 'PPT': return 'fas fa-file-powerpoint text-warning';
+        case 'VIDEO': return 'fas fa-video text-info';
+        default: return 'fas fa-file text-secondary';
+    }
+}
+
+function downloadDocument(docId) {
+    // Simular download
+    showToast(`Iniciando download do documento...`, 'info');
+    
+    // Na implementação real, fazer requisição para o endpoint de download
+    fetch(`/api/material-apoio/biblioteca/download/${docId}`)
+        .then(response => {
+            if (response.ok) {
+                showToast('Download concluído!', 'success');
+            } else {
+                showToast('Download ainda não disponível', 'warning');
+            }
+        })
+        .catch(error => {
+            console.error('Erro no download:', error);
+            showToast('Erro no download', 'error');
+        });
+}
+
+function searchDocuments() {
+    const searchTerm = document.getElementById('search-docs').value.toLowerCase();
+    const categoryFilter = document.getElementById('filter-category').value;
+    
+    const documentItems = document.querySelectorAll('.document-item');
+    
+    documentItems.forEach(item => {
+        const title = item.querySelector('.document-title').textContent.toLowerCase();
+        const category = item.querySelector('.text-muted').textContent;
+        
+        const matchesSearch = title.includes(searchTerm);
+        const matchesCategory = !categoryFilter || category.includes(categoryFilter);
+        
+        if (matchesSearch && matchesCategory) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+
+function showToast(message, type = 'info') {
+    // Implementação simples de toast notification
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'error' ? 'danger' : type} position-fixed`;
+    toast.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    `;
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}-circle me-2"></i>
+        ${message}
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Fade in
+    setTimeout(() => toast.style.opacity = '1', 100);
+    
+    // Remove after delay
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => document.body.removeChild(toast), 300);
+    }, 3000);
+}
+
+function loadBuscaContent() {
+    document.getElementById('content-body').innerHTML = `
+        <div class="search-interface">
+            <div class="search-header mb-4">
+                <h5>🔍 Busca Inteligente PNSB</h5>
+                <p class="text-muted">Pesquisa unificada em documentos, manuais, legislação e base de conhecimento</p>
+            </div>
+            
+            <div class="search-main mb-4">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="input-group input-group-lg">
+                            <input type="text" class="form-control" 
+                                   placeholder="Digite sua pergunta ou termo de pesquisa..." 
+                                   id="main-search-input"
+                                   onkeypress="handleMainSearchKeyPress(event)">
+                            <button class="btn btn-primary" type="button" onclick="performMainSearch()">
+                                <i class="fas fa-search me-2"></i>Buscar
+                            </button>
+                        </div>
+                        <div class="search-suggestions mt-2">
+                            <small class="text-muted">
+                                💡 Exemplos: "coleta seletiva", "plano municipal", "águas pluviais", "Lei 12.305"
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <select class="form-select form-select-lg" id="search-type">
+                            <option value="all">🌐 Busca Geral</option>
+                            <option value="documents">📄 Documentos</option>
+                            <option value="legislation">⚖️ Legislação</option>
+                            <option value="procedures">📋 Procedimentos</option>
+                            <option value="qa">❓ Perguntas Frequentes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-filters mb-4" style="display: none;" id="advanced-filters">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">🔧 Filtros Avançados</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-select" id="filter-category-search">
+                                    <option value="">Todas</option>
+                                    <option value="residuos">Resíduos Sólidos</option>
+                                    <option value="aguas">Águas Pluviais</option>
+                                    <option value="legislacao">Legislação</option>
+                                    <option value="metodologia">Metodologia</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tipo de Documento</label>
+                                <select class="form-select" id="filter-doc-type">
+                                    <option value="">Todos</option>
+                                    <option value="manual">Manual</option>
+                                    <option value="questionario">Questionário</option>
+                                    <option value="lei">Legislação</option>
+                                    <option value="tutorial">Tutorial</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Data</label>
+                                <select class="form-select" id="filter-date">
+                                    <option value="">Qualquer período</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022 ou anterior</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Relevância</label>
+                                <select class="form-select" id="filter-relevance">
+                                    <option value="high">Alta</option>
+                                    <option value="medium">Média</option>
+                                    <option value="all">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-actions mb-3">
+                <button class="btn btn-outline-secondary btn-sm" onclick="toggleAdvancedFilters()">
+                    <i class="fas fa-sliders-h me-1"></i>Filtros Avançados
+                </button>
+                <button class="btn btn-outline-primary btn-sm" onclick="clearSearchFilters()">
+                    <i class="fas fa-eraser me-1"></i>Limpar
+                </button>
+                <button class="btn btn-outline-success btn-sm" onclick="searchWithAI()">
+                    <i class="fas fa-robot me-1"></i>Buscar com IA
+                </button>
+            </div>
+            
+            <div id="search-results">
+                <div class="search-welcome text-center py-5">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Digite algo para pesquisar</h5>
+                    <p class="text-muted">Busque por termos técnicos, procedimentos, legislação ou faça perguntas específicas sobre PNSB</p>
+                    
+                    <div class="quick-searches mt-4">
+                        <h6 class="text-muted mb-3">🔥 Buscas Populares:</h6>
+                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('coleta seletiva')">Coleta Seletiva</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('PMGIRS')">PMGIRS</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('drenagem urbana')">Drenagem Urbana</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('questionário')">Questionário</button>
+                            <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('marco legal')">Marco Legal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function handleMainSearchKeyPress(event) {
+    if (event.key === 'Enter') {
+        performMainSearch();
+    }
+}
+
+async function performMainSearch() {
+    const searchTerm = document.getElementById('main-search-input').value.trim();
+    const searchType = document.getElementById('search-type').value;
+    
+    if (!searchTerm) {
+        showToast('Digite algo para pesquisar', 'warning');
+        return;
+    }
+    
+    const resultsContainer = document.getElementById('search-results');
+    
+    // Mostrar loading
+    resultsContainer.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Pesquisando...</span>
+            </div>
+            <p class="mt-2 text-muted">🔍 Pesquisando "${searchTerm}"...</p>
+        </div>
+    `;
+    
+    try {
+        // Construir filtros
+        const filtros = {
+            categoria: document.getElementById('filter-category-search')?.value || '',
+            tipo_documento: document.getElementById('filter-doc-type')?.value || '',
+            data: document.getElementById('filter-date')?.value || '',
+            relevancia: document.getElementById('filter-relevance')?.value || 'high'
+        };
+        
+        const response = await fetch('/api/material-apoio/busca', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: searchTerm,
+                type: searchType,
+                filtros: filtros
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            displaySearchResults(result.data, searchTerm);
+        } else {
+            resultsContainer.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Erro na pesquisa: ${result.message}
+                </div>
+            `;
+        }
+        
+    } catch (error) {
+        console.error('Erro na busca:', error);
+        resultsContainer.innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-times-circle me-2"></i>
+                Erro ao realizar pesquisa. Tente novamente.
+            </div>
+        `;
+    }
+}
+
+function displaySearchResults(data, searchTerm) {
+    const resultsContainer = document.getElementById('search-results');
+    
+    if (data.status === 'em_desenvolvimento') {
+        // Sistema de busca em desenvolvimento - não usar dados simulados
+        resultsContainer.innerHTML = `
+            <div class="search-results-header mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6>Busca: <strong>"${searchTerm}"</strong></h6>
+                    <span class="badge bg-warning">Sistema em desenvolvimento</span>
+                </div>
+                <small class="text-muted">⚠️ Funcionalidade de busca será implementada em breve</small>
+            </div>
+            
+            <div class="alert alert-info">
+                <h6><i class="fas fa-info-circle me-2"></i>Sistema de Busca em Desenvolvimento</h6>
+                <p class="mb-2">A funcionalidade de busca está sendo implementada e estará disponível em breve.</p>
+                <p class="mb-0"><strong>Alternativas:</strong></p>
+                <ul class="mb-0">
+                    <li>Use o Chat IA PNSB para perguntas específicas</li>
+                    <li>Navegue pelas seções da Biblioteca Digital</li>
+                    <li>Consulte os Tutoriais Práticos disponíveis</li>
+                </ul>
+            </div>`;
+    } else {
+        resultsContainer.innerHTML = `
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Nenhum resultado encontrado para "${searchTerm}". Tente termos diferentes ou use a busca com IA.
+            </div>
+        `;
+    }
+}
+
+// Função removida: generateMockSearchResults() - sistema não usa dados simulados
+
+function quickSearch(term) {
+    document.getElementById('main-search-input').value = term;
+    performMainSearch();
+}
+
+function toggleAdvancedFilters() {
+    const filters = document.getElementById('advanced-filters');
+    if (filters.style.display === 'none') {
+        filters.style.display = 'block';
+    } else {
+        filters.style.display = 'none';
+    }
+}
+
+function clearSearchFilters() {
+    document.getElementById('main-search-input').value = '';
+    document.getElementById('search-type').value = 'all';
+    
+    const filters = ['filter-category-search', 'filter-doc-type', 'filter-date'];
+    filters.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.value = '';
+    });
+    
+    document.getElementById('filter-relevance').value = 'high';
+    document.getElementById('search-results').innerHTML = `
+        <div class="search-welcome text-center py-5">
+            <i class="fas fa-search fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">Digite algo para pesquisar</h5>
+        </div>
+    `;
+}
+
+async function searchWithAI() {
+    const searchTerm = document.getElementById('main-search-input').value.trim();
+    
+    if (!searchTerm) {
+        showToast('Digite uma pergunta para a IA', 'warning');
+        return;
+    }
+    
+    // Redirecionar para o chat IA com a pergunta
+    const modal = new bootstrap.Modal(document.getElementById('chatModal'));
+    modal.show();
+    
+    // Aguardar modal abrir e enviar pergunta
+    setTimeout(() => {
+        document.getElementById('chat-input').value = searchTerm;
+        sendChatMessage();
+    }, 500);
+}
+
+function openResult(resultId) {
+    showToast('Abrindo resultado...', 'info');
+    // Implementar abertura do resultado específico
+}
+
+function saveResult(resultId) {
+    showToast('Resultado salvo nos favoritos', 'success');
+    // Implementar salvamento do resultado
+}
+
+function loadRecursosContent() {
+    document.getElementById('content-body').innerHTML = `
+        <div class="recursos-praticos">
+            <div class="recursos-header mb-4">
+                <h5>🛠️ Recursos Práticos PNSB</h5>
+                <p class="text-muted">Calculadoras especializadas, glossário técnico e tabelas de referência</p>
+            </div>
+            
+            <!-- Navegação por categorias -->
+            <ul class="nav nav-tabs mb-4" id="recursos-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="calculadoras-tab" data-bs-toggle="tab" data-bs-target="#calculadoras" type="button" role="tab">
+                        <i class="fas fa-calculator me-2"></i>Calculadoras
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="glossario-tab" data-bs-toggle="tab" data-bs-target="#glossario" type="button" role="tab">
+                        <i class="fas fa-book me-2"></i>Glossário
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tabelas-tab" data-bs-toggle="tab" data-bs-target="#tabelas" type="button" role="tab">
+                        <i class="fas fa-table me-2"></i>Tabelas
+                    </button>
+                </li>
+            </ul>
+            
+            <!-- Conteúdo das abas -->
+            <div class="tab-content" id="recursos-tab-content">
+                <!-- Calculadoras -->
+                <div class="tab-pane fade show active" id="calculadoras" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 calculadora-card" onclick="openCalculadora('cobertura_coleta')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-percentage fa-2x text-primary mb-3"></i>
+                                    <h6>Cobertura de Coleta</h6>
+                                    <p class="text-muted small">Calcula percentual de cobertura do serviço de coleta domiciliar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 calculadora-card" onclick="openCalculadora('geracao_per_capita')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-weight-hanging fa-2x text-success mb-3"></i>
+                                    <h6>Geração Per Capita</h6>
+                                    <p class="text-muted small">Calcula geração de resíduos por habitante por dia</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 calculadora-card" onclick="openCalculadora('taxa_reciclagem')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-recycle fa-2x text-warning mb-3"></i>
+                                    <h6>Taxa de Reciclagem</h6>
+                                    <p class="text-muted small">Calcula percentual de materiais reciclados</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 calculadora-card" onclick="openCalculadora('densidade_drenagem')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-tint fa-2x text-info mb-3"></i>
+                                    <h6>Densidade de Drenagem</h6>
+                                    <p class="text-muted small">Calcula densidade da rede de drenagem urbana</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card h-100 calculadora-card" onclick="openCalculadora('custo_per_capita')">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-dollar-sign fa-2x text-danger mb-3"></i>
+                                    <h6>Custo Per Capita</h6>
+                                    <p class="text-muted small">Calcula custo do serviço por habitante</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Glossário -->
+                <div class="tab-pane fade" id="glossario" role="tabpanel">
+                    <div class="glossario-container">
+                        <div class="search-box mb-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="glossario-search" placeholder="Buscar termo técnico...">
+                                <button class="btn btn-outline-secondary" onclick="searchGlossario()">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div id="glossario-results">
+                            <p class="text-muted text-center">Digite um termo para buscar ou clique em "Carregar Glossário Completo"</p>
+                            <div class="text-center">
+                                <button class="btn btn-primary" onclick="loadGlossarioCompleto()">
+                                    <i class="fas fa-book me-2"></i>Carregar Glossário Completo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tabelas -->
+                <div class="tab-pane fade" id="tabelas" role="tabpanel">
+                    <div class="tabelas-container">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card tabela-card" onclick="loadTabela('municipios')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-map-marker-alt fa-2x text-primary mb-3"></i>
+                                        <h6>Municípios PNSB</h6>
+                                        <p class="text-muted small">Lista dos municípios da pesquisa em SC</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card tabela-card" onclick="loadTabela('classificacao_residuos')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-trash-alt fa-2x text-success mb-3"></i>
+                                        <h6>Classificação Resíduos</h6>
+                                        <p class="text-muted small">Tipos e classificações de resíduos sólidos</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card tabela-card" onclick="loadTabela('indicadores')">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-chart-line fa-2x text-warning mb-3"></i>
+                                        <h6>Indicadores PNSB</h6>
+                                        <p class="text-muted small">Principais indicadores e fórmulas</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tabela-resultado"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function loadTreinamentoContent() {
+    document.getElementById('content-body').innerHTML = `
+        <div class="training-center">
+            <h6>🎓 Centro de Treinamento</h6>
+            <p class="text-muted">Em desenvolvimento - Tutoriais e materiais de treinamento</p>
+        </div>
+    `;
+}
+
+function loadComunidadeContent() {
+    document.getElementById('content-body').innerHTML = `
+        <div class="community-hub">
+            <h6>👥 Comunidade de Prática</h6>
+            <p class="text-muted">Em desenvolvimento - Fórum e base de conhecimento colaborativa</p>
+        </div>
+    `;
+}
+
+// Novas funções para Recursos Práticos
+
+async function openCalculadora(tipo) {
+    const calculadoraConfig = {
+        'cobertura_coleta': {
+            titulo: 'Calculadora de Cobertura de Coleta',
+            campos: [
+                { id: 'populacao_total', label: 'População Total', tipo: 'number', placeholder: 'Ex: 100000' },
+                { id: 'populacao_atendida', label: 'População Atendida', tipo: 'number', placeholder: 'Ex: 95000' }
+            ]
+        },
+        'geracao_per_capita': {
+            titulo: 'Calculadora de Geração Per Capita',
+            campos: [
+                { id: 'total_residuos_kg_dia', label: 'Total de Resíduos (kg/dia)', tipo: 'number', placeholder: 'Ex: 50000' },
+                { id: 'populacao', label: 'População', tipo: 'number', placeholder: 'Ex: 100000' }
+            ]
+        },
+        'taxa_reciclagem': {
+            titulo: 'Calculadora de Taxa de Reciclagem',
+            campos: [
+                { id: 'total_coletado', label: 'Total Coletado (kg)', tipo: 'number', placeholder: 'Ex: 1000000' },
+                { id: 'total_reciclado', label: 'Total Reciclado (kg)', tipo: 'number', placeholder: 'Ex: 150000' }
+            ]
+        },
+        'densidade_drenagem': {
+            titulo: 'Calculadora de Densidade de Drenagem',
+            campos: [
+                { id: 'extensao_rede_km', label: 'Extensão da Rede (km)', tipo: 'number', placeholder: 'Ex: 120' },
+                { id: 'area_urbana_km2', label: 'Área Urbana (km²)', tipo: 'number', placeholder: 'Ex: 15' }
+            ]
+        },
+        'custo_per_capita': {
+            titulo: 'Calculadora de Custo Per Capita',
+            campos: [
+                { id: 'custo_total_anual', label: 'Custo Total Anual (R$)', tipo: 'number', placeholder: 'Ex: 5000000' },
+                { id: 'populacao', label: 'População', tipo: 'number', placeholder: 'Ex: 100000' }
+            ]
+        }
+    };
+    
+    const config = calculadoraConfig[tipo];
+    if (!config) return;
+    
+    // Criar modal da calculadora
+    const modalHtml = `
+        <div class="modal fade" id="calculadoraModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">
+                            <i class="fas fa-calculator me-2"></i>
+                            ${config.titulo}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="calculadora-form">
+                            ${config.campos.map(campo => `
+                                <div class="mb-3">
+                                    <label for="${campo.id}" class="form-label">${campo.label}</label>
+                                    <input type="${campo.tipo}" class="form-control" id="${campo.id}" 
+                                           placeholder="${campo.placeholder}" required>
+                                </div>
+                            `).join('')}
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-calculator me-2"></i>Calcular
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <div id="resultado-calculo" style="display: none;" class="mt-4">
+                            <!-- Resultado será inserido aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remover modal anterior se existir
+    const existingModal = document.getElementById('calculadoraModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Adicionar novo modal
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Configurar event listener do formulário
+    document.getElementById('calculadora-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const dados = {};
+        config.campos.forEach(campo => {
+            dados[campo.id] = document.getElementById(campo.id).value;
+        });
+        
+        try {
+            const response = await fetch('/api/material-apoio/recursos/calculadora', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    tipo: tipo,
+                    dados: dados
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                displayCalculoResultado(result.data);
+            } else {
+                showToast(result.message || 'Erro no cálculo', 'error');
+            }
+            
+        } catch (error) {
+            console.error('Erro na calculadora:', error);
+            showToast('Erro ao processar cálculo', 'error');
+        }
+    });
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('calculadoraModal'));
+    modal.show();
+}
+
+function displayCalculoResultado(resultado) {
+    const resultadoDiv = document.getElementById('resultado-calculo');
+    
+    resultadoDiv.innerHTML = `
+        <div class="card border-success">
+            <div class="card-header bg-success text-white">
+                <h6 class="mb-0">📊 Resultado do Cálculo</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4 class="text-success">${resultado.resultado} ${resultado.unidade}</h4>
+                        <p class="text-muted mb-0">${resultado.tipo}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>📋 Interpretação:</h6>
+                        <p class="text-muted">${resultado.interpretacao}</p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>🔢 Fórmula:</h6>
+                        <code>${resultado.formula}</code>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>📥 Dados de Entrada:</h6>
+                        <ul class="list-unstyled small">
+                            ${Object.entries(resultado.dados_entrada).map(([key, value]) => 
+                                `<li><strong>${key}:</strong> ${value}</li>`
+                            ).join('')}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    resultadoDiv.style.display = 'block';
+}
+
+async function searchGlossario() {
+    const termo = document.getElementById('glossario-search').value.trim();
+    
+    if (!termo) {
+        showToast('Digite um termo para buscar', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/material-apoio/recursos/glossario?termo=${encodeURIComponent(termo)}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            displayGlossarioResultado(result.data, termo);
+        } else {
+            showToast('Erro ao buscar termo', 'error');
+        }
+        
+    } catch (error) {
+        console.error('Erro na busca do glossário:', error);
+        showToast('Erro ao buscar termo', 'error');
+    }
+}
+
+async function loadGlossarioCompleto() {
+    try {
+        const response = await fetch('/api/material-apoio/recursos/glossario');
+        const result = await response.json();
+        
+        if (result.success) {
+            displayGlossarioCompleto(result.data.glossario_completo);
+        } else {
+            showToast('Erro ao carregar glossário', 'error');
+        }
+        
+    } catch (error) {
+        console.error('Erro ao carregar glossário:', error);
+        showToast('Erro ao carregar glossário', 'error');
+    }
+}
+
+function displayGlossarioResultado(data, termo) {
+    const resultsDiv = document.getElementById('glossario-results');
+    
+    if (data.termo) {
+        // Resultado único
+        resultsDiv.innerHTML = `
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">${data.termo}</h6>
+                </div>
+                <div class="card-body">
+                    <p><strong>Definição:</strong> ${data.definicao}</p>
+                    <p><strong>Descrição:</strong> ${data.descricao}</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <span class="badge bg-secondary">${data.categoria}</span>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <small class="text-muted">${data.base_legal}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else if (data.resultados) {
+        // Múltiplos resultados
+        const resultados = Object.entries(data.resultados);
+        
+        if (resultados.length === 0) {
+            resultsDiv.innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Nenhum termo encontrado para "${termo}"
+                </div>
+            `;
+        } else {
+            resultsDiv.innerHTML = `
+                <h6>Resultados para "${termo}":</h6>
+                ${resultados.map(([key, item]) => `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h6 class="card-title">${item.termo}</h6>
+                            <p class="card-text">${item.definicao}</p>
+                            <span class="badge bg-secondary">${item.categoria}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+    }
+}
+
+function displayGlossarioCompleto(glossario) {
+    const resultsDiv = document.getElementById('glossario-results');
+    const termos = Object.entries(glossario);
+    
+    resultsDiv.innerHTML = `
+        <h6>Glossário Completo PNSB (${termos.length} termos):</h6>
+        <div class="row">
+            ${termos.map(([key, item]) => `
+                <div class="col-md-6 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h6 class="card-title">${item.termo}</h6>
+                            <p class="card-text small">${item.definicao}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-secondary">${item.categoria}</span>
+                                <small class="text-muted">${item.base_legal}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+async function loadTabela(tipo) {
+    try {
+        const response = await fetch(`/api/material-apoio/recursos/tabelas?tipo=${tipo}`);
+        const result = await response.json();
+        
+        if (result.success) {
+            displayTabela(result.data);
+        } else {
+            showToast('Erro ao carregar tabela', 'error');
+        }
+        
+    } catch (error) {
+        console.error('Erro ao carregar tabela:', error);
+        showToast('Erro ao carregar tabela', 'error');
+    }
+}
+
+function displayTabela(tabela) {
+    const resultadoDiv = document.getElementById('tabela-resultado');
+    
+    resultadoDiv.innerHTML = `
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="mb-0">${tabela.titulo}</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                ${tabela.colunas.map(coluna => `<th>${coluna}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tabela.dados.map(linha => `
+                                <tr>
+                                    ${linha.map(celula => `<td>${celula}</td>`).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end">
+                    <small class="text-muted">Fonte: ${tabela.fonte}</small>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📚 Material de Apoio PNSB carregado');
+});
+</script>
+{% endblock %}

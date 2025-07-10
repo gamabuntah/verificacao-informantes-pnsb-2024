@@ -1,0 +1,76 @@
+⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+=== INICIANDO APP.PY CORRETO ===
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250703_004758
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+ * Serving Flask app 'app'
+ * Debug mode: on
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+INFO:werkzeug:127.0.0.1 - - [03/Jul/2025 00:50:24] "[35m[1mGET / HTTP/1.1[0m" 500 -
+Traceback (most recent call last):
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2552, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2532, in wsgi_app
+    response = self.handle_exception(e)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2529, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/app.py", line 140, in index
+    return render_template('dashboard.html')
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/templating.py", line 147, in render_template
+    return _render(app, template, context)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/templating.py", line 130, in _render
+    rv = template.render(context)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/jinja2/environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "/home/ggmob/.local/lib/python3.10/site-packages/jinja2/environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/templates/dashboard.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/templates/base.html", line 208, in top-level template code
+    <a href="{{ url_for('material_apoio') }}" class="nav-link-custom {% if 'material-apoio' in request.path %}active{% endif %}">
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2034, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2023, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+  File "/home/ggmob/.local/lib/python3.10/site-packages/werkzeug/routing/map.py", line 917, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'material_apoio'. Did you mean 'material_apoio.busca_unificada' instead?
+🛑 Sistema de backup automático parado

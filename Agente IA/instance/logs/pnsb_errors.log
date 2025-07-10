@@ -1,0 +1,1 @@
+2025-07-07 20:13:58,317 ERROR: Error: Unhandled Exception | name 'logger' is not defined | {'timestamp': '2025-07-07T20:13:58.317097', 'error_type': 'Unhandled Exception', 'error_message': "name 'logger' is not defined", 'url': 'http://localhost/api/alertas/criticos', 'method': 'GET', 'ip': '127.0.0.1', 'user_agent': 'werkzeug/2.2.3'}

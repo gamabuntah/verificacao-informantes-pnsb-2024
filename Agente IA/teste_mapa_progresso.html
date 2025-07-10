@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Mapa de Progresso PNSB</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .status-card {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #444;
+        }
+        .success { border-color: #28a745; }
+        .error { border-color: #dc3545; }
+        .warning { border-color: #ffc107; }
+        .info { border-color: #17a2b8; }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+        .data-display {
+            background: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        .test-button {
+            background: #5F5CFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #4a47cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste do Mapa de Progresso PNSB</h1>
+        <p>Este é um teste para verificar se os endpoints do mapa de progresso estão funcionando corretamente.</p>
+        
+        <div class="status-card info">
+            <h3>Status da Conexão</h3>
+            <div id="connection-status" class="loading">Verificando conexão...</div>
+        </div>
+        
+        <div class="status-card">
+            <h3>Testes de Endpoints</h3>
+            <button class="test-button" onclick="testarEndpoints()">🔄 Testar Todos os Endpoints</button>
+            <button class="test-button" onclick="testarProgressoMapa()">🗺️ Testar Progresso Mapa</button>
+            <button class="test-button" onclick="testarDashboard()">📊 Testar Dashboard</button>
+            <button class="test-button" onclick="testarVisitasObrigatorias()">📋 Testar Visitas Obrigatórias</button>
+            <div id="test-results"></div>
+        </div>
+        
+        <div class="status-card">
+            <h3>Dados Carregados</h3>
+            <div id="data-display" class="data-display">Nenhum dado carregado ainda...</div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração dos endpoints
+        const API_ENDPOINTS = {
+            PROGRESSO_MAPA: '/api/visitas/progresso-mapa',
+            DASHBOARD_INTELIGENTE: '/api/visitas/dashboard-inteligente',
+            STATUS_VISITAS_OBRIGATORIAS: '/api/visitas-obrigatorias/status-visitas-obrigatorias',
+            QUESTIONARIOS_OBRIGATORIOS: '/api/questionarios/questionarios-obrigatorios',
+            ENTIDADES_IDENTIFICADAS: '/api/questionarios/entidades-identificadas'
+        };
+
+        // Função para adicionar resultado do teste
+        function adicionarResultado(endpoint, status, dados = null, error = null) {
+            const resultsDiv = document.getElementById('test-results');
+            const statusClass = status === 'success' ? 'success' : 'error';
+            
+            const html = `
+                <div class="status-card ${statusClass}">
+                    <h4>${endpoint}</h4>
+                    <p><strong>Status:</strong> ${status}</p>
+                    ${error ? `<p><strong>Erro:</strong> ${error}</p>` : ''}
+                    ${dados ? `<p><strong>Dados:</strong> ${JSON.stringify(dados).substring(0, 200)}...</p>` : ''}
+                </div>
+            `;
+            
+            resultsDiv.innerHTML += html;
+        }
+
+        // Função para testar um endpoint específico
+        async function testarEndpoint(nome, url) {
+            try {
+                console.log(`🧪 Testando ${nome}...`);
+                const response = await fetch(url);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(`✅ ${nome} funcionando`, data);
+                    adicionarResultado(nome, 'success', data);
+                    return { success: true, data };
+                } else {
+                    console.error(`❌ ${nome} falhou: ${response.status}`);
+                    adicionarResultado(nome, 'error', null, `HTTP ${response.status}`);
+                    return { success: false, error: `HTTP ${response.status}` };
+                }
+            } catch (error) {
+                console.error(`❌ ${nome} erro:`, error);
+                adicionarResultado(nome, 'error', null, error.message);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // Testar todos os endpoints
+        async function testarEndpoints() {
+            document.getElementById('test-results').innerHTML = '<div class="loading">Testando endpoints...</div>';
+            
+            const resultados = {};
+            
+            for (const [nome, url] of Object.entries(API_ENDPOINTS)) {
+                resultados[nome] = await testarEndpoint(nome, url);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Delay entre testes
+            }
+            
+            // Mostrar resumo
+            const sucessos = Object.values(resultados).filter(r => r.success).length;
+            const total = Object.keys(resultados).length;
+            
+            document.getElementById('data-display').innerHTML = `
+                <strong>Resumo dos Testes:</strong><br>
+                ✅ Sucessos: ${sucessos}/${total}<br>
+                ❌ Falhas: ${total - sucessos}/${total}<br>
+                <br>
+                <strong>Detalhes:</strong><br>
+                ${JSON.stringify(resultados, null, 2)}
+            `;
+        }
+
+        // Testes específicos
+        async function testarProgressoMapa() {
+            const resultado = await testarEndpoint('Progresso Mapa', API_ENDPOINTS.PROGRESSO_MAPA);
+            if (resultado.success) {
+                document.getElementById('data-display').innerHTML = `
+                    <strong>Dados do Progresso Mapa:</strong><br>
+                    Municípios: ${resultado.data.data?.length || 0}<br>
+                    <pre>${JSON.stringify(resultado.data, null, 2)}</pre>
+                `;
+            }
+        }
+
+        async function testarDashboard() {
+            const resultado = await testarEndpoint('Dashboard Inteligente', API_ENDPOINTS.DASHBOARD_INTELIGENTE);
+            if (resultado.success) {
+                document.getElementById('data-display').innerHTML = `
+                    <strong>Dados do Dashboard:</strong><br>
+                    <pre>${JSON.stringify(resultado.data, null, 2)}</pre>
+                `;
+            }
+        }
+
+        async function testarVisitasObrigatorias() {
+            const resultado = await testarEndpoint('Visitas Obrigatórias', API_ENDPOINTS.STATUS_VISITAS_OBRIGATORIAS);
+            if (resultado.success) {
+                document.getElementById('data-display').innerHTML = `
+                    <strong>Dados das Visitas Obrigatórias:</strong><br>
+                    Total: ${resultado.data.estatisticas_gerais?.total_visitas_obrigatorias || 0}<br>
+                    <pre>${JSON.stringify(resultado.data, null, 2)}</pre>
+                `;
+            }
+        }
+
+        // Verificar status da conexão
+        async function verificarConexao() {
+            try {
+                const response = await fetch('/api/visitas/dashboard-inteligente');
+                if (response.ok) {
+                    document.getElementById('connection-status').innerHTML = '✅ Conectado ao servidor Flask (porta 8080)';
+                    document.getElementById('connection-status').parentElement.className = 'status-card success';
+                } else {
+                    document.getElementById('connection-status').innerHTML = '❌ Servidor respondeu com erro: ' + response.status;
+                    document.getElementById('connection-status').parentElement.className = 'status-card error';
+                }
+            } catch (error) {
+                document.getElementById('connection-status').innerHTML = '❌ Erro de conexão: ' + error.message;
+                document.getElementById('connection-status').parentElement.className = 'status-card error';
+            }
+        }
+
+        // Inicializar página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Teste do Mapa de Progresso carregado');
+            verificarConexao();
+        });
+    </script>
+</body>
+</html>

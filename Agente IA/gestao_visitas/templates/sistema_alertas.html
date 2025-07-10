@@ -1,0 +1,1221 @@
+{% extends "base.html" %}
+
+{% block title %}Sistema de Alertas - Sistema PNSB{% endblock %}
+
+{% block head %}
+<style>
+.alerts-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.alert-card {
+    background: #23263B;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border-left: 5px solid #2D3142;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert-card.critical {
+    border-left-color: #dc3545;
+    background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), #23263B);
+}
+
+.alert-card.warning {
+    border-left-color: #ffc107;
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), #23263B);
+}
+
+.alert-card.info {
+    border-left-color: #17a2b8;
+    background: linear-gradient(135deg, rgba(23, 162, 184, 0.1), #23263B);
+}
+
+.alert-card.success {
+    border-left-color: #28a745;
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), #23263B);
+}
+
+.alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.alert-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 20px;
+    color: white;
+}
+
+.alert-icon.critical { background: #dc3545; }
+.alert-icon.warning { background: #ffc107; color: #212529; }
+.alert-icon.info { background: #17a2b8; }
+.alert-icon.success { background: #28a745; }
+
+.alert-content {
+    flex-grow: 1;
+}
+
+.alert-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #F1F1F1;
+    margin-bottom: 8px;
+}
+
+.alert-description {
+    color: #E9ECEF;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.alert-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.detail-item {
+    background: #2D3142;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.detail-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #5F5CFF;
+}
+
+.detail-label {
+    font-size: 11px;
+    color: #E9ECEF;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+.alert-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.alert-timestamp {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 11px;
+    color: #6c757d;
+    background: rgba(45, 49, 66, 0.8);
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.alert-priority {
+    position: absolute;
+    top: 15px;
+    right: 80px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.priority-alta { background: #dc3545; color: white; }
+.priority-media { background: #ffc107; color: #212529; }
+.priority-baixa { background: #28a745; color: white; }
+
+.alert-status {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 11px;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.status-ativo { background: #dc3545; color: white; }
+.status-monitorando { background: #ffc107; color: #212529; }
+.status-resolvido { background: #28a745; color: white; }
+
+.filters-panel {
+    background: #23263B;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.statistics-panel {
+    background: linear-gradient(135deg, rgba(95, 92, 255, 0.1), rgba(110, 231, 183, 0.1));
+    border: 1px solid #5F5CFF;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.stat-card {
+    background: rgba(95, 92, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #5F5CFF;
+    display: block;
+}
+
+.stat-label {
+    color: #F1F1F1;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.stat-trend {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.trend-up { color: #28a745; }
+.trend-down { color: #dc3545; }
+.trend-stable { color: #6c757d; }
+
+.configuration-panel {
+    background: #2D3142;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.config-section {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #3A3F54;
+}
+
+.config-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.config-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #F1F1F1;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.config-title i {
+    margin-right: 10px;
+    color: #5F5CFF;
+}
+
+.threshold-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.threshold-label {
+    color: #E9ECEF;
+    font-size: 14px;
+}
+
+.threshold-input {
+    width: 80px;
+    background: #181A20;
+    border: 1px solid #3A3F54;
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #F1F1F1;
+    font-size: 13px;
+}
+
+.notification-method {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #181A20;
+    border-radius: 8px;
+}
+
+.notification-method input[type="checkbox"] {
+    margin-right: 10px;
+    accent-color: #5F5CFF;
+}
+
+.notification-method label {
+    color: #F1F1F1;
+    font-size: 14px;
+    cursor: pointer;
+    flex-grow: 1;
+}
+
+.notification-method .config-icon {
+    color: #5F5CFF;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.action-btn {
+    background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(95, 92, 255, 0.4);
+}
+
+.action-btn.secondary {
+    background: #6c757d;
+}
+
+.action-btn.secondary:hover {
+    background: #5a6268;
+}
+
+.action-btn.danger {
+    background: #dc3545;
+}
+
+.action-btn.danger:hover {
+    background: #c82333;
+}
+
+.timeline-container {
+    background: #23263B;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.timeline-item:not(:last-child):before {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 50px;
+    width: 2px;
+    height: calc(100% + 20px);
+    background: #2D3142;
+}
+
+.timeline-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #5F5CFF;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-content {
+    flex-grow: 1;
+    background: #2D3142;
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.timeline-title {
+    font-weight: 600;
+    color: #F1F1F1;
+    margin-bottom: 5px;
+}
+
+.timeline-description {
+    color: #E9ECEF;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.timeline-time {
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.smart-suggestions {
+    background: linear-gradient(135deg, rgba(110, 231, 183, 0.1), rgba(95, 92, 255, 0.1));
+    border: 1px solid #6EE7B7;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.suggestion-item {
+    background: rgba(110, 231, 183, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.suggestion-icon {
+    width: 36px;
+    height: 36px;
+    background: #6EE7B7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: #212529;
+}
+
+.suggestion-content {
+    flex-grow: 1;
+}
+
+.suggestion-title {
+    font-weight: 600;
+    color: #F1F1F1;
+    margin-bottom: 5px;
+}
+
+.suggestion-text {
+    color: #E9ECEF;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.floating-notification {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    width: 350px;
+    background: #23263B;
+    border: 2px solid #5F5CFF;
+    border-radius: 12px;
+    padding: 15px;
+    z-index: 10000;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.floating-notification.show {
+    transform: translateX(0);
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.notification-title {
+    font-weight: 600;
+    color: #F1F1F1;
+    font-size: 14px;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0;
+    font-size: 18px;
+}
+
+.notification-body {
+    color: #E9ECEF;
+    font-size: 13px;
+    line-height: 1.4;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="alerts-container">
+    <div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+        <h2 class="fw-bold mb-0">🔔 Sistema de Alertas Inteligentes</h2>
+        <div class="d-flex gap-2">
+            <button class="action-btn" onclick="criarNovoAlerta()">
+                <i class="fas fa-plus"></i> Novo Alerta
+            </button>
+            <button class="action-btn secondary" onclick="configurarAlertas()">
+                <i class="fas fa-cog"></i> Configurar
+            </button>
+            <button class="action-btn secondary" onclick="testarNotificacoes()">
+                <i class="fas fa-bell"></i> Testar
+            </button>
+        </div>
+    </div>
+
+    <!-- Estatísticas dos Alertas -->
+    <div class="statistics-panel">
+        <h5 class="mb-3"><i class="fas fa-chart-bar"></i> Estatísticas dos Alertas</h5>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-value" id="total-alertas">24</span>
+                <div class="stat-label">Total de Alertas</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> +3 hoje
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-value" id="alertas-criticos">3</span>
+                <div class="stat-label">Críticos Ativos</div>
+                <div class="stat-trend trend-down">
+                    <i class="fas fa-arrow-down"></i> -1 hoje
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-value" id="taxa-resolucao">87%</span>
+                <div class="stat-label">Taxa de Resolução</div>
+                <div class="stat-trend trend-up">
+                    <i class="fas fa-arrow-up"></i> +5% semana
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-value" id="tempo-resposta">2.3h</span>
+                <div class="stat-label">Tempo Médio Resposta</div>
+                <div class="stat-trend trend-stable">
+                    <i class="fas fa-minus"></i> estável
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filters-panel">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Prioridade</label>
+                <select class="form-select bg-dark text-light" id="filtro-prioridade">
+                    <option value="">Todas</option>
+                    <option value="alta">Alta</option>
+                    <option value="media">Média</option>
+                    <option value="baixa">Baixa</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Status</label>
+                <select class="form-select bg-dark text-light" id="filtro-status">
+                    <option value="">Todos</option>
+                    <option value="ativo">Ativo</option>
+                    <option value="monitorando">Monitorando</option>
+                    <option value="resolvido">Resolvido</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Tipo</label>
+                <select class="form-select bg-dark text-light" id="filtro-tipo">
+                    <option value="">Todos</option>
+                    <option value="prazo">Prazo</option>
+                    <option value="produtividade">Produtividade</option>
+                    <option value="resistencia">Resistência</option>
+                    <option value="sistema">Sistema</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-primary w-100" onclick="aplicarFiltros()">
+                    <i class="fas fa-filter"></i> Filtrar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sugestões Inteligentes -->
+    <div class="smart-suggestions">
+        <h5 class="mb-3"><i class="fas fa-lightbulb"></i> Sugestões Inteligentes</h5>
+        <div id="suggestions-container">
+            <div class="suggestion-item">
+                <div class="suggestion-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="suggestion-content">
+                    <div class="suggestion-title">Otimização de Cronograma</div>
+                    <div class="suggestion-text">
+                        Reagendar visitas de Itajaí para terça-feira às 14h pode aumentar taxa de sucesso em 35% baseado nos padrões identificados.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="suggestion-item">
+                <div class="suggestion-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="suggestion-content">
+                    <div class="suggestion-title">Contato Proativo</div>
+                    <div class="suggestion-text">
+                        3 informantes não responderam em 48h. Recomenda-se abordagem via WhatsApp com script personalizado.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Alertas -->
+    <div id="alerts-list">
+        <!-- Alerta Crítico -->
+        <div class="alert-card critical">
+            <div class="alert-priority priority-alta">Alta</div>
+            <div class="alert-timestamp">Há 15 min</div>
+            <div class="alert-status status-ativo">Ativo</div>
+            
+            <div class="alert-header">
+                <div class="alert-icon critical">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">Meta Mensal em Risco - Itajaí</div>
+                    <div class="alert-description">
+                        O município de Itajaí está 40% abaixo da meta mensal com apenas 8 dias restantes. Taxa de sucesso atual: 45%. Requer intervenção imediata.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert-details">
+                <div class="detail-item">
+                    <div class="detail-value">45%</div>
+                    <div class="detail-label">Taxa Sucesso</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">8</div>
+                    <div class="detail-label">Dias Restantes</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">12</div>
+                    <div class="detail-label">Visitas Necessárias</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">3</div>
+                    <div class="detail-label">Informantes Ativos</div>
+                </div>
+            </div>
+            
+            <div class="alert-actions">
+                <button class="action-btn" onclick="abrirPlanoAcao('itajai-meta')">
+                    <i class="fas fa-clipboard-list"></i> Plano de Ação
+                </button>
+                <button class="action-btn secondary" onclick="reagendarVisitas('Itajaí')">
+                    <i class="fas fa-calendar-alt"></i> Reagendar
+                </button>
+                <button class="action-btn secondary" onclick="contactarInformantes('Itajaí')">
+                    <i class="fas fa-phone"></i> Contatar
+                </button>
+                <button class="action-btn danger" onclick="resolverAlerta('alerta-1')">
+                    <i class="fas fa-check"></i> Resolver
+                </button>
+            </div>
+        </div>
+
+        <!-- Alerta de Aviso -->
+        <div class="alert-card warning">
+            <div class="alert-priority priority-media">Média</div>
+            <div class="alert-timestamp">Há 2 horas</div>
+            <div class="alert-status status-monitorando">Monitorando</div>
+            
+            <div class="alert-header">
+                <div class="alert-icon warning">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">Atraso na Resposta - Bombinhas</div>
+                    <div class="alert-description">
+                        Informante de Bombinhas não respondeu ao contato inicial há 72 horas. Recomenda-se abordagem alternativa via telefone.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert-details">
+                <div class="detail-item">
+                    <div class="detail-value">72h</div>
+                    <div class="detail-label">Sem Resposta</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">2</div>
+                    <div class="detail-label">Tentativas</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">Email</div>
+                    <div class="detail-label">Último Canal</div>
+                </div>
+            </div>
+            
+            <div class="alert-actions">
+                <button class="action-btn" onclick="tentarContato('bombinhas', 'telefone')">
+                    <i class="fas fa-phone"></i> Ligar
+                </button>
+                <button class="action-btn secondary" onclick="enviarWhatsApp('bombinhas')">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </button>
+                <button class="action-btn secondary" onclick="adiarContato('bombinhas', 24)">
+                    <i class="fas fa-clock"></i> Aguardar 24h
+                </button>
+            </div>
+        </div>
+
+        <!-- Alerta Informativo -->
+        <div class="alert-card info">
+            <div class="alert-priority priority-baixa">Baixa</div>
+            <div class="alert-timestamp">Há 4 horas</div>
+            <div class="alert-status status-monitorando">Monitorando</div>
+            
+            <div class="alert-header">
+                <div class="alert-icon info">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">Melhoria na Performance - Navegantes</div>
+                    <div class="alert-description">
+                        Taxa de sucesso em Navegantes aumentou 25% esta semana. Padrão pode ser replicado em outros municípios similares.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert-details">
+                <div class="detail-item">
+                    <div class="detail-value">+25%</div>
+                    <div class="detail-label">Melhoria</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">90%</div>
+                    <div class="detail-label">Taxa Atual</div>
+                </div>
+            </div>
+            
+            <div class="alert-actions">
+                <button class="action-btn" onclick="analisarPadrao('navegantes')">
+                    <i class="fas fa-search"></i> Analisar Padrão
+                </button>
+                <button class="action-btn secondary" onclick="replicarEstrategia('navegantes')">
+                    <i class="fas fa-copy"></i> Replicar
+                </button>
+            </div>
+        </div>
+
+        <!-- Alerta de Sucesso -->
+        <div class="alert-card success">
+            <div class="alert-priority priority-baixa">Baixa</div>
+            <div class="alert-timestamp">Ontem</div>
+            <div class="alert-status status-resolvido">Resolvido</div>
+            
+            <div class="alert-header">
+                <div class="alert-icon success">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="alert-content">
+                    <div class="alert-title">Meta Atingida - Balneário Camboriú</div>
+                    <div class="alert-description">
+                        Balneário Camboriú atingiu 120% da meta mensal com 5 dias de antecedência. Excelente trabalho da equipe!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert-details">
+                <div class="detail-item">
+                    <div class="detail-value">120%</div>
+                    <div class="detail-label">Meta Atingida</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-value">5</div>
+                    <div class="detail-label">Dias Antecedência</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline de Atividades -->
+    <div class="timeline-container">
+        <h5 class="mb-3"><i class="fas fa-history"></i> Timeline de Atividades</h5>
+        <div id="timeline-list">
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Alerta Crítico Gerado</div>
+                    <div class="timeline-description">Meta mensal de Itajaí identificada em risco</div>
+                    <div class="timeline-time">15 minutos atrás</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Contato Automático Enviado</div>
+                    <div class="timeline-description">WhatsApp enviado para informante de Bombinhas</div>
+                    <div class="timeline-time">2 horas atrás</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Alerta Resolvido</div>
+                    <div class="timeline-description">Balneário Camboriú atingiu meta mensal</div>
+                    <div class="timeline-time">Ontem às 16:30</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuração de Alertas (inicialmente oculto) -->
+    <div class="configuration-panel" id="config-panel" style="display: none;">
+        <h5 class="mb-3"><i class="fas fa-cog"></i> Configuração de Alertas</h5>
+        
+        <div class="config-section">
+            <div class="config-title">
+                <i class="fas fa-threshold"></i>
+                Limites e Thresholds
+            </div>
+            
+            <div class="threshold-control">
+                <span class="threshold-label">Meta mensal em risco (%)</span>
+                <input type="number" class="threshold-input" value="70" min="0" max="100">
+            </div>
+            
+            <div class="threshold-control">
+                <span class="threshold-label">Tempo sem resposta (horas)</span>
+                <input type="number" class="threshold-input" value="48" min="1" max="168">
+            </div>
+            
+            <div class="threshold-control">
+                <span class="threshold-label">Taxa de sucesso mínima (%)</span>
+                <input type="number" class="threshold-input" value="60" min="0" max="100">
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <div class="config-title">
+                <i class="fas fa-bell"></i>
+                Métodos de Notificação
+            </div>
+            
+            <div class="notification-method">
+                <input type="checkbox" id="notif-email" checked>
+                <label for="notif-email">Notificação por E-mail</label>
+                <i class="fas fa-cog config-icon" onclick="configurarEmail()"></i>
+            </div>
+            
+            <div class="notification-method">
+                <input type="checkbox" id="notif-whatsapp">
+                <label for="notif-whatsapp">Notificação por WhatsApp</label>
+                <i class="fas fa-cog config-icon" onclick="configurarWhatsApp()"></i>
+            </div>
+            
+            <div class="notification-method">
+                <input type="checkbox" id="notif-sistema" checked>
+                <label for="notif-sistema">Notificação no Sistema</label>
+                <i class="fas fa-cog config-icon" onclick="configurarSistema()"></i>
+            </div>
+        </div>
+        
+        <div class="config-section">
+            <div class="config-title">
+                <i class="fas fa-clock"></i>
+                Frequência de Verificação
+            </div>
+            
+            <div class="threshold-control">
+                <span class="threshold-label">Verificar alertas a cada (minutos)</span>
+                <input type="number" class="threshold-input" value="15" min="5" max="60">
+            </div>
+        </div>
+        
+        <div class="alert-actions">
+            <button class="action-btn" onclick="salvarConfiguracao()">
+                <i class="fas fa-save"></i> Salvar Configuração
+            </button>
+            <button class="action-btn secondary" onclick="resetarConfiguracao()">
+                <i class="fas fa-undo"></i> Resetar
+            </button>
+            <button class="action-btn secondary" onclick="fecharConfiguracao()">
+                <i class="fas fa-times"></i> Fechar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Notificação Flutuante (inicialmente oculta) -->
+<div class="floating-notification" id="floating-notification">
+    <div class="notification-header">
+        <div class="notification-title">Novo Alerta Crítico</div>
+        <button class="notification-close" onclick="fecharNotificacao()">×</button>
+    </div>
+    <div class="notification-body">
+        Meta mensal de Penha em situação crítica. Intervenção necessária.
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let alertasAtivos = [];
+let configuracaoAlertas = {
+    meta_risco: 70,
+    tempo_sem_resposta: 48,
+    taxa_sucesso_minima: 60,
+    frequencia_verificacao: 15,
+    notificacoes: {
+        email: true,
+        whatsapp: false,
+        sistema: true
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarSistemaAlertas();
+    carregarAlertas();
+    iniciarMonitoramento();
+});
+
+function inicializarSistemaAlertas() {
+    // Configurar intervalo de verificação
+    setInterval(verificarNovosAlertas, configuracaoAlertas.frequencia_verificacao * 60000);
+    
+    // Simular notificação flutuante após 5 segundos
+    setTimeout(() => {
+        mostrarNotificacaoFlutuante();
+    }, 5000);
+}
+
+async function carregarAlertas() {
+    try {
+        showToast('Carregando alertas...', 'info');
+        
+        // Simular carregamento de alertas
+        setTimeout(() => {
+            atualizarEstatisticas();
+            gerarSugestoesInteligentes();
+            showToast('Alertas carregados com sucesso!', 'success');
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Erro ao carregar alertas:', error);
+        showToast('Erro ao carregar alertas', 'danger');
+    }
+}
+
+function verificarNovosAlertas() {
+    // Simular verificação de novos alertas
+    const probabilidade = Math.random();
+    
+    if (probabilidade < 0.1) { // 10% de chance de novo alerta
+        gerarNovoAlerta();
+    }
+}
+
+function gerarNovoAlerta() {
+    const tiposAlerta = [
+        {
+            tipo: 'prazo',
+            titulo: 'Prazo Próximo do Vencimento',
+            descricao: 'Visita agendada para amanhã ainda não confirmada',
+            prioridade: 'media',
+            icone: 'clock'
+        },
+        {
+            tipo: 'resistencia',
+            titulo: 'Resistência Detectada',
+            descricao: 'Informante demonstra sinais de resistência',
+            prioridade: 'alta',
+            icone: 'shield-alt'
+        },
+        {
+            tipo: 'oportunidade',
+            titulo: 'Oportunidade de Contato',
+            descricao: 'Melhor horário para contato identificado',
+            prioridade: 'baixa',
+            icone: 'lightbulb'
+        }
+    ];
+    
+    const alerta = tiposAlerta[Math.floor(Math.random() * tiposAlerta.length)];
+    
+    // Atualizar contador
+    const totalElement = document.getElementById('total-alertas');
+    const totalAtual = parseInt(totalElement.textContent);
+    totalElement.textContent = totalAtual + 1;
+    
+    // Mostrar notificação
+    mostrarNotificacaoFlutuante(alerta);
+}
+
+function mostrarNotificacaoFlutuante(alerta = null) {
+    const notification = document.getElementById('floating-notification');
+    
+    if (alerta) {
+        notification.querySelector('.notification-title').textContent = alerta.titulo;
+        notification.querySelector('.notification-body').textContent = alerta.descricao;
+    }
+    
+    notification.classList.add('show');
+    
+    // Auto-fechar após 10 segundos
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 10000);
+}
+
+function fecharNotificacao() {
+    document.getElementById('floating-notification').classList.remove('show');
+}
+
+function atualizarEstatisticas() {
+    // Simular atualização de estatísticas
+    const stats = {
+        total: Math.floor(Math.random() * 10) + 20,
+        criticos: Math.floor(Math.random() * 5) + 1,
+        resolucao: Math.floor(Math.random() * 20) + 80,
+        tempo: (Math.random() * 3 + 1).toFixed(1)
+    };
+    
+    // Animação de contadores
+    animateCounter('total-alertas', stats.total);
+    animateCounter('alertas-criticos', stats.criticos);
+    animateCounter('taxa-resolucao', stats.resolucao, '%');
+    
+    document.getElementById('tempo-resposta').textContent = stats.tempo + 'h';
+}
+
+function animateCounter(elementId, targetValue, suffix = '') {
+    const element = document.getElementById(elementId);
+    const startValue = parseInt(element.textContent) || 0;
+    const increment = (targetValue - startValue) / 20;
+    let currentValue = startValue;
+    
+    const timer = setInterval(() => {
+        currentValue += increment;
+        if ((increment > 0 && currentValue >= targetValue) || 
+            (increment < 0 && currentValue <= targetValue)) {
+            currentValue = targetValue;
+            clearInterval(timer);
+        }
+        element.textContent = Math.round(currentValue) + suffix;
+    }, 50);
+}
+
+function gerarSugestoesInteligentes() {
+    const sugestoes = [
+        {
+            icone: 'route',
+            titulo: 'Otimização de Rota',
+            texto: 'Agrupar visitas de Itapema e Porto Belo no mesmo dia pode economizar 2 horas de deslocamento.'
+        },
+        {
+            icone: 'brain',
+            titulo: 'Padrão Identificado',
+            texto: 'Informantes técnicos respondem 40% melhor quando recebem dados comparativos antecipadamente.'
+        },
+        {
+            icone: 'calendar-check',
+            titulo: 'Momento Ideal',
+            texto: 'Quinta-feira às 15h é o momento com maior taxa de sucesso para novos contatos.'
+        }
+    ];
+    
+    const container = document.getElementById('suggestions-container');
+    
+    // Adicionar nova sugestão ocasionalmente
+    if (Math.random() < 0.3) {
+        const novaSugestao = sugestoes[Math.floor(Math.random() * sugestoes.length)];
+        
+        const suggestionDiv = document.createElement('div');
+        suggestionDiv.className = 'suggestion-item';
+        suggestionDiv.innerHTML = `
+            <div class="suggestion-icon">
+                <i class="fas fa-${novaSugestao.icone}"></i>
+            </div>
+            <div class="suggestion-content">
+                <div class="suggestion-title">${novaSugestao.titulo}</div>
+                <div class="suggestion-text">${novaSugestao.texto}</div>
+            </div>
+        `;
+        
+        container.appendChild(suggestionDiv);
+        
+        // Limitar a 5 sugestões
+        while (container.children.length > 5) {
+            container.removeChild(container.firstElementChild);
+        }
+    }
+}
+
+function criarNovoAlerta() {
+    showToast('Abrindo criador de alertas personalizados...', 'info');
+    // Implementar interface de criação de alertas
+}
+
+function configurarAlertas() {
+    const configPanel = document.getElementById('config-panel');
+    configPanel.style.display = configPanel.style.display === 'none' ? 'block' : 'none';
+}
+
+function fecharConfiguracao() {
+    document.getElementById('config-panel').style.display = 'none';
+}
+
+function salvarConfiguracao() {
+    // Capturar valores dos inputs
+    configuracaoAlertas.meta_risco = document.querySelector('input[value="70"]').value;
+    configuracaoAlertas.tempo_sem_resposta = document.querySelector('input[value="48"]').value;
+    
+    showToast('Configuração salva com sucesso!', 'success');
+    fecharConfiguracao();
+}
+
+function resetarConfiguracao() {
+    if (confirm('Deseja resetar todas as configurações para os valores padrão?')) {
+        configuracaoAlertas = {
+            meta_risco: 70,
+            tempo_sem_resposta: 48,
+            taxa_sucesso_minima: 60,
+            frequencia_verificacao: 15,
+            notificacoes: {
+                email: true,
+                whatsapp: false,
+                sistema: true
+            }
+        };
+        showToast('Configuração resetada!', 'info');
+    }
+}
+
+function testarNotificacoes() {
+    showToast('Testando notificações...', 'info');
+    
+    setTimeout(() => {
+        mostrarNotificacaoFlutuante({
+            titulo: 'Teste de Notificação',
+            descricao: 'Este é um teste do sistema de notificações. Funcionando perfeitamente!'
+        });
+        showToast('Teste concluído!', 'success');
+    }, 2000);
+}
+
+function aplicarFiltros() {
+    const prioridade = document.getElementById('filtro-prioridade').value;
+    const status = document.getElementById('filtro-status').value;
+    const tipo = document.getElementById('filtro-tipo').value;
+    
+    showToast('Filtros aplicados aos alertas', 'info');
+    // Implementar lógica de filtros
+}
+
+function abrirPlanoAcao(alertaId) {
+    showToast(`Abrindo plano de ação para ${alertaId}...`, 'info');
+    // Implementar interface de plano de ação
+}
+
+function reagendarVisitas(municipio) {
+    showToast(`Abrindo agenda para reagendar visitas em ${municipio}...`, 'info');
+    // Redirecionar para agenda
+}
+
+function contactarInformantes(municipio) {
+    showToast(`Iniciando contato com informantes de ${municipio}...`, 'info');
+    // Implementar interface de contato
+}
+
+function resolverAlerta(alertaId) {
+    if (confirm('Deseja marcar este alerta como resolvido?')) {
+        showToast('Alerta marcado como resolvido!', 'success');
+        // Implementar lógica de resolução
+    }
+}
+
+function tentarContato(municipio, canal) {
+    showToast(`Iniciando contato com ${municipio} via ${canal}...`, 'info');
+}
+
+function enviarWhatsApp(municipio) {
+    showToast(`Enviando WhatsApp para ${municipio}...`, 'info');
+}
+
+function adiarContato(municipio, horas) {
+    showToast(`Contato com ${municipio} adiado por ${horas} horas`, 'info');
+}
+
+function analisarPadrao(municipio) {
+    showToast(`Analisando padrão de sucesso de ${municipio}...`, 'info');
+}
+
+function replicarEstrategia(municipio) {
+    showToast(`Replicando estratégia de ${municipio} para outros municípios...`, 'info');
+}
+
+function iniciarMonitoramento() {
+    // Simular monitoramento em tempo real
+    setInterval(() => {
+        // Verificar condições críticas
+        verificarCondicoesCriticas();
+    }, 30000); // Verificar a cada 30 segundos
+}
+
+function verificarCondicoesCriticas() {
+    // Lógica de verificação de condições críticas
+    // Em produção, conectaria com APIs reais
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
+{% endblock %}

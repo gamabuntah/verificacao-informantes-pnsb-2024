@@ -1,0 +1,772 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Analytics - PNSB 2024{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+<style>
+    body {
+        background: linear-gradient(135deg, #0F1419 0%, #181A20 50%, #23263B 100%);
+        color: #F1F1F1;
+        min-height: 100vh;
+    }
+
+    .page-header {
+        background: rgba(35, 38, 59, 0.9);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(95, 92, 255, 0.2);
+        padding: 20px 0;
+        margin-bottom: 30px;
+    }
+
+    .analytics-card {
+        background: linear-gradient(145deg, #23263B 0%, #2D3142 100%);
+        border: 1px solid rgba(95, 92, 255, 0.1);
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .analytics-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(95, 92, 255, 0.3);
+        box-shadow: 0 8px 25px rgba(95, 92, 255, 0.1);
+    }
+
+    .metric-card {
+        background: #2D3142;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #5F5CFF;
+        margin-bottom: 10px;
+    }
+
+    .metric-label {
+        color: #B8BCC8;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .heatmap-container {
+        height: 400px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .coverage-progress {
+        height: 8px;
+        background: #3A3F54;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    .coverage-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+        border-radius: 4px;
+        transition: width 0.8s ease;
+    }
+
+    .municipality-filter {
+        background: #2D3142;
+        border: 1px solid #3A3F54;
+        border-radius: 8px;
+        padding: 10px;
+        color: #F1F1F1;
+        margin-bottom: 20px;
+    }
+
+    .municipality-filter:focus {
+        border-color: #5F5CFF;
+        outline: none;
+    }
+
+    .btn-analytics {
+        background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-analytics:hover {
+        background: linear-gradient(90deg, #6EE7B7 0%, #5F5CFF 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(95, 92, 255, 0.3);
+    }
+
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin-bottom: 20px;
+    }
+
+    .loading-spinner {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+    }
+
+    .gap-indicator {
+        background: #dc3545;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin-right: 5px;
+    }
+
+    .cluster-indicator {
+        background: #28a745;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        margin-right: 5px;
+    }
+
+    .alert-item {
+        background: #2D3142;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .recommendation-item {
+        background: #2D3142;
+        border-left: 4px solid #5F5CFF;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .export-button {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    .export-button:hover {
+        background: #218838;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="h3 mb-0 text-gradient">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Dashboard Analytics PNSB 2024
+                </h1>
+                <p class="text-muted mb-0">Análise avançada de dados geográficos e métricas operacionais</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <select class="municipality-filter me-2" id="municipalityFilter">
+                    <option value="">Todos os Municípios</option>
+                    <option value="Balneário Camboriú">Balneário Camboriú</option>
+                    <option value="Balneário Piçarras">Balneário Piçarras</option>
+                    <option value="Bombinhas">Bombinhas</option>
+                    <option value="Camboriú">Camboriú</option>
+                    <option value="Itajaí">Itajaí</option>
+                    <option value="Itapema">Itapema</option>
+                    <option value="Luiz Alves">Luiz Alves</option>
+                    <option value="Navegantes">Navegantes</option>
+                    <option value="Penha">Penha</option>
+                    <option value="Porto Belo">Porto Belo</option>
+                    <option value="Ilhota">Ilhota</option>
+                </select>
+                <button class="btn btn-analytics" onclick="refreshAnalytics()">
+                    <i class="fas fa-sync-alt me-2"></i>
+                    Atualizar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- Métricas Principais -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="metric-card">
+                <div class="metric-value" id="totalEntities">67</div>
+                <div class="metric-label">Total de Entidades</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="metric-card">
+                <div class="metric-value" id="coveragePercentage">78.9%</div>
+                <div class="metric-label">Cobertura Geográfica</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="metric-card">
+                <div class="metric-value" id="efficiencyScore">82.3</div>
+                <div class="metric-label">Score de Eficiência</div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="metric-card">
+                <div class="metric-value" id="completionRate">65.2%</div>
+                <div class="metric-label">Taxa de Conclusão</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Heatmap e Análise de Cobertura -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="analytics-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-fire me-2"></i>
+                        Heatmap de Densidade
+                    </h5>
+                    <div>
+                        <select class="form-select form-select-sm" id="heatmapWeight" style="background: #2D3142; color: #F1F1F1; border: 1px solid #3A3F54;">
+                            <option value="density">Densidade</option>
+                            <option value="priority">Prioridade</option>
+                            <option value="requirements">Requisitos</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="heatmap-container" id="heatmapContainer">
+                    <div class="loading-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Carregando...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="analytics-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-map me-2"></i>
+                    Análise de Cobertura
+                </h5>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Cobertura Atual</span>
+                        <span id="currentCoverage">78.9%</span>
+                    </div>
+                    <div class="coverage-progress">
+                        <div class="coverage-fill" id="coverageFill" style="width: 78.9%"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Gaps Identificados</span>
+                        <span id="gapCount"><span class="gap-indicator">3</span>gaps</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Clusters Otimizados</span>
+                        <span id="clusterCount"><span class="cluster-indicator">5</span>clusters</span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-sm btn-analytics" onclick="showCoverageDetails()">
+                        <i class="fas fa-search me-1"></i>
+                        Detalhes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráficos e Tendências -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="analytics-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-chart-bar me-2"></i>
+                    Distribuição por Município
+                </h5>
+                <div class="chart-container">
+                    <canvas id="municipalityChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="analytics-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Tendência de Eficiência
+                </h5>
+                <div class="chart-container">
+                    <canvas id="efficiencyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alertas e Recomendações -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="analytics-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Alertas e Avisos
+                </h5>
+                <div id="alertsContainer">
+                    <div class="alert-item">
+                        <strong>Cobertura Insuficiente</strong><br>
+                        <small>3 municípios com cobertura abaixo de 70%</small>
+                    </div>
+                    <div class="alert-item">
+                        <strong>Gaps Geográficos</strong><br>
+                        <small>Áreas rurais com baixa densidade de entidades</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="analytics-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    Recomendações
+                </h5>
+                <div id="recommendationsContainer">
+                    <div class="recommendation-item">
+                        <strong>Otimização de Rotas</strong><br>
+                        <small>Potencial redução de 20% no tempo de deslocamento</small>
+                    </div>
+                    <div class="recommendation-item">
+                        <strong>Priorização de Visitas</strong><br>
+                        <small>Focar em entidades P1 com maior impacto</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export e Relatórios -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="analytics-card">
+                <h5 class="mb-3">
+                    <i class="fas fa-file-export me-2"></i>
+                    Exportar Relatórios
+                </h5>
+                <div class="d-flex gap-2">
+                    <button class="export-button" onclick="exportIBGEReport('executive')">
+                        <i class="fas fa-file-pdf me-1"></i>
+                        Relatório Executivo
+                    </button>
+                    <button class="export-button" onclick="exportIBGEReport('detailed')">
+                        <i class="fas fa-file-alt me-1"></i>
+                        Relatório Detalhado
+                    </button>
+                    <button class="export-button" onclick="exportIBGEReport('technical')">
+                        <i class="fas fa-file-code me-1"></i>
+                        Relatório Técnico
+                    </button>
+                    <button class="export-button" onclick="exportExcel()">
+                        <i class="fas fa-file-excel me-1"></i>
+                        Planilha Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalhes -->
+<div class="modal fade" id="coverageModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: #23263B; color: #F1F1F1;">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes da Análise de Cobertura</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="coverageDetails">
+                    <!-- Conteúdo será carregado dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Variáveis globais
+let heatmapInstance = null;
+let municipalityChart = null;
+let efficiencyChart = null;
+let currentData = null;
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    initializeAnalytics();
+    initializeCharts();
+    
+    // Event listeners
+    document.getElementById('municipalityFilter').addEventListener('change', refreshAnalytics);
+    document.getElementById('heatmapWeight').addEventListener('change', updateHeatmap);
+});
+
+function initializeAnalytics() {
+    console.log('🔄 Inicializando Dashboard Analytics...');
+    loadAnalyticsData();
+}
+
+function initializeCharts() {
+    // Gráfico de distribuição por município
+    const municipalityCtx = document.getElementById('municipalityChart').getContext('2d');
+    municipalityChart = new Chart(municipalityCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Balneário Camboriú', 'Itajaí', 'Camboriú', 'Bombinhas', 'Itapema'],
+            datasets: [{
+                label: 'Entidades',
+                data: [12, 15, 8, 6, 10],
+                backgroundColor: 'rgba(95, 92, 255, 0.6)',
+                borderColor: 'rgba(95, 92, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#F1F1F1'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#B8BCC8'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#B8BCC8'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico de tendência de eficiência
+    const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
+    efficiencyChart = new Chart(efficiencyCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+            datasets: [{
+                label: 'Eficiência (%)',
+                data: [70, 75, 78, 82, 85, 82],
+                borderColor: 'rgba(110, 231, 183, 1)',
+                backgroundColor: 'rgba(110, 231, 183, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#F1F1F1'
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: '#B8BCC8'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: '#B8BCC8'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function loadAnalyticsData() {
+    const municipality = document.getElementById('municipalityFilter').value;
+    
+    showLoading(true);
+    
+    // Carregar dados do overview
+    fetch('/api/analytics/dashboard/overview')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                currentData = data.data;
+                updateMetrics(data.data);
+                loadHeatmap();
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar dados:', error);
+            showError('Erro ao carregar dados do dashboard');
+        })
+        .finally(() => {
+            showLoading(false);
+        });
+}
+
+function updateMetrics(data) {
+    const metrics = data.kpi_dashboard || {};
+    
+    document.getElementById('totalEntities').textContent = 
+        data.overview_metrics?.total_entities || 67;
+    document.getElementById('coveragePercentage').textContent = 
+        (metrics.geographic_coverage || 78.9).toFixed(1) + '%';
+    document.getElementById('efficiencyScore').textContent = 
+        (metrics.efficiency_score || 82.3).toFixed(1);
+    document.getElementById('completionRate').textContent = 
+        (metrics.completion_rate || 65.2).toFixed(1) + '%';
+    
+    // Atualizar cobertura
+    const coverage = metrics.geographic_coverage || 78.9;
+    document.getElementById('currentCoverage').textContent = coverage.toFixed(1) + '%';
+    document.getElementById('coverageFill').style.width = coverage + '%';
+}
+
+function loadHeatmap() {
+    const municipality = document.getElementById('municipalityFilter').value;
+    const weightBy = document.getElementById('heatmapWeight').value;
+    
+    const params = new URLSearchParams();
+    if (municipality) params.append('municipality', municipality);
+    if (weightBy) params.append('weight_by', weightBy);
+    
+    fetch(`/api/analytics/heatmap/entities?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                renderHeatmap(data.data);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar heatmap:', error);
+        });
+}
+
+function renderHeatmap(heatmapData) {
+    const container = document.getElementById('heatmapContainer');
+    container.innerHTML = '';
+    
+    // Inicializar mapa
+    const map = L.map(container).setView(heatmapData.center, 10);
+    
+    // Adicionar tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Preparar dados para heatmap
+    const heatPoints = heatmapData.points.map(point => [
+        point.lat, 
+        point.lng, 
+        point.weight
+    ]);
+    
+    // Adicionar heatmap
+    if (heatPoints.length > 0) {
+        const heatLayer = L.heatLayer(heatPoints, {
+            radius: heatmapData.visualization_config.radius,
+            blur: heatmapData.visualization_config.blur,
+            maxZoom: 18,
+            gradient: heatmapData.visualization_config.gradient
+        }).addTo(map);
+    }
+    
+    // Adicionar marcadores individuais
+    heatmapData.points.forEach(point => {
+        const marker = L.marker([point.lat, point.lng])
+            .bindPopup(`
+                <strong>${point.entity_type}</strong><br>
+                Município: ${point.municipality}<br>
+                Prioridade: P${point.priority}<br>
+                Status: ${point.status}
+            `);
+        marker.addTo(map);
+    });
+    
+    heatmapInstance = map;
+}
+
+function updateHeatmap() {
+    loadHeatmap();
+}
+
+function refreshAnalytics() {
+    loadAnalyticsData();
+}
+
+function showCoverageDetails() {
+    const municipality = document.getElementById('municipalityFilter').value;
+    
+    fetch(`/api/analytics/coverage/analysis${municipality ? '?municipality=' + municipality : ''}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const details = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Resumo da Cobertura</h6>
+                            <p><strong>Área Total:</strong> ${data.data.coverage_summary.total_area_km2} km²</p>
+                            <p><strong>Área Coberta:</strong> ${data.data.coverage_summary.covered_area_km2} km²</p>
+                            <p><strong>Percentual:</strong> ${data.data.coverage_summary.coverage_percentage}%</p>
+                            <p><strong>Avaliação:</strong> ${data.data.coverage_summary.coverage_grade}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Análise de Gaps</h6>
+                            <p><strong>Total de Gaps:</strong> ${data.data.gaps_analysis.total_gaps}</p>
+                            <p><strong>Severidade:</strong> ${data.data.gaps_analysis.gap_severity}</p>
+                            <h6>Clusters</h6>
+                            <p><strong>Total de Clusters:</strong> ${data.data.clusters_analysis.total_clusters}</p>
+                            <p><strong>Eficiência:</strong> ${data.data.clusters_analysis.cluster_efficiency}</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <h6>Insights Acionáveis</h6>
+                        <ul>
+                            ${data.data.actionable_insights.map(insight => `<li>${insight}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                
+                document.getElementById('coverageDetails').innerHTML = details;
+                new bootstrap.Modal(document.getElementById('coverageModal')).show();
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar detalhes:', error);
+        });
+}
+
+function exportIBGEReport(format) {
+    const exportData = {
+        format_type: format,
+        export_format: 'json',
+        include_attachments: true
+    };
+    
+    fetch('/api/analytics/reports/ibge', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(exportData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Criar e baixar arquivo JSON
+            const blob = new Blob([JSON.stringify(data.data, null, 2)], 
+                { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_ibge_${format}_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showSuccess('Relatório exportado com sucesso!');
+        }
+    })
+    .catch(error => {
+        console.error('Erro ao exportar relatório:', error);
+        showError('Erro ao exportar relatório');
+    });
+}
+
+function exportExcel() {
+    showInfo('Exportação para Excel será implementada em breve');
+}
+
+function showLoading(show) {
+    const spinner = document.querySelector('.loading-spinner');
+    if (spinner) {
+        spinner.style.display = show ? 'block' : 'none';
+    }
+}
+
+function showSuccess(message) {
+    showToast(message, 'success');
+}
+
+function showError(message) {
+    showToast(message, 'danger');
+}
+
+function showInfo(message) {
+    showToast(message, 'info');
+}
+
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type} position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'danger' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        ${message}
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+</script>
+{% endblock %}

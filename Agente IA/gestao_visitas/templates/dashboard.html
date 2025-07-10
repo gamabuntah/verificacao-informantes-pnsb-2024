@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sistema PNSB{% endblock %}
+
+{% block head %}
+<style>
+@media (max-width: 768px) {
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Success Banner -->
+<div class="success-banner">
+    <h3>🎉 Sistema PNSB Totalmente Renovado!</h3>
+    <p>Interface moderna, responsiva e funcionalidades completas PNSB implementadas</p>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-number" id="stat-endpoints">46+</div>
+        <div class="stat-label">Endpoints PNSB</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number skeleton" id="stat-visitas">--</div>
+        <div class="stat-label">Visitas Agendadas</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">11</div>
+        <div class="stat-label">Municípios SC</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number skeleton" id="stat-realizadas">--</div>
+        <div class="stat-label">Realizadas</div>
+    </div>
+</div>
+
+<!-- Features Grid -->
+<div class="features-grid">
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-brain"></i>
+        </div>
+        <div class="feature-title">Perfil Inteligente do Informante</div>
+        <div class="feature-description">
+            Análise comportamental, histórico de abordagens e estratégias personalizadas para cada informante.
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-route"></i>
+        </div>
+        <div class="feature-title">Logística com Google Maps</div>
+        <div class="feature-description">
+            Otimização de rotas diárias, cálculo de tempos de viagem e monitoramento de trânsito em tempo real.
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="feature-title">Rastreamento de Questionários</div>
+        <div class="feature-description">
+            Mapa visual de progresso por município, alertas de prazo e relatórios executivos de coleta.
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="feature-title">Assistente de Abordagem</div>
+        <div class="feature-description">
+            Scripts personalizados, banco de argumentos eficazes e técnicas para contornar objeções.
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="feature-title">Sistema de Contingência</div>
+        <div class="feature-description">
+            Identificação automática de informantes alternativos e planos de backup por município.
+        </div>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-network-wired"></i>
+        </div>
+        <div class="feature-title">Comunicação Eficiente</div>
+        <div class="feature-description">
+            Integração WhatsApp, e-mail automático e notificações inteligentes para máxima eficiência.
+        </div>
+    </div>
+</div>
+
+<!-- Charts Container -->
+<div class="charts-container">
+    <div class="chart-card">
+        <div class="chart-title">Distribuição das Visitas</div>
+        <canvas id="grafico-visitas" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+        <div class="chart-title">Próximas Visitas</div>
+        <div id="lista-proximas-visitas" style="max-height: 250px; overflow-y: auto;">
+            <div class="text-secondary">Carregando...</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+// Carregar dados reais das visitas
+async function carregarDadosDashboard() {
+  try {
+    // Remove skeleton loading classes
+    document.getElementById('stat-visitas').classList.remove('skeleton');
+    document.getElementById('stat-realizadas').classList.remove('skeleton');
+    
+    const response = await fetchWithLoading('/api/visitas');
+    const visitas = response.data;
+    
+    // Atualizar estatísticas
+    const agendadas = visitas.filter(v => v.status === 'agendada').length;
+    const realizadas = visitas.filter(v => v.status === 'realizada').length;
+    const pendentes = visitas.filter(v => v.status === 'pendente').length;
+    
+    document.getElementById('stat-visitas').textContent = agendadas;
+    document.getElementById('stat-realizadas').textContent = realizadas;
+
+    // Próximas visitas com design moderno
+    const proximas = visitas
+      .filter(v => v.status === 'agendada')
+      .sort((a, b) => new Date(a.data) - new Date(b.data))
+      .slice(0, 5);
+    
+    const lista = document.getElementById('lista-proximas-visitas');
+    lista.innerHTML = '';
+    
+    if (proximas.length === 0) {
+      lista.innerHTML = '<div class="text-secondary">Nenhuma visita agendada.</div>';
+    } else {
+      proximas.forEach(v => {
+        const div = document.createElement('div');
+        div.className = 'mb-3 p-3 rounded';
+        div.style.background = 'rgba(95, 92, 255, 0.1)';
+        div.style.border = '1px solid rgba(95, 92, 255, 0.2)';
+        div.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong style="color: var(--text-primary)">${v.municipio}</strong>
+              <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                ${v.data} às ${v.hora_inicio || '--:--'}
+              </div>
+            </div>
+            <span class="badge" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));">
+              ${v.tipo_pesquisa || 'MRS'}
+            </span>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    // Gráfico com design moderno
+    const ctx = document.getElementById('grafico-visitas').getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Agendadas', 'Realizadas', 'Pendentes'],
+        datasets: [{
+          data: [agendadas, realizadas, pendentes],
+          backgroundColor: [
+            'rgba(95, 92, 255, 0.8)',
+            'rgba(110, 231, 183, 0.8)',
+            'rgba(255, 193, 7, 0.8)'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        plugins: {
+          legend: {
+            labels: { 
+              color: '#F1F1F1', 
+              font: { size: 14, weight: '500' }
+            }
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: false
+      }
+    });
+  } catch (error) {
+    console.error('Erro ao carregar dados do dashboard:', error);
+    document.getElementById('stat-visitas').textContent = '0';
+    document.getElementById('stat-realizadas').textContent = '0';
+    document.getElementById('lista-proximas-visitas').innerHTML = 
+      '<div class="text-secondary">Erro ao carregar visitas.</div>';
+    
+    // Remove skeleton classes even on error
+    document.getElementById('stat-visitas').classList.remove('skeleton');
+    document.getElementById('stat-realizadas').classList.remove('skeleton');
+  }
+}
+
+// Carregar dados quando a página estiver pronta
+document.addEventListener('DOMContentLoaded', carregarDadosDashboard);
+</script>
+{% endblock %}

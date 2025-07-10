@@ -1,0 +1,21 @@
+{
+    "name": "Sistema PNSB 2024",
+    "short_name": "PNSB",
+    "description": "Pesquisa Nacional de Saneamento Básico - Sistema de Gestão de Visitas",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0F1419",
+    "theme_color": "#5F5CFF",
+    "orientation": "portrait",
+    "scope": "/",
+    "lang": "pt-BR",
+    "icons": [
+        {
+            "src": "/static/icons/icon-base.svg",
+            "sizes": "72x72 96x96 128x128 144x144 152x152 192x192 384x384 512x512",
+            "type": "image/svg+xml",
+            "purpose": "maskable any"
+        }
+    ],
+    "categories": ["business", "productivity", "government"]
+}

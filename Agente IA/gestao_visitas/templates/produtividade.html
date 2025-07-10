@@ -1,0 +1,1069 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard de Produtividade - Sistema PNSB{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/date-fns@3.0.0/index.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <h2 class="fw-bold mb-0">📊 Dashboard de Produtividade</h2>
+    <div class="d-flex gap-2">
+        <button class="btn-success-custom" onclick="exportarRelatorio()">
+            <i class="fas fa-download"></i> Exportar Relatório
+        </button>
+        <button class="btn-primary-custom" onclick="atualizarDashboard()">
+            <i class="fas fa-sync"></i> Atualizar
+        </button>
+    </div>
+</div>
+
+<!-- Período de Análise -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <label for="periodo-inicio" class="form-label">Data Início</label>
+        <input type="date" class="form-control" id="periodo-inicio">
+    </div>
+    <div class="col-md-3">
+        <label for="periodo-fim" class="form-label">Data Fim</label>
+        <input type="date" class="form-control" id="periodo-fim">
+    </div>
+    <div class="col-md-3">
+        <label for="municipio-filtro" class="form-label">Município</label>
+        <select class="form-select" id="municipio-filtro">
+            <option value="">Todos os Municípios</option>
+            <option>Balneário Camboriú</option>
+            <option>Balneário Piçarras</option>
+            <option>Bombinhas</option>
+            <option>Camboriú</option>
+            <option>Itajaí</option>
+            <option>Itapema</option>
+            <option>Luiz Alves</option>
+            <option>Navegantes</option>
+            <option>Penha</option>
+            <option>Porto Belo</option>
+            <option>Ilhota</option>
+        </select>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-primary w-100" onclick="filtrarDados()">
+            <i class="fas fa-filter"></i> Filtrar
+        </button>
+    </div>
+</div>
+
+<!-- Métricas Principais -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="metric-card">
+            <div class="metric-header">
+                <div class="metric-icon bg-primary">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="metric-trend" id="trend-realizadas">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12%</span>
+                </div>
+            </div>
+            <div class="metric-body">
+                <h3 class="metric-number" id="total-realizadas">--</h3>
+                <p class="metric-label">Visitas Realizadas</p>
+                <div class="metric-progress">
+                    <div class="progress">
+                        <div class="progress-bar bg-primary" id="progress-realizadas" style="width: 0%"></div>
+                    </div>
+                    <small class="text-muted" id="meta-realizadas">Meta: 100</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="metric-card">
+            <div class="metric-header">
+                <div class="metric-icon bg-success">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="metric-trend" id="trend-tempo">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>-8%</span>
+                </div>
+            </div>
+            <div class="metric-body">
+                <h3 class="metric-number" id="tempo-medio">--</h3>
+                <p class="metric-label">Tempo Médio/Visita</p>
+                <div class="metric-progress">
+                    <div class="progress">
+                        <div class="progress-bar bg-success" id="progress-tempo" style="width: 75%"></div>
+                    </div>
+                    <small class="text-muted">Eficiência: Boa</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="metric-card">
+            <div class="metric-header">
+                <div class="metric-icon bg-warning">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="metric-trend" id="trend-sucesso">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+5%</span>
+                </div>
+            </div>
+            <div class="metric-body">
+                <h3 class="metric-number" id="taxa-sucesso">--</h3>
+                <p class="metric-label">Taxa de Sucesso</p>
+                <div class="metric-progress">
+                    <div class="progress">
+                        <div class="progress-bar bg-warning" id="progress-sucesso" style="width: 0%"></div>
+                    </div>
+                    <small class="text-muted" id="status-sucesso">Excelente</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="metric-card">
+            <div class="metric-header">
+                <div class="metric-icon bg-info">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <div class="metric-trend" id="trend-produtividade">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+15%</span>
+                </div>
+            </div>
+            <div class="metric-body">
+                <h3 class="metric-number" id="indice-produtividade">--</h3>
+                <p class="metric-label">Índice de Produtividade</p>
+                <div class="metric-progress">
+                    <div class="progress">
+                        <div class="progress-bar bg-info" id="progress-produtividade" style="width: 0%"></div>
+                    </div>
+                    <small class="text-muted" id="classificacao-produtividade">Alta Performance</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos Principais -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-chart-line"></i> Evolução da Produtividade</h5>
+                <div class="chart-controls">
+                    <button class="btn btn-sm btn-outline-primary" onclick="alterarVisualizacao('diario')">Diário</button>
+                    <button class="btn btn-sm btn-primary" onclick="alterarVisualizacao('semanal')">Semanal</button>
+                    <button class="btn btn-sm btn-outline-primary" onclick="alterarVisualizacao('mensal')">Mensal</button>
+                </div>
+            </div>
+            <div class="chart-body">
+                <canvas id="grafico-evolucao" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5><i class="fas fa-map-marked-alt"></i> Performance por Município</h5>
+            </div>
+            <div class="chart-body">
+                <canvas id="grafico-municipios" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Análises Detalhadas -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="analysis-card">
+            <div class="analysis-header">
+                <h5><i class="fas fa-users"></i> Análise de Informantes</h5>
+                <button class="btn btn-sm btn-outline-info" onclick="abrirDetalhesInformantes()">
+                    <i class="fas fa-external-link-alt"></i> Ver Detalhes
+                </button>
+            </div>
+            <div class="analysis-body">
+                <div class="informant-metrics" id="metricas-informantes">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="metric-small">
+                                <span class="metric-value" id="informantes-cooperativos">--</span>
+                                <span class="metric-desc">Cooperativos</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-small">
+                                <span class="metric-value" id="informantes-resistentes">--</span>
+                                <span class="metric-desc">Resistentes</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-small">
+                                <span class="metric-value" id="tempo-medio-contato">--</span>
+                                <span class="metric-desc">Tempo Médio Contato</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-small">
+                                <span class="metric-value" id="taxa-rejeicao">--</span>
+                                <span class="metric-desc">Taxa de Rejeição</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resistance-analysis mt-3">
+                    <h6>Padrões de Resistência</h6>
+                    <div id="analise-resistencia">
+                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                        <span class="ms-2">Analisando padrões...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="analysis-card">
+            <div class="analysis-header">
+                <h5><i class="fas fa-clock"></i> Otimização de Cronograma</h5>
+                <button class="btn btn-sm btn-outline-success" onclick="otimizarCronograma()">
+                    <i class="fas fa-magic"></i> Otimizar
+                </button>
+            </div>
+            <div class="analysis-body">
+                <div class="schedule-optimization" id="otimizacao-cronograma">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="metric-small">
+                                <span class="metric-value" id="melhor-horario">--</span>
+                                <span class="metric-desc">Melhor Horário</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-small">
+                                <span class="metric-value" id="melhor-dia">--</span>
+                                <span class="metric-desc">Melhor Dia</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="optimization-suggestions" id="sugestoes-otimizacao">
+                                <h6>Sugestões de Melhoria</h6>
+                                <div class="suggestions-list">
+                                    <div class="spinner-border spinner-border-sm" role="status"></div>
+                                    <span class="ms-2">Calculando otimizações...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Alertas e Notificações -->
+<div class="row g-4 mb-4">
+    <div class="col-12">
+        <div class="alerts-card">
+            <div class="alerts-header">
+                <h5><i class="fas fa-bell"></i> Alertas Inteligentes</h5>
+                <div class="alert-controls">
+                    <button class="btn btn-sm btn-outline-warning" onclick="configurarAlertas()">
+                        <i class="fas fa-cog"></i> Configurar
+                    </button>
+                    <button class="btn btn-sm btn-outline-info" onclick="marcarTodosLidos()">
+                        <i class="fas fa-check-double"></i> Marcar Lidos
+                    </button>
+                </div>
+            </div>
+            <div class="alerts-body" id="lista-alertas">
+                <div class="alert-item warning">
+                    <div class="alert-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Meta de visitas em risco</div>
+                        <div class="alert-desc">Meta mensal pode não ser atingida em Itajaí (-15%)</div>
+                        <div class="alert-time">Há 2 horas</div>
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn btn-sm btn-outline-primary">Ver Detalhes</button>
+                    </div>
+                </div>
+
+                <div class="alert-item success">
+                    <div class="alert-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Meta atingida</div>
+                        <div class="alert-desc">Balneário Camboriú atingiu 120% da meta mensal</div>
+                        <div class="alert-time">Há 4 horas</div>
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn btn-sm btn-outline-success">Parabéns!</button>
+                    </div>
+                </div>
+
+                <div class="alert-item info">
+                    <div class="alert-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Tendência positiva</div>
+                        <div class="alert-desc">Taxa de sucesso aumentou 8% esta semana</div>
+                        <div class="alert-time">Ontem</div>
+                    </div>
+                    <div class="alert-actions">
+                        <button class="btn btn-sm btn-outline-info">Analisar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ranking de Performance -->
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="ranking-card">
+            <div class="ranking-header">
+                <h5><i class="fas fa-medal"></i> Ranking de Municípios</h5>
+                <select class="form-select form-select-sm" style="width: auto;" onchange="alterarMetricaRanking(this.value)">
+                    <option value="visitas">Por Visitas Realizadas</option>
+                    <option value="sucesso">Por Taxa de Sucesso</option>
+                    <option value="tempo">Por Eficiência de Tempo</option>
+                    <option value="produtividade">Por Índice de Produtividade</option>
+                </select>
+            </div>
+            <div class="ranking-body" id="ranking-municipios">
+                <!-- Ranking será populado via JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="insights-card">
+            <div class="insights-header">
+                <h5><i class="fas fa-lightbulb"></i> Insights Inteligentes</h5>
+                <button class="btn btn-sm btn-outline-warning" onclick="gerarInsights()">
+                    <i class="fas fa-brain"></i> Gerar Novos
+                </button>
+            </div>
+            <div class="insights-body" id="insights-inteligentes">
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-clock text-warning"></i>
+                    </div>
+                    <div class="insight-content">
+                        <strong>Horário Otimizado:</strong> Visitas entre 14h-16h têm 35% mais sucesso
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-calendar text-info"></i>
+                    </div>
+                    <div class="insight-content">
+                        <strong>Melhor Dia:</strong> Terças e quintas apresentam menor resistência
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-map-pin text-success"></i>
+                    </div>
+                    <div class="insight-content">
+                        <strong>Rota Eficiente:</strong> Agrupar visitas por região reduz tempo em 25%
+                    </div>
+                </div>
+
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-user-tie text-primary"></i>
+                    </div>
+                    <div class="insight-content">
+                        <strong>Perfil Informante:</strong> Funcionários técnicos são 40% mais colaborativos
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let dashboardData = {};
+let currentVisualization = 'semanal';
+
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarDashboard();
+    carregarDadosProdutividade();
+    configurarPeriodoPadrao();
+});
+
+function inicializarDashboard() {
+    // Configurar gráficos
+    inicializarGraficoEvolucao();
+    inicializarGraficoMunicipios();
+    
+    // Carregar dados iniciais
+    atualizarDashboard();
+}
+
+function configurarPeriodoPadrao() {
+    const hoje = new Date();
+    const umMesAtras = new Date(hoje.getFullYear(), hoje.getMonth() - 1, hoje.getDate());
+    
+    document.getElementById('periodo-inicio').value = umMesAtras.toISOString().split('T')[0];
+    document.getElementById('periodo-fim').value = hoje.toISOString().split('T')[0];
+}
+
+async function carregarDadosProdutividade() {
+    try {
+        showToast('Carregando dados de produtividade...', 'info');
+        
+        const response = await fetch('/api/pnsb/dashboard-produtividade');
+        dashboardData = await response.json();
+        
+        atualizarMetricasPrincipais();
+        atualizarGraficos();
+        atualizarAnalises();
+        atualizarRanking();
+        
+        showToast('Dashboard atualizado com sucesso!', 'success');
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+        showToast('Erro ao carregar dados do dashboard', 'danger');
+    }
+}
+
+function atualizarMetricasPrincipais() {
+    if (!dashboardData.metricas) return;
+    
+    const metricas = dashboardData.metricas;
+    
+    // Visitas Realizadas
+    document.getElementById('total-realizadas').textContent = metricas.visitas_realizadas || 0;
+    document.getElementById('progress-realizadas').style.width = `${(metricas.visitas_realizadas / metricas.meta_visitas * 100) || 0}%`;
+    document.getElementById('meta-realizadas').textContent = `Meta: ${metricas.meta_visitas || 100}`;
+    
+    // Tempo Médio
+    document.getElementById('tempo-medio').textContent = `${metricas.tempo_medio || 0}min`;
+    
+    // Taxa de Sucesso
+    const taxaSucesso = metricas.taxa_sucesso || 0;
+    document.getElementById('taxa-sucesso').textContent = `${taxaSucesso}%`;
+    document.getElementById('progress-sucesso').style.width = `${taxaSucesso}%`;
+    
+    // Índice de Produtividade
+    const indiceProdutividade = metricas.indice_produtividade || 0;
+    document.getElementById('indice-produtividade').textContent = indiceProdutividade;
+    document.getElementById('progress-produtividade').style.width = `${indiceProdutividade}%`;
+    
+    // Classificações
+    atualizarClassificacoes(metricas);
+}
+
+function atualizarClassificacoes(metricas) {
+    const taxaSucesso = metricas.taxa_sucesso || 0;
+    const indiceProdutividade = metricas.indice_produtividade || 0;
+    
+    // Classificação da taxa de sucesso
+    let statusSucesso = 'Baixa';
+    if (taxaSucesso >= 80) statusSucesso = 'Excelente';
+    else if (taxaSucesso >= 60) statusSucesso = 'Boa';
+    else if (taxaSucesso >= 40) statusSucesso = 'Regular';
+    
+    document.getElementById('status-sucesso').textContent = statusSucesso;
+    
+    // Classificação da produtividade
+    let classificacaoProd = 'Baixa Performance';
+    if (indiceProdutividade >= 80) classificacaoProd = 'Alta Performance';
+    else if (indiceProdutividade >= 60) classificacaoProd = 'Boa Performance';
+    else if (indiceProdutividade >= 40) classificacaoProd = 'Performance Regular';
+    
+    document.getElementById('classificacao-produtividade').textContent = classificacaoProd;
+}
+
+function inicializarGraficoEvolucao() {
+    const ctx = document.getElementById('grafico-evolucao').getContext('2d');
+    
+    window.graficoEvolucao = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Visitas Realizadas',
+                data: [],
+                borderColor: '#5F5CFF',
+                backgroundColor: 'rgba(95, 92, 255, 0.1)',
+                tension: 0.4,
+                fill: true
+            }, {
+                label: 'Taxa de Sucesso (%)',
+                data: [],
+                borderColor: '#6EE7B7',
+                backgroundColor: 'rgba(110, 231, 183, 0.1)',
+                tension: 0.4,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: '#F1F1F1' }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    ticks: { color: '#E9ECEF' }
+                },
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
+                    ticks: { color: '#E9ECEF' }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    grid: { drawOnChartArea: false },
+                    ticks: { color: '#E9ECEF' }
+                }
+            }
+        }
+    });
+}
+
+function inicializarGraficoMunicipios() {
+    const ctx = document.getElementById('grafico-municipios').getContext('2d');
+    
+    window.graficoMunicipios = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [],
+            datasets: [{
+                data: [],
+                backgroundColor: [
+                    '#5F5CFF', '#6EE7B7', '#FFB347', '#FF6B6B', 
+                    '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57',
+                    '#FF9FF3', '#54A0FF', '#5F27CD'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { 
+                        color: '#F1F1F1',
+                        font: { size: 11 },
+                        padding: 10
+                    }
+                }
+            }
+        }
+    });
+}
+
+function atualizarGraficos() {
+    if (!dashboardData.graficos) return;
+    
+    const graficos = dashboardData.graficos;
+    
+    // Atualizar gráfico de evolução
+    if (graficos.evolucao) {
+        window.graficoEvolucao.data.labels = graficos.evolucao.labels;
+        window.graficoEvolucao.data.datasets[0].data = graficos.evolucao.visitas;
+        window.graficoEvolucao.data.datasets[1].data = graficos.evolucao.taxa_sucesso;
+        window.graficoEvolucao.update();
+    }
+    
+    // Atualizar gráfico de municípios
+    if (graficos.municipios) {
+        window.graficoMunicipios.data.labels = graficos.municipios.labels;
+        window.graficoMunicipios.data.datasets[0].data = graficos.municipios.data;
+        window.graficoMunicipios.update();
+    }
+}
+
+function atualizarAnalises() {
+    if (!dashboardData.analises) return;
+    
+    const analises = dashboardData.analises;
+    
+    // Métricas de informantes
+    if (analises.informantes) {
+        document.getElementById('informantes-cooperativos').textContent = analises.informantes.cooperativos || 0;
+        document.getElementById('informantes-resistentes').textContent = analises.informantes.resistentes || 0;
+        document.getElementById('tempo-medio-contato').textContent = `${analises.informantes.tempo_medio || 0}min`;
+        document.getElementById('taxa-rejeicao').textContent = `${analises.informantes.taxa_rejeicao || 0}%`;
+    }
+    
+    // Análise de resistência
+    if (analises.resistencia) {
+        document.getElementById('analise-resistencia').innerHTML = analises.resistencia.map(item => 
+            `<div class="resistance-pattern">
+                <strong>${item.padrao}:</strong> ${item.descricao}
+                <span class="badge bg-${item.severidade}">${item.frequencia}</span>
+            </div>`
+        ).join('');
+    }
+    
+    // Otimização de cronograma
+    if (analises.cronograma) {
+        document.getElementById('melhor-horario').textContent = analises.cronograma.melhor_horario || '--';
+        document.getElementById('melhor-dia').textContent = analises.cronograma.melhor_dia || '--';
+        
+        if (analises.cronograma.sugestoes) {
+            document.getElementById('sugestoes-otimizacao').innerHTML = `
+                <h6>Sugestões de Melhoria</h6>
+                <div class="suggestions-list">
+                    ${analises.cronograma.sugestoes.map(s => 
+                        `<div class="suggestion-item">
+                            <i class="fas fa-lightbulb text-warning"></i>
+                            ${s.descricao} <span class="badge bg-success">+${s.melhoria}</span>
+                        </div>`
+                    ).join('')}
+                </div>
+            `;
+        }
+    }
+}
+
+function atualizarRanking() {
+    if (!dashboardData.ranking) return;
+    
+    const ranking = dashboardData.ranking.municipios || [];
+    
+    document.getElementById('ranking-municipios').innerHTML = ranking.map((item, index) => `
+        <div class="ranking-item">
+            <div class="ranking-position">
+                <span class="position-number">${index + 1}</span>
+                ${index < 3 ? `<i class="fas fa-medal text-${['warning', 'secondary', 'dark'][index]}"></i>` : ''}
+            </div>
+            <div class="ranking-info">
+                <div class="ranking-name">${item.municipio}</div>
+                <div class="ranking-metric">${item.valor} ${item.unidade}</div>
+            </div>
+            <div class="ranking-trend">
+                <i class="fas fa-arrow-${item.tendencia === 'up' ? 'up text-success' : item.tendencia === 'down' ? 'down text-danger' : 'right text-warning'}"></i>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Funções de interação
+function alterarVisualizacao(tipo) {
+    currentVisualization = tipo;
+    
+    // Atualizar botões ativos
+    document.querySelectorAll('.chart-controls .btn').forEach(btn => {
+        btn.className = btn.textContent.toLowerCase() === tipo ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-primary';
+    });
+    
+    // Recarregar dados
+    carregarDadosProdutividade();
+}
+
+async function filtrarDados() {
+    const inicio = document.getElementById('periodo-inicio').value;
+    const fim = document.getElementById('periodo-fim').value;
+    const municipio = document.getElementById('municipio-filtro').value;
+    
+    try {
+        const params = new URLSearchParams({
+            inicio,
+            fim,
+            municipio,
+            visualizacao: currentVisualization
+        });
+        
+        const response = await fetch(`/api/pnsb/dashboard-produtividade?${params}`);
+        dashboardData = await response.json();
+        
+        atualizarMetricasPrincipais();
+        atualizarGraficos();
+        atualizarAnalises();
+        atualizarRanking();
+        
+        showToast('Dados filtrados com sucesso!', 'success');
+    } catch (error) {
+        showToast('Erro ao filtrar dados', 'danger');
+    }
+}
+
+function atualizarDashboard() {
+    carregarDadosProdutividade();
+}
+
+async function exportarRelatorio() {
+    try {
+        showToast('Gerando relatório...', 'info');
+        
+        const response = await fetch('/api/extended/exportar/pdf', {method: 'POST'});
+        
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `relatorio_produtividade_${new Date().toISOString().split('T')[0]}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            showToast('Relatório exportado com sucesso!', 'success');
+        } else {
+            throw new Error('Erro na exportação');
+        }
+    } catch (error) {
+        showToast('Erro ao exportar relatório', 'danger');
+    }
+}
+
+async function otimizarCronograma() {
+    try {
+        showToast('Otimizando cronograma...', 'info');
+        
+        const response = await fetch('/api/pnsb/otimizar-cronograma', {method: 'POST'});
+        const result = await response.json();
+        
+        if (result.sucesso) {
+            // Atualizar sugestões
+            atualizarAnalises();
+            showToast('Cronograma otimizado com sucesso!', 'success');
+        } else {
+            throw new Error(result.erro);
+        }
+    } catch (error) {
+        showToast('Erro ao otimizar cronograma', 'danger');
+    }
+}
+
+function alterarMetricaRanking(metrica) {
+    // Simular mudança de métrica do ranking
+    carregarDadosProdutividade();
+}
+
+async function gerarInsights() {
+    try {
+        showToast('Gerando insights inteligentes...', 'info');
+        
+        const response = await fetch('/api/pnsb/gerar-insights', {method: 'POST'});
+        const insights = await response.json();
+        
+        if (insights.sucesso) {
+            document.getElementById('insights-inteligentes').innerHTML = insights.insights.map(insight => `
+                <div class="insight-item">
+                    <div class="insight-icon">
+                        <i class="fas fa-${insight.icone} text-${insight.cor}"></i>
+                    </div>
+                    <div class="insight-content">
+                        <strong>${insight.titulo}:</strong> ${insight.descricao}
+                    </div>
+                </div>
+            `).join('');
+            
+            showToast('Novos insights gerados!', 'success');
+        }
+    } catch (error) {
+        showToast('Erro ao gerar insights', 'danger');
+    }
+}
+
+function configurarAlertas() {
+    // Abrir modal de configuração de alertas
+    showToast('Função de configuração de alertas em desenvolvimento', 'info');
+}
+
+function marcarTodosLidos() {
+    document.querySelectorAll('.alert-item').forEach(alert => {
+        alert.style.opacity = '0.6';
+    });
+    showToast('Todos os alertas marcados como lidos', 'success');
+}
+
+function abrirDetalhesInformantes() {
+    window.location.href = '/perfil-informantes';
+}
+</script>
+
+<style>
+.metric-card {
+    background: linear-gradient(135deg, #23263B 0%, #1A1D29 100%);
+    border: 1px solid #2D3142;
+    border-radius: 16px;
+    padding: 24px;
+    height: 100%;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(95, 92, 255, 0.15);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.metric-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: white;
+}
+
+.metric-trend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6EE7B7;
+}
+
+.metric-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #F1F1F1;
+    margin: 0;
+}
+
+.metric-label {
+    color: #E9ECEF;
+    margin: 8px 0 16px 0;
+    font-size: 14px;
+}
+
+.metric-progress .progress {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.chart-card, .analysis-card, .alerts-card, .ranking-card, .insights-card {
+    background: linear-gradient(135deg, #23263B 0%, #1A1D29 100%);
+    border: 1px solid #2D3142;
+    border-radius: 16px;
+    height: 100%;
+}
+
+.chart-header, .analysis-header, .alerts-header, .ranking-header, .insights-header {
+    padding: 20px 24px 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.chart-body, .analysis-body, .alerts-body, .ranking-body, .insights-body {
+    padding: 0 24px 24px 24px;
+}
+
+.chart-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.metric-small {
+    text-align: center;
+    padding: 12px;
+    background: rgba(95, 92, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(95, 92, 255, 0.2);
+}
+
+.metric-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #F1F1F1;
+}
+
+.metric-desc {
+    font-size: 11px;
+    color: #E9ECEF;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.alert-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    transition: all 0.2s;
+}
+
+.alert-item.warning {
+    background: rgba(255, 179, 71, 0.1);
+    border: 1px solid rgba(255, 179, 71, 0.2);
+}
+
+.alert-item.success {
+    background: rgba(110, 231, 183, 0.1);
+    border: 1px solid rgba(110, 231, 183, 0.2);
+}
+
+.alert-item.info {
+    background: rgba(95, 92, 255, 0.1);
+    border: 1px solid rgba(95, 92, 255, 0.2);
+}
+
+.alert-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.alert-title {
+    font-weight: 600;
+    color: #F1F1F1;
+    margin-bottom: 4px;
+}
+
+.alert-desc {
+    color: #E9ECEF;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.alert-time {
+    color: #9CA3AF;
+    font-size: 12px;
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ranking-position {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 60px;
+}
+
+.position-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(95, 92, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 12px;
+    color: #F1F1F1;
+}
+
+.ranking-info {
+    flex: 1;
+}
+
+.ranking-name {
+    font-weight: 600;
+    color: #F1F1F1;
+    margin-bottom: 2px;
+}
+
+.ranking-metric {
+    color: #E9ECEF;
+    font-size: 14px;
+}
+
+.insight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.insight-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.insight-content {
+    color: #E9ECEF;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.resistance-pattern, .suggestion-item {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border-left: 3px solid #FFB347;
+}
+
+.suggestion-item {
+    border-left-color: #6EE7B7;
+}
+
+@media (max-width: 768px) {
+    .metric-card {
+        margin-bottom: 16px;
+    }
+    
+    .chart-controls {
+        flex-wrap: wrap;
+    }
+    
+    .metric-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+}
+</style>
+{% endblock %}

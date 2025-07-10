@@ -1,0 +1,838 @@
+{% extends "base.html" %}
+
+{% block title %}Configurações - Sistema PNSB{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap align-items-center justify-content-between mb-4">
+    <h2 class="fw-bold mb-0">⚙️ Configurações do Sistema</h2>
+    <button class="btn-success-custom" onclick="salvarTodasConfiguracoes()">
+        <i class="fas fa-save"></i> Salvar Todas as Configurações
+    </button>
+</div>
+
+<!-- Status das Configurações -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-number" id="status-google-maps">❌</div>
+            <div class="stat-label">Google Maps API</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-number" id="status-gemini">❌</div>
+            <div class="stat-label">Google Gemini API</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-number" id="status-whatsapp">❌</div>
+            <div class="stat-label">WhatsApp Business</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-number" id="status-email">❌</div>
+            <div class="stat-label">Email SMTP</div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs de Configuração -->
+<ul class="nav nav-tabs mb-4" id="configTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="apis-tab" data-bs-toggle="tab" data-bs-target="#apis" type="button" role="tab">
+            <i class="fas fa-key"></i> APIs Externas
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="sistema-tab" data-bs-toggle="tab" data-bs-target="#sistema" type="button" role="tab">
+            <i class="fas fa-cog"></i> Sistema
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="backup-tab" data-bs-toggle="tab" data-bs-target="#backup" type="button" role="tab">
+            <i class="fas fa-shield-alt"></i> Backup
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="avancado-tab" data-bs-toggle="tab" data-bs-target="#avancado" type="button" role="tab">
+            <i class="fas fa-code"></i> Avançado
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="configTabContent">
+    <!-- APIs Externas -->
+    <div class="tab-pane fade show active" id="apis" role="tabpanel">
+        <div class="row g-4">
+            <!-- Google Maps API -->
+            <div class="col-lg-6">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-map-marked-alt text-warning"></i> Google Maps API</h5>
+                        <small class="text-muted">Para otimização de rotas e cálculo de distâncias</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="google-maps-key" class="form-label">API Key</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="google-maps-key" placeholder="AIzaSy...">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('google-maps-key')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary btn-sm" onclick="testarGoogleMaps()">
+                                <i class="fas fa-vial"></i> Testar
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="salvarConfiguracao('google_maps')">
+                                <i class="fas fa-save"></i> Salvar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Gemini API -->
+            <div class="col-lg-6">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-brain text-info"></i> Google Gemini API</h5>
+                        <small class="text-muted">Para chat inteligente e assistente de abordagem</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="gemini-key" class="form-label">API Key</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="gemini-key" placeholder="AIzaSy...">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('gemini-key')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary btn-sm" onclick="testarGemini()">
+                                <i class="fas fa-vial"></i> Testar
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="salvarConfiguracao('gemini')">
+                                <i class="fas fa-save"></i> Salvar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WhatsApp Business API -->
+            <div class="col-lg-6">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fab fa-whatsapp text-success"></i> WhatsApp Business API</h5>
+                        <small class="text-muted">Para verificações e comunicação automatizada</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="whatsapp-token" class="form-label">Access Token</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="whatsapp-token" placeholder="EAAp...">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('whatsapp-token')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="whatsapp-phone-id" class="form-label">Phone Number ID</label>
+                            <input type="text" class="form-control" id="whatsapp-phone-id" placeholder="472473086265676">
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary btn-sm" onclick="testarWhatsApp()">
+                                <i class="fas fa-vial"></i> Testar
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="salvarConfiguracao('whatsapp')">
+                                <i class="fas fa-save"></i> Salvar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email SMTP -->
+            <div class="col-lg-6">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-envelope text-primary"></i> Email SMTP</h5>
+                        <small class="text-muted">Para envio de relatórios e notificações</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="smtp-host" class="form-label">Host SMTP</label>
+                                    <input type="text" class="form-control" id="smtp-host" placeholder="smtp.gmail.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="smtp-port" class="form-label">Porta</label>
+                                    <input type="number" class="form-control" id="smtp-port" placeholder="587">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="smtp-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="smtp-email" placeholder="seu.email@gmail.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="smtp-password" class="form-label">Senha/App Password</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="smtp-password">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePasswordVisibility('smtp-password')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary btn-sm" onclick="testarEmail()">
+                                <i class="fas fa-vial"></i> Testar
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="salvarConfiguracao('email')">
+                                <i class="fas fa-save"></i> Salvar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema -->
+    <div class="tab-pane fade" id="sistema" role="tabpanel">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-clock text-warning"></i> Configurações de Tempo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="backup-interval" class="form-label">Intervalo de Backup (minutos)</label>
+                            <input type="number" class="form-control" id="backup-interval" value="5" min="1" max="60">
+                        </div>
+                        <div class="mb-3">
+                            <label for="session-timeout" class="form-label">Timeout da Sessão (minutos)</label>
+                            <input type="number" class="form-control" id="session-timeout" value="30" min="5" max="240">
+                        </div>
+                        <button class="btn btn-success btn-sm" onclick="salvarConfiguracao('sistema')">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-bell text-info"></i> Notificações</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="notif-email" checked>
+                            <label class="form-check-label" for="notif-email">
+                                Notificações por Email
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="notif-whatsapp" checked>
+                            <label class="form-check-label" for="notif-whatsapp">
+                                Notificações por WhatsApp
+                            </label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="notif-desktop" checked>
+                            <label class="form-check-label" for="notif-desktop">
+                                Notificações no Desktop
+                            </label>
+                        </div>
+                        <button class="btn btn-success btn-sm" onclick="salvarConfiguracao('notificacoes')">
+                            <i class="fas fa-save"></i> Salvar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup -->
+    <div class="tab-pane fade" id="backup" role="tabpanel">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-shield-alt text-success"></i> Sistema de Backup Automático</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="backup-status-info">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Carregando...</span>
+                                </div>
+                                <p class="mt-2">Carregando status do backup...</p>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2 mt-3">
+                            <button class="btn btn-warning btn-sm" onclick="criarBackupEmergencial()">
+                                <i class="fas fa-exclamation-triangle"></i> Backup de Emergência
+                            </button>
+                            <button class="btn btn-info btn-sm" onclick="verificarBackups()">
+                                <i class="fas fa-sync"></i> Verificar Status
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-download text-primary"></i> Exportar Dados</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="exportarDados('json')">
+                                <i class="fas fa-file-code"></i> Exportar JSON
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" onclick="exportarDados('excel')">
+                                <i class="fas fa-file-excel"></i> Exportar Excel
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" onclick="exportarDados('pdf')">
+                                <i class="fas fa-file-pdf"></i> Relatório PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Avançado -->
+    <div class="tab-pane fade" id="avancado" role="tabpanel">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-database text-warning"></i> Banco de Dados</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Informações do Banco</label>
+                            <div id="db-info">
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                                <span class="ms-2">Carregando...</span>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-warning btn-sm" onclick="executarManutencao()">
+                                <i class="fas fa-tools"></i> Manutenção
+                            </button>
+                            <button class="btn btn-info btn-sm" onclick="verificarIntegridade()">
+                                <i class="fas fa-check-circle"></i> Verificar Integridade
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card config-card">
+                    <div class="card-header">
+                        <h5><i class="fas fa-chart-bar text-info"></i> Estatísticas do Sistema</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="system-stats">
+                            <div class="spinner-border spinner-border-sm" role="status"></div>
+                            <span class="ms-2">Carregando estatísticas...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    carregarConfiguracoes();
+    verificarStatusAPIs();
+    carregarBackupStatus();
+    carregarEstatisticasSistema();
+});
+
+// Alternar visibilidade de senhas
+function togglePasswordVisibility(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = input.nextElementSibling.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fas fa-eye-slash';
+    } else {
+        input.type = 'password';
+        icon.className = 'fas fa-eye';
+    }
+}
+
+// Carregar configurações existentes
+async function carregarConfiguracoes() {
+    try {
+        const response = await fetch('/api/extended/configuracoes');
+        const config = await response.json();
+        
+        // Preencher campos com valores existentes
+        if (config.google_maps_key) {
+            document.getElementById('google-maps-key').value = config.google_maps_key;
+        }
+        if (config.gemini_key) {
+            document.getElementById('gemini-key').value = config.gemini_key;
+        }
+        // ... outros campos
+        
+    } catch (error) {
+        console.error('Erro ao carregar configurações:', error);
+    }
+}
+
+// Verificar status das APIs
+async function verificarStatusAPIs() {
+    const statusElements = {
+        'google-maps': 'status-google-maps',
+        'gemini': 'status-gemini',
+        'whatsapp': 'status-whatsapp',
+        'email': 'status-email'
+    };
+    
+    for (const [api, elementId] of Object.entries(statusElements)) {
+        try {
+            const response = await fetch(`/api/extended/status/${api}`);
+            const result = await response.json();
+            
+            const element = document.getElementById(elementId);
+            element.textContent = result.ativo ? '✅' : '❌';
+            element.className = result.ativo ? 'stat-number text-success' : 'stat-number text-danger';
+        } catch (error) {
+            document.getElementById(elementId).textContent = '❌';
+        }
+    }
+}
+
+// Salvar configuração específica
+async function salvarConfiguracao(tipo) {
+    let dados = {};
+    
+    switch (tipo) {
+        case 'google_maps':
+            dados = {
+                google_maps_key: document.getElementById('google-maps-key').value
+            };
+            break;
+        case 'gemini':
+            dados = {
+                gemini_key: document.getElementById('gemini-key').value
+            };
+            break;
+        case 'whatsapp':
+            dados = {
+                whatsapp_token: document.getElementById('whatsapp-token').value,
+                whatsapp_phone_id: document.getElementById('whatsapp-phone-id').value
+            };
+            break;
+        case 'email':
+            dados = {
+                smtp_host: document.getElementById('smtp-host').value,
+                smtp_port: document.getElementById('smtp-port').value,
+                smtp_email: document.getElementById('smtp-email').value,
+                smtp_password: document.getElementById('smtp-password').value
+            };
+            break;
+        case 'sistema':
+            dados = {
+                backup_interval: document.getElementById('backup-interval').value,
+                session_timeout: document.getElementById('session-timeout').value
+            };
+            break;
+        case 'notificacoes':
+            dados = {
+                notif_email: document.getElementById('notif-email').checked,
+                notif_whatsapp: document.getElementById('notif-whatsapp').checked,
+                notif_desktop: document.getElementById('notif-desktop').checked
+            };
+            break;
+    }
+    
+    try {
+        const response = await fetch('/api/extended/configuracoes', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({tipo, ...dados})
+        });
+        
+        const result = await response.json();
+        
+        if (result.sucesso) {
+            showToast(`Configuração ${tipo} salva com sucesso!`, 'success');
+            verificarStatusAPIs();
+        } else {
+            showToast(`Erro ao salvar configuração: ${result.erro}`, 'danger');
+        }
+    } catch (error) {
+        showToast(`Erro na requisição: ${error.message}`, 'danger');
+    }
+}
+
+// Testar APIs
+async function testarGoogleMaps() {
+    const key = document.getElementById('google-maps-key').value;
+    if (!key) {
+        showToast('Digite a API key primeiro', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/extended/testar/google-maps', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({api_key: key})
+        });
+        
+        const result = await response.json();
+        showToast(result.sucesso ? 'Google Maps API funcionando!' : `Erro: ${result.erro}`, 
+                 result.sucesso ? 'success' : 'danger');
+    } catch (error) {
+        showToast(`Erro ao testar: ${error.message}`, 'danger');
+    }
+}
+
+async function testarGemini() {
+    const key = document.getElementById('gemini-key').value;
+    if (!key) {
+        showToast('Digite a API key primeiro', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/extended/testar/gemini', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({api_key: key})
+        });
+        
+        const result = await response.json();
+        showToast(result.sucesso ? 'Gemini API funcionando!' : `Erro: ${result.erro}`, 
+                 result.sucesso ? 'success' : 'danger');
+    } catch (error) {
+        showToast(`Erro ao testar: ${error.message}`, 'danger');
+    }
+}
+
+async function testarWhatsApp() {
+    const token = document.getElementById('whatsapp-token').value;
+    const phoneId = document.getElementById('whatsapp-phone-id').value;
+    
+    if (!token || !phoneId) {
+        showToast('Digite o token e phone ID primeiro', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/extended/testar/whatsapp', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({access_token: token, phone_number_id: phoneId})
+        });
+        
+        const result = await response.json();
+        showToast(result.sucesso ? 'WhatsApp API funcionando!' : `Erro: ${result.erro}`, 
+                 result.sucesso ? 'success' : 'danger');
+    } catch (error) {
+        showToast(`Erro ao testar: ${error.message}`, 'danger');
+    }
+}
+
+async function testarEmail() {
+    const dados = {
+        host: document.getElementById('smtp-host').value,
+        port: document.getElementById('smtp-port').value,
+        email: document.getElementById('smtp-email').value,
+        password: document.getElementById('smtp-password').value
+    };
+    
+    if (!dados.host || !dados.email || !dados.password) {
+        showToast('Preencha todos os campos de email', 'warning');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/extended/testar/email', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(dados)
+        });
+        
+        const result = await response.json();
+        showToast(result.sucesso ? 'Email SMTP funcionando!' : `Erro: ${result.erro}`, 
+                 result.sucesso ? 'success' : 'danger');
+    } catch (error) {
+        showToast(`Erro ao testar: ${error.message}`, 'danger');
+    }
+}
+
+// Salvar todas as configurações
+async function salvarTodasConfiguracoes() {
+    const tipos = ['google_maps', 'gemini', 'whatsapp', 'email', 'sistema', 'notificacoes'];
+    let sucesso = 0;
+    
+    for (const tipo of tipos) {
+        try {
+            await salvarConfiguracao(tipo);
+            sucesso++;
+        } catch (error) {
+            console.error(`Erro ao salvar ${tipo}:`, error);
+        }
+    }
+    
+    showToast(`${sucesso}/${tipos.length} configurações salvas com sucesso!`, 
+             sucesso === tipos.length ? 'success' : 'warning');
+}
+
+// Carregar status do backup
+async function carregarBackupStatus() {
+    try {
+        const response = await fetch('/api/backup/status');
+        const status = await response.json();
+        
+        document.getElementById('backup-status-info').innerHTML = `
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <strong>Último Backup:</strong><br>
+                    <span class="text-success">${status.ultimo_backup || 'Nunca'}</span>
+                </div>
+                <div class="col-md-6">
+                    <strong>Total de Backups:</strong><br>
+                    <span class="text-info">${status.total_backups || 0}</span>
+                </div>
+                <div class="col-md-6">
+                    <strong>Status:</strong><br>
+                    <span class="badge bg-success">Ativo</span>
+                </div>
+                <div class="col-md-6">
+                    <strong>Próximo Backup:</strong><br>
+                    <span class="text-warning">${status.proximo_backup || 'Em breve'}</span>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        document.getElementById('backup-status-info').innerHTML = `
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                Erro ao carregar status do backup: ${error.message}
+            </div>
+        `;
+    }
+}
+
+// Carregar estatísticas do sistema
+async function carregarEstatisticasSistema() {
+    try {
+        const response = await fetch('/api/extended/estatisticas');
+        const stats = await response.json();
+        
+        document.getElementById('system-stats').innerHTML = `
+            <div class="row g-2">
+                <div class="col-6">
+                    <small class="text-muted">Total de Visitas:</small><br>
+                    <strong>${stats.total_visitas || 0}</strong>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">Contatos:</small><br>
+                    <strong>${stats.total_contatos || 0}</strong>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">Checklists:</small><br>
+                    <strong>${stats.total_checklists || 0}</strong>
+                </div>
+                <div class="col-6">
+                    <small class="text-muted">Tamanho DB:</strong><br>
+                    <strong>${stats.tamanho_db || 'N/A'}</strong>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('db-info').innerHTML = `
+            <div class="small">
+                <div><strong>Arquivo:</strong> ${stats.db_path || 'gestao_visitas.db'}</div>
+                <div><strong>Versão:</strong> ${stats.db_version || 'SQLite 3'}</div>
+                <div><strong>Última Modificação:</strong> ${stats.db_modified || 'N/A'}</div>
+            </div>
+        `;
+        
+    } catch (error) {
+        document.getElementById('system-stats').innerHTML = `
+            <div class="text-danger">
+                <i class="fas fa-exclamation-circle"></i>
+                Erro ao carregar estatísticas
+            </div>
+        `;
+        
+        document.getElementById('db-info').innerHTML = `
+            <div class="text-danger">
+                <i class="fas fa-exclamation-circle"></i>
+                Erro ao carregar informações do banco
+            </div>
+        `;
+    }
+}
+
+// Funções de backup e exportação
+async function criarBackupEmergencial() {
+    try {
+        const response = await fetch('/api/backup/emergencial', {method: 'POST'});
+        const result = await response.json();
+        
+        if (result.sucesso) {
+            showToast('Backup de emergência criado com sucesso!', 'success');
+            carregarBackupStatus();
+        } else {
+            showToast(`Erro ao criar backup: ${result.error}`, 'danger');
+        }
+    } catch (error) {
+        showToast(`Erro na requisição: ${error.message}`, 'danger');
+    }
+}
+
+function verificarBackups() {
+    carregarBackupStatus();
+    showToast('Status do backup atualizado!', 'info');
+}
+
+async function exportarDados(formato) {
+    try {
+        showToast(`Iniciando exportação ${formato.toUpperCase()}...`, 'info');
+        
+        const response = await fetch(`/api/extended/exportar/${formato}`, {method: 'POST'});
+        
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pnsb_export_${new Date().toISOString().split('T')[0]}.${formato}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            showToast(`Exportação ${formato.toUpperCase()} concluída!`, 'success');
+        } else {
+            throw new Error('Erro na exportação');
+        }
+    } catch (error) {
+        showToast(`Erro na exportação: ${error.message}`, 'danger');
+    }
+}
+
+// Funções avançadas
+async function executarManutencao() {
+    if (!confirm('Executar manutenção do banco de dados? Isso pode demorar alguns minutos.')) {
+        return;
+    }
+    
+    try {
+        showToast('Executando manutenção...', 'info');
+        
+        const response = await fetch('/api/extended/manutencao', {method: 'POST'});
+        const result = await response.json();
+        
+        showToast(result.sucesso ? 'Manutenção concluída!' : `Erro: ${result.erro}`, 
+                 result.sucesso ? 'success' : 'danger');
+        
+        if (result.sucesso) {
+            carregarEstatisticasSistema();
+        }
+    } catch (error) {
+        showToast(`Erro na manutenção: ${error.message}`, 'danger');
+    }
+}
+
+async function verificarIntegridade() {
+    try {
+        showToast('Verificando integridade...', 'info');
+        
+        const response = await fetch('/api/extended/integridade');
+        const result = await response.json();
+        
+        showToast(result.integro ? 'Banco de dados íntegro!' : `Problemas encontrados: ${result.problemas}`, 
+                 result.integro ? 'success' : 'warning');
+    } catch (error) {
+        showToast(`Erro na verificação: ${error.message}`, 'danger');
+    }
+}
+</script>
+
+<style>
+.config-card {
+    background: linear-gradient(135deg, #23263B 0%, #1A1D29 100%);
+    border: 1px solid #2D3142;
+    border-radius: 12px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.config-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(95, 92, 255, 0.15);
+}
+
+.config-card .card-header {
+    background: rgba(95, 92, 255, 0.1);
+    border-bottom: 1px solid rgba(95, 92, 255, 0.2);
+    border-radius: 12px 12px 0 0;
+}
+
+.nav-tabs .nav-link {
+    background: rgba(95, 92, 255, 0.1);
+    border: 1px solid rgba(95, 92, 255, 0.2);
+    color: #F1F1F1;
+    margin-right: 5px;
+    border-radius: 8px 8px 0 0;
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(135deg, #5F5CFF 0%, #6EE7B7 100%);
+    border-color: #5F5CFF;
+    color: white;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, #23263B 0%, #1A1D29 100%);
+    border: 1px solid #2D3142;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #6EE7B7;
+}
+
+.stat-label {
+    color: #E9ECEF;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+</style>
+{% endblock %}

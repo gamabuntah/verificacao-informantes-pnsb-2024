@@ -1,0 +1,42 @@
+⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+=== INICIANDO APP.PY CORRETO ===
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250706_083242
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+ * Serving Flask app 'app'
+ * Debug mode: on
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+🛑 Sistema de backup automático parado

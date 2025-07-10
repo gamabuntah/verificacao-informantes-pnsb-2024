@@ -1,0 +1,1098 @@
+{
+  "created_at": "2025-07-04T16:41:54.535462",
+  "original_path": "gestao_visitas/gestao_visitas.db",
+  "description": "Antes de adicionar campos de prioridade P1/P2/P3",
+  "schema_info": {
+    "alembic_version": [
+      {
+        "name": "version_num",
+        "type": "VARCHAR(32)",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "checklists": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "visita_id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "observacoes_antes",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "observacoes_durante",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "observacoes_apos",
+        "type": "VARCHAR(1000)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "itens_marcados",
+        "type": "JSON",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "cracha_ibge",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "recibo_entrega",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "questionario_mrs_impresso",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "questionario_map_impresso",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "carta_oficial",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "questionario_mrs_digital",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "questionario_map_digital",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "manual_pnsb",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "guia_site_externo",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "card_contato",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "audio_explicativo",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "planejamento_rota",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "agenda_confirmada",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "apresentacao_ibge",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "explicacao_objetivo",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "explicacao_estrutura",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "explicacao_data_referencia",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "explicacao_prestador",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "explicacao_servicos",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "explicacao_site_externo",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "explicacao_pdf_editavel",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "validacao_prestadores",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "registro_contatos",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "assinatura_informante",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "devolucao_materiais",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "registro_followup",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "combinacao_entrega",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "combinacao_acompanhamento",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "observacoes_finais",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "contatos": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "municipio",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "tipo_entidade",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "tipo_pesquisa",
+        "type": "VARCHAR(10)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "local_chatgpt",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "local_gemini",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "local_grok",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "local_mais_provavel",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "responsavel_chatgpt",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "responsavel_gemini",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "responsavel_grok",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "responsavel_mais_provavel",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "endereco_chatgpt",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "endereco_gemini",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "endereco_grok",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "endereco_mais_provavel",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "contato_chatgpt",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "contato_gemini",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "contato_grok",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "contato_mais_provavel",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "horario_chatgpt",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "horario_gemini",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "horario_grok",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "horario_mais_provavel",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "nome",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "telefone",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "email",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "cargo",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "orgao",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "endereco",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "historico_abordagens",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "historico_comunicacao",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "data_ultima_tentativa",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "status_ultimo_contato",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "preferencias_contato",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "data_criacao",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "data_atualizacao",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "entidades_identificadas": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "municipio",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "tipo_entidade",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "nome_entidade",
+        "type": "VARCHAR(200)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "cnpj",
+        "type": "VARCHAR(18)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "endereco",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "telefone",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "email",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "responsavel",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "status_mrs",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "status_map",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "identificado_em",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "atualizado_em",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "fonte_identificacao",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "visita_id",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "observacoes",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "prioridade",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": "2"
+      },
+      {
+        "name": "origem_lista_uf",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": "0"
+      },
+      {
+        "name": "codigo_uf",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "mrs_obrigatorio",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": "0"
+      },
+      {
+        "name": "map_obrigatorio",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": "0"
+      },
+      {
+        "name": "validado_em",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "validado_por",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "entidades_prioritarias_uf": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "codigo_uf",
+        "type": "VARCHAR(20)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "municipio",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "regiao",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "nome_entidade",
+        "type": "VARCHAR(200)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "tipo_entidade",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "cnpj",
+        "type": "VARCHAR(18)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "endereco_completo",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "mrs_obrigatorio",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "map_obrigatorio",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "motivo_mrs",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "motivo_map",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "processado",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "data_processamento",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "categoria_uf",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "subcategoria_uf",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "prioridade_uf",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "telefone_uf",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "email_uf",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "responsavel_uf",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "observacoes_uf",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "importado_em",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "arquivo_origem",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "linha_origem",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "progresso_questionarios": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "municipio",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "total_mrs_obrigatorios",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "total_map_obrigatorios",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "mrs_concluidos",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "map_concluidos",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "percentual_mrs",
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "percentual_map",
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "percentual_geral",
+        "type": "FLOAT",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "status_geral",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "atualizado_em",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null
+      }
+    ],
+    "questionarios_obrigatorios": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "municipio",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "tipo_entidade",
+        "type": "VARCHAR(50)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "mrs_obrigatorio",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "map_obrigatorio",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "criado_em",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "atualizado_em",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "ativo",
+        "type": "BOOLEAN",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "observacoes",
+        "type": "TEXT",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "visitas": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "municipio",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "hora_inicio",
+        "type": "TIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "hora_fim",
+        "type": "TIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "local",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "tipo_pesquisa",
+        "type": "VARCHAR(10)",
+        "nullable": false,
+        "default": "'MRS'"
+      },
+      {
+        "name": "status",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": "'agendada'"
+      },
+      {
+        "name": "observacoes",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "data_criacao",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "data_atualizacao",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "tipo_informante",
+        "type": "VARCHAR(30)",
+        "nullable": false,
+        "default": "'prefeitura'"
+      },
+      {
+        "name": "pesquisador_responsavel",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "telefone_responsavel",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "email_enviado_em",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "whatsapp_verificacao_enviado",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "whatsapp_resposta_recebida",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "email_recebido_confirmado",
+        "type": "BOOLEAN",
+        "nullable": true,
+        "default": "0"
+      },
+      {
+        "name": "entidade_nome",
+        "type": "VARCHAR(200)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "entidade_cnpj",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "entidade_categoria",
+        "type": "VARCHAR(50)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "responsavel_cargo",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "entidade_endereco",
+        "type": "VARCHAR(300)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "entidade_servicos",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      }
+    ],
+    "visitas_backup": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "municipio",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "DATETIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "hora_inicio",
+        "type": "TIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "hora_fim",
+        "type": "TIME",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "informante",
+        "type": "VARCHAR(100)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "tipo_pesquisa",
+        "type": "VARCHAR(10)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "status",
+        "type": "VARCHAR(20)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "observacoes",
+        "type": "VARCHAR(500)",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "data_criacao",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "data_atualizacao",
+        "type": "DATETIME",
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "tipo_informante",
+        "type": "VARCHAR(30)",
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "pesquisador_responsavel",
+        "type": "VARCHAR(100)",
+        "nullable": true,
+        "default": null
+      }
+    ]
+  },
+  "data_counts": {
+    "alembic_version": 0,
+    "checklists": 10,
+    "contatos": 0,
+    "entidades_identificadas": 24,
+    "entidades_prioritarias_uf": 24,
+    "progresso_questionarios": 15,
+    "questionarios_obrigatorios": 11,
+    "visitas": 10,
+    "visitas_backup": 1
+  }
+}

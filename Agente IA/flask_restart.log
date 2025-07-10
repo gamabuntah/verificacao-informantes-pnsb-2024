@@ -1,0 +1,960 @@
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250707_130311
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+ * Serving Flask app 'app'
+ * Debug mode: on
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Databases de cache offline inicializados
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Google Maps API inicializada para cache offline
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.route_optimizer:🗺️ Google Maps API inicializada e testada com sucesso
+INFO:gestao_visitas.services.route_optimizer:🗺️ Iniciando otimização Nível 2 com 1 pontos
+ERROR:gestao_visitas.services.route_optimizer:❌ Erro ao obter matriz do Google Maps: 'IBGE'
+ERROR:gestao_visitas.services.route_optimizer:❌ Traceback: Traceback (most recent call last):
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/services/route_optimizer.py", line 265, in _get_google_distance_matrix
+    origins = [coords['IBGE_START']] + [coords[point.id] for point in points]
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/services/route_optimizer.py", line 265, in <listcomp>
+    origins = [coords['IBGE_START']] + [coords[point.id] for point in points]
+KeyError: 'IBGE'
+
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:22:04] "POST /api/otimizar-rotas HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/services/route_optimizer.py', reloading
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250707_130315
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+💾 Backup automático criado: 20250707_130831
+💾 Backup automático criado: 20250707_131347
+💾 Backup automático criado: 20250707_131903
+🔧 Iniciando otimização para 1 visitas
+✅ RouteOptimizer inicializado. Google Maps disponível: True
+📍 Pontos convertidos: 1
+   1. Bombinhas - Bombinhas - Prefeitura
+🚀 Iniciando otimização com Google Maps...
+✅ Resultado da otimização: sucesso=False
+❌ Erro: Falha ao obter dados do Google Maps
+🛑 Sistema de backup automático parado
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+INFO:googlemaps.client:API queries_quota: 60
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 216-667-060
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:23:26] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:25:25] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:27:25] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:27:27] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:27:27] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:29:25] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:31:25] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:32:27] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:32:27] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:33:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Databases de cache offline inicializados
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Google Maps API inicializada para cache offline
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.route_optimizer:🗺️ Google Maps API inicializada e testada com sucesso
+INFO:gestao_visitas.services.route_optimizer:🗺️ Iniciando otimização Nível 2 com 1 pontos
+INFO:gestao_visitas.services.route_optimizer:🗺️ Consultando matriz de distâncias: 3 origens, 3 destinos
+INFO:gestao_visitas.services.route_optimizer:🕐 Horário de partida calculado: 2025-07-08 08:00:00
+INFO:gestao_visitas.services.route_optimizer:📊 Resposta da API: status=OK
+INFO:gestao_visitas.services.route_optimizer:✅ Matriz de distâncias processada com sucesso
+INFO:gestao_visitas.services.route_optimizer:🔍 COMPARAÇÃO DE PONTOS:
+INFO:gestao_visitas.services.route_optimizer:   optimized_points: ['Bombinhas']
+INFO:gestao_visitas.services.route_optimizer:   route_with_schedule: ['Bombinhas']
+INFO:gestao_visitas.services.route_optimizer:🔍 CALCULANDO ESTATÍSTICAS com 1 visitas
+INFO:gestao_visitas.services.route_optimizer:🔍 MATRIX DISTANCES type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:🔍 MATRIX DURATIONS type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:🔍 CALCULANDO ESTATÍSTICAS: 1 visitas
+INFO:gestao_visitas.services.route_optimizer:🔍 Matrix distances type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:✅ IDA: IBGE → 2: 55.17km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO IDA: 74.8min
+INFO:gestao_visitas.services.route_optimizer:✅ VOLTA: 2 → IBGE: 51.32km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO VOLTA: 70.1min
+INFO:gestao_visitas.services.route_optimizer:✅ DISTÂNCIA TOTAL GOOGLE MAPS: 106.50km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO VIAGEM TOTAL GOOGLE MAPS: 144.9min
+INFO:gestao_visitas.services.route_optimizer:✅ Otimização Nível 2 concluída com sucesso
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:34:14] "POST /api/otimizar-rotas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:35:25] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:26] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:28] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:29] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:29] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:30] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:30] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:33] "GET /api/google-maps-config HTTP/1.1" 200 -
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Databases de cache offline inicializados
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Google Maps API inicializada para cache offline
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.route_optimizer:🗺️ Google Maps API inicializada e testada com sucesso
+INFO:gestao_visitas.services.route_optimizer:🗺️ Iniciando otimização Nível 3 com 3 pontos
+INFO:gestao_visitas.services.route_optimizer:🕰️ Buscando horários de atendimento reais...
+INFO:gestao_visitas.services.route_optimizer:🔍 Buscando horários para: Porto Belo - Prefeitura, Porto Belo, SC, Brazil
+INFO:gestao_visitas.services.route_optimizer:✅ Horários encontrados para Porto Belo - Prefeitura: {'is_open_now': True, 'weekday_text': ['Monday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Tuesday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Wednesday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Thursday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Friday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:00\u2009–\u20095:00\u202fPM', 'Saturday: Closed', 'Sunday: Closed'], 'periods': [{'close': {'day': 1, 'time': '1200'}, 'open': {'day': 1, 'time': '0800'}}, {'close': {'day': 1, 'time': '1700'}, 'open': {'day': 1, 'time': '1300'}}, {'close': {'day': 2, 'time': '1200'}, 'open': {'day': 2, 'time': '0800'}}, {'close': {'day': 2, 'time': '1700'}, 'open': {'day': 2, 'time': '1300'}}, {'close': {'day': 3, 'time': '1200'}, 'open': {'day': 3, 'time': '0800'}}, {'close': {'day': 3, 'time': '1700'}, 'open': {'day': 3, 'time': '1300'}}, {'close': {'day': 4, 'time': '1200'}, 'open': {'day': 4, 'time': '0800'}}, {'close': {'day': 4, 'time': '1700'}, 'open': {'day': 4, 'time': '1300'}}, {'close': {'day': 5, 'time': '1200'}, 'open': {'day': 5, 'time': '0800'}}, {'close': {'day': 5, 'time': '1700'}, 'open': {'day': 5, 'time': '1300'}}], 'today_open': '08:00', 'today_close': '12:00', 'is_open_target_day': True}
+INFO:gestao_visitas.services.route_optimizer:🔍 Buscando horários para: Bombinhas - Prefeitura - Vigilância Sanitária, Bombinhas, SC, Brazil
+INFO:gestao_visitas.services.route_optimizer:✅ Horários encontrados para Bombinhas - Prefeitura - Vigilância Sanitária: {'is_open_now': True, 'weekday_text': ['Monday: 12:00\u2009–\u20095:00\u202fPM', 'Tuesday: 12:00\u2009–\u20095:00\u202fPM', 'Wednesday: 12:00\u2009–\u20095:00\u202fPM', 'Thursday: 12:00\u2009–\u20095:00\u202fPM', 'Friday: 12:00\u2009–\u20095:00\u202fPM', 'Saturday: Closed', 'Sunday: Closed'], 'periods': [{'close': {'day': 1, 'time': '1700'}, 'open': {'day': 1, 'time': '1200'}}, {'close': {'day': 2, 'time': '1700'}, 'open': {'day': 2, 'time': '1200'}}, {'close': {'day': 3, 'time': '1700'}, 'open': {'day': 3, 'time': '1200'}}, {'close': {'day': 4, 'time': '1700'}, 'open': {'day': 4, 'time': '1200'}}, {'close': {'day': 5, 'time': '1700'}, 'open': {'day': 5, 'time': '1200'}}], 'today_open': '12:00', 'today_close': '17:00', 'is_open_target_day': True}
+INFO:gestao_visitas.services.route_optimizer:🔍 Buscando horários para: Bombinhas - Captação - Prefeitura, Bombinhas, SC, Brazil
+INFO:gestao_visitas.services.route_optimizer:✅ Horários encontrados para Bombinhas - Captação - Prefeitura: {'is_open_now': True, 'weekday_text': ['Monday: 12:00\u2009–\u20096:00\u202fPM', 'Tuesday: 12:00\u2009–\u20096:00\u202fPM', 'Wednesday: 12:00\u2009–\u20096:00\u202fPM', 'Thursday: 12:00\u2009–\u20096:00\u202fPM', 'Friday: 12:00\u2009–\u20096:00\u202fPM', 'Saturday: Closed', 'Sunday: Closed'], 'periods': [{'close': {'day': 1, 'time': '1800'}, 'open': {'day': 1, 'time': '1200'}}, {'close': {'day': 2, 'time': '1800'}, 'open': {'day': 2, 'time': '1200'}}, {'close': {'day': 3, 'time': '1800'}, 'open': {'day': 3, 'time': '1200'}}, {'close': {'day': 4, 'time': '1800'}, 'open': {'day': 4, 'time': '1200'}}, {'close': {'day': 5, 'time': '1800'}, 'open': {'day': 5, 'time': '1200'}}], 'today_open': '12:00', 'today_close': '18:00', 'is_open_target_day': True}
+INFO:gestao_visitas.services.route_optimizer:🗺️ Consultando matriz de distâncias: 5 origens, 5 destinos
+INFO:gestao_visitas.services.route_optimizer:🕐 Horário de partida calculado: 2025-07-14 08:00:00
+INFO:gestao_visitas.services.route_optimizer:📊 Resposta da API: status=OK
+INFO:gestao_visitas.services.route_optimizer:✅ Matriz de distâncias processada com sucesso
+INFO:gestao_visitas.services.route_optimizer:🕰️ Ajustando visita para abertura: 12:00
+INFO:gestao_visitas.services.route_optimizer:🔍 COMPARAÇÃO DE PONTOS:
+INFO:gestao_visitas.services.route_optimizer:   optimized_points: ['Porto Belo', 'Bombinhas', 'Bombinhas']
+INFO:gestao_visitas.services.route_optimizer:   route_with_schedule: ['Porto Belo', 'Bombinhas', 'Bombinhas']
+INFO:gestao_visitas.services.route_optimizer:🔍 CALCULANDO ESTATÍSTICAS com 3 visitas
+INFO:gestao_visitas.services.route_optimizer:🔍 MATRIX DISTANCES type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:🔍 MATRIX DURATIONS type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:🔍 CALCULANDO ESTATÍSTICAS: 3 visitas
+INFO:gestao_visitas.services.route_optimizer:🔍 Matrix distances type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:✅ IDA: IBGE → 4: 46.88km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO IDA: 55.6min
+INFO:gestao_visitas.services.route_optimizer:✅ ENTRE VISITAS: 4 → 2: 8.59km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO ENTRE VISITAS: 20.0min
+INFO:gestao_visitas.services.route_optimizer:✅ ENTRE VISITAS: 2 → 3: 0.00km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO ENTRE VISITAS: 0.0min
+INFO:gestao_visitas.services.route_optimizer:✅ VOLTA: 3 → IBGE: 51.32km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO VOLTA: 70.1min
+INFO:gestao_visitas.services.route_optimizer:✅ DISTÂNCIA TOTAL GOOGLE MAPS: 106.79km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO VIAGEM TOTAL GOOGLE MAPS: 145.7min
+INFO:gestao_visitas.services.route_optimizer:✅ Otimização Nível 3 concluída com sucesso
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:36] "POST /api/otimizar-rotas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:49] "GET /api/google-maps-config HTTP/1.1" 200 -
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Databases de cache offline inicializados
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.offline_maps_service:🗺️ Google Maps API inicializada para cache offline
+INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.route_optimizer:🗺️ Google Maps API inicializada e testada com sucesso
+INFO:gestao_visitas.services.route_optimizer:🗺️ Iniciando otimização Nível 3 com 2 pontos
+INFO:gestao_visitas.services.route_optimizer:🕰️ Buscando horários de atendimento reais...
+INFO:gestao_visitas.services.route_optimizer:🔍 Buscando horários para: Balneário Piçarras - Secretaria Municipal de Obras (SMO), Balneário Piçarras, SC, Brazil
+INFO:gestao_visitas.services.route_optimizer:✅ Horários encontrados para Balneário Piçarras - Secretaria Municipal de Obras (SMO): {'is_open_now': True, 'weekday_text': ['Monday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:30\u2009–\u20095:30\u202fPM', 'Tuesday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:30\u2009–\u20095:30\u202fPM', 'Wednesday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:30\u2009–\u20095:30\u202fPM', 'Thursday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:30\u2009–\u20095:30\u202fPM', 'Friday: 8:00\u202fAM\u2009–\u200912:00\u202fPM, 1:30\u2009–\u20095:30\u202fPM', 'Saturday: Closed', 'Sunday: Closed'], 'periods': [{'close': {'day': 1, 'time': '1200'}, 'open': {'day': 1, 'time': '0800'}}, {'close': {'day': 1, 'time': '1730'}, 'open': {'day': 1, 'time': '1330'}}, {'close': {'day': 2, 'time': '1200'}, 'open': {'day': 2, 'time': '0800'}}, {'close': {'day': 2, 'time': '1730'}, 'open': {'day': 2, 'time': '1330'}}, {'close': {'day': 3, 'time': '1200'}, 'open': {'day': 3, 'time': '0800'}}, {'close': {'day': 3, 'time': '1730'}, 'open': {'day': 3, 'time': '1330'}}, {'close': {'day': 4, 'time': '1200'}, 'open': {'day': 4, 'time': '0800'}}, {'close': {'day': 4, 'time': '1730'}, 'open': {'day': 4, 'time': '1330'}}, {'close': {'day': 5, 'time': '1200'}, 'open': {'day': 5, 'time': '0800'}}, {'close': {'day': 5, 'time': '1730'}, 'open': {'day': 5, 'time': '1330'}}], 'today_open': '08:00', 'today_close': '12:00', 'is_open_target_day': True}
+INFO:gestao_visitas.services.route_optimizer:🔍 Buscando horários para: Penha - Secretaria de Obras ou Serviços Urbanos, Penha, SC, Brazil
+WARNING:gestao_visitas.services.route_optimizer:⚠️ Horários não disponíveis para Penha - Secretaria de Obras ou Serviços Urbanos
+INFO:gestao_visitas.services.route_optimizer:🗺️ Consultando matriz de distâncias: 4 origens, 4 destinos
+INFO:gestao_visitas.services.route_optimizer:🕐 Horário de partida calculado: 2025-07-14 08:00:00
+INFO:gestao_visitas.services.route_optimizer:📊 Resposta da API: status=OK
+INFO:gestao_visitas.services.route_optimizer:✅ Matriz de distâncias processada com sucesso
+INFO:gestao_visitas.services.route_optimizer:🔍 COMPARAÇÃO DE PONTOS:
+INFO:gestao_visitas.services.route_optimizer:   optimized_points: ['Penha', 'Balneário Piçarras']
+INFO:gestao_visitas.services.route_optimizer:   route_with_schedule: ['Penha', 'Balneário Piçarras']
+INFO:gestao_visitas.services.route_optimizer:🔍 CALCULANDO ESTATÍSTICAS com 2 visitas
+INFO:gestao_visitas.services.route_optimizer:🔍 MATRIX DISTANCES type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:🔍 MATRIX DURATIONS type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:🔍 CALCULANDO ESTATÍSTICAS: 2 visitas
+INFO:gestao_visitas.services.route_optimizer:🔍 Matrix distances type: <class 'dict'>
+INFO:gestao_visitas.services.route_optimizer:✅ IDA: IBGE → 6: 26.45km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO IDA: 36.2min
+INFO:gestao_visitas.services.route_optimizer:✅ ENTRE VISITAS: 6 → 5: 3.99km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO ENTRE VISITAS: 9.6min
+INFO:gestao_visitas.services.route_optimizer:✅ VOLTA: 5 → IBGE: 26.77km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO VOLTA: 40.3min
+INFO:gestao_visitas.services.route_optimizer:✅ DISTÂNCIA TOTAL GOOGLE MAPS: 57.21km
+INFO:gestao_visitas.services.route_optimizer:✅ TEMPO VIAGEM TOTAL GOOGLE MAPS: 86.1min
+INFO:gestao_visitas.services.route_optimizer:✅ Otimização Nível 3 concluída com sucesso
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:37:51] "POST /api/otimizar-rotas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:39:27] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:41:29] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:42:31] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:42:31] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:43:28] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:45:29] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:47:28] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:47:29] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:47:30] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:49:29] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:51:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:52:30] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:52:30] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:53:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:55:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:57:30] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:57:30] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:57:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 13:59:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:01:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:02:30] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:02:30] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:03:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:05:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:07:30] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:07:30] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:07:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:09:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:11:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:12:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:12:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:13:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:15:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:17:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:17:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:17:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:19:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:21:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:22:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:22:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:23:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:25:39] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:26:08] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:26:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:27:27] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:27:29] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:27:29] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:27:39] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:29:28] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:30:20] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:31:13] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:31:27] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:31:32] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:32:08] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:32:29] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:32:29] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:33:29] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:35:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:37:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:37:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:37:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:39:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:41:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:42:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:42:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:43:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:45:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:47:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:47:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:47:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:49:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:51:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:52:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:52:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:53:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:55:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:57:28] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:57:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:57:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:57:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 14:59:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:01:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:02:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:02:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:03:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:05:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:07:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:07:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:07:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:09:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:11:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:12:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:12:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:13:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:15:29] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:17:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:17:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:17:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:19:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:21:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:22:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:22:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:23:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:25:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:27:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:27:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:27:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:29:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:31:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:32:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:32:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:33:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:35:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:37:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:37:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:37:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:39:43] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:41:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:42:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:42:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:43:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:45:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:46:56] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:47:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:47:46] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:47:47] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:17] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:18] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:19] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:19] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:19] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:20] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:50] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:50] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:50] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:50] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:50] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:50] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:50] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:51] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:52] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:52] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:52] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 15:48:53] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:23:32] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:23:36] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:23:41] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:23:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:24:01] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:24:01] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:24:54] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:26:51] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:28:51] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:28:53] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:28:53] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:30:50] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:32:39] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:33:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:33:53] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:33:53] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:35:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:37:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:38:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:39:02] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:39:03] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:39:04] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:39:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:41:43] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:43:35] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:43:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:43:51] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:43:51] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:45:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:45:47] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:47:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:49:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:49:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:49:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:51:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:53:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:54:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:54:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:55:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:57:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:59:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:59:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 16:59:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:01:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:03:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:04:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:04:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:05:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:07:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:09:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:09:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:09:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:11:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:13:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:14:45] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:14:45] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:15:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:17:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:19:45] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:19:46] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:19:46] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:21:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:23:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:24:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+✅ Google Maps API configurado com sucesso
+💾 Backup automático criado: 20250707_132317
+🔒 Sistema de backup automático iniciado
+   📁 Diretório: gestao_visitas/backups_automaticos
+   ⏰ Intervalo: 300 segundos
+🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_132832
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_133348
+🔧 Iniciando otimização para 1 visitas
+✅ RouteOptimizer inicializado. Google Maps disponível: True
+📍 Pontos convertidos: 1
+   1. Bombinhas - Bombinhas - Prefeitura
+🚀 Iniciando otimização com Google Maps...
+✅ Resultado da otimização: sucesso=True
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+🔧 Iniciando otimização para 3 visitas
+✅ RouteOptimizer inicializado. Google Maps disponível: True
+📍 Pontos convertidos: 3
+   1. Porto Belo - Porto Belo - Prefeitura
+   2. Bombinhas - Bombinhas - Prefeitura - Vigilância Sanitária
+   3. Bombinhas - Bombinhas - Captação - Prefeitura
+🚀 Iniciando otimização com Google Maps...
+✅ Resultado da otimização: sucesso=True
+🔧 Iniciando otimização para 2 visitas
+✅ RouteOptimizer inicializado. Google Maps disponível: True
+📍 Pontos convertidos: 2
+   1. Balneário Piçarras - Balneário Piçarras - Secretaria Municipal de Obras (SMO)
+   2. Penha - Penha - Secretaria de Obras ou Serviços Urbanos
+🚀 Iniciando otimização com Google Maps...
+✅ Resultado da otimização: sucesso=True
+💾 Backup automático criado: 20250707_133906
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_134421
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_134935
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_135449
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_140007
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_140523
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_141039
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_141557
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_142112
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_142629
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_143147
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_143703
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_144219
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_144738
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_145254
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_145808
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_150323
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_150840
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_151355
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_151911
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_152429
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_152944
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_153500
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_154018
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_154534
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_162357
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_162911
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_163422
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_163935
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_164449
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_165003
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_165519
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_170034
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_170550
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_171108
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_171624
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_172141
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:24:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:25:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:27:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:29:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:29:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:29:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:31:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:33:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:34:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:34:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:35:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:37:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:39:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:39:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:39:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:41:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:43:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:44:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:44:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:45:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:47:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:49:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:49:44] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:49:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:51:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:53:40] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:54:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:54:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:55:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:57:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:59:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:59:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 17:59:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:01:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:03:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:04:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:04:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:05:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:07:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:09:45] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:09:46] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:09:46] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:10:27] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:11:31] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:11:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:13:43] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:14:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:14:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:15:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:16:56] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:17:26] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:17:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:19:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:19:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:19:42] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:21:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:23:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:24:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:24:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:25:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:30] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:30] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:30] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:30] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:30] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:30] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:30] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:31] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:33] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:33] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:33] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:26:33] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:28:32] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:30:31] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:31:35] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:31:35] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:32:32] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:34:31] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:36:32] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:36:33] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:36:33] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:38:31] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:40:32] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:41:34] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:41:34] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:42:31] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:44:32] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:46:30] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:46:33] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:46:33] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:48:31] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:50:31] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:51:32] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:51:32] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:52:31] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:54:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:56:33] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:56:33] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:56:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 18:58:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:00:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:01:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:01:43] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:02:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:04:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:06:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:06:43] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:06:44] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:08:41] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [07/Jul/2025 19:10:42] "GET /api/alertas/criticos HTTP/1.1" 200 -
+INFO:werkzeug: * Detected change in '/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/app.py', reloading
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_172659
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_173216
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_173733
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_174250
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_174808
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_175326
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_175844
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_180404
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_180922
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_181438
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_181955
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_182511
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_183028
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_183544
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_184102
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_184619
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_185136
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_185654
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_190211
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 9
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250707_190728
+🛑 Sistema de backup automático parado
+INFO:werkzeug: * Restarting with stat
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
+INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
+INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
+INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
+=== INICIANDO APP.PY CORRETO ===
+✅ Compressão Flask-Compress ativada
+✅ Arquivo .env carregado com sucesso
+✅ Serviços PNSB inicializados com sucesso
+Traceback (most recent call last):
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/app.py", line 71, in <module>
+    from gestao_visitas.routes.auto_scheduler_api import auto_scheduler_bp
+  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/routes/auto_scheduler_api.py", line 7, in <module>
+    from gestao_visitas.services.auto_scheduler import AutoSchedulerService
+ModuleNotFoundError: No module named 'gestao_visitas.services.auto_scheduler'
+💾 Backup automático criado: 20250707_130826
+💾 Backup automático criado: 20250707_131343
+💾 Backup automático criado: 20250707_131859
+💾 Backup automático criado: 20250707_132415
+💾 Backup automático criado: 20250707_132933
+💾 Backup automático criado: 20250707_133448
+💾 Backup automático criado: 20250707_134005
+💾 Backup automático criado: 20250707_134522
+💾 Backup automático criado: 20250707_135035
+💾 Backup automático criado: 20250707_135550
+💾 Backup automático criado: 20250707_140108
+💾 Backup automático criado: 20250707_140624
+💾 Backup automático criado: 20250707_141140
+💾 Backup automático criado: 20250707_141656
+💾 Backup automático criado: 20250707_142213
+💾 Backup automático criado: 20250707_142730
+💾 Backup automático criado: 20250707_143246
+💾 Backup automático criado: 20250707_143804
+💾 Backup automático criado: 20250707_144320
+💾 Backup automático criado: 20250707_144837
+💾 Backup automático criado: 20250707_145355
+💾 Backup automático criado: 20250707_145909
+💾 Backup automático criado: 20250707_150424
+💾 Backup automático criado: 20250707_150940
+💾 Backup automático criado: 20250707_151456
+💾 Backup automático criado: 20250707_152012
+💾 Backup automático criado: 20250707_152528
+💾 Backup automático criado: 20250707_153045
+💾 Backup automático criado: 20250707_153601
+💾 Backup automático criado: 20250707_154118
+💾 Backup automático criado: 20250707_154635
+💾 Backup automático criado: 20250707_162457
+💾 Backup automático criado: 20250707_163009
+💾 Backup automático criado: 20250707_163520
+💾 Backup automático criado: 20250707_164033
+💾 Backup automático criado: 20250707_164548
+💾 Backup automático criado: 20250707_165102
+💾 Backup automático criado: 20250707_165616
+💾 Backup automático criado: 20250707_170134
+💾 Backup automático criado: 20250707_170650
+💾 Backup automático criado: 20250707_171206
+💾 Backup automático criado: 20250707_171724
+💾 Backup automático criado: 20250707_172241
+💾 Backup automático criado: 20250707_172757
+💾 Backup automático criado: 20250707_173316
+💾 Backup automático criado: 20250707_173833
+💾 Backup automático criado: 20250707_174350
+💾 Backup automático criado: 20250707_174907
+💾 Backup automático criado: 20250707_175427
+💾 Backup automático criado: 20250707_175945
+💾 Backup automático criado: 20250707_180502
+💾 Backup automático criado: 20250707_181022
+💾 Backup automático criado: 20250707_181538
+💾 Backup automático criado: 20250707_182054
+💾 Backup automático criado: 20250707_182612
+💾 Backup automático criado: 20250707_183128
+💾 Backup automático criado: 20250707_183645
+💾 Backup automático criado: 20250707_184203
+💾 Backup automático criado: 20250707_184720
+💾 Backup automático criado: 20250707_185238
+💾 Backup automático criado: 20250707_185755
+💾 Backup automático criado: 20250707_190315
+💾 Backup automático criado: 20250707_190831
+🛑 Sistema de backup automático parado

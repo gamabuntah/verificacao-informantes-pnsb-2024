@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo - Sistema PNSB 2024</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Sistema de Design PNSB */
+        :root {
+            --primary-color: #5F5CFF;
+            --primary-hover: #4B47E6;
+            --secondary-color: #6EE7B7;
+            --secondary-hover: #5BD1A3;
+            --background-dark: #181A20;
+            --surface-primary: #23263B;
+            --surface-secondary: #2D3142;
+            --surface-tertiary: #3A3D52;
+            --text-primary: #F1F1F1;
+            --text-secondary: #B0B3C7;
+            --text-muted: #8B8FA3;
+            --border-color: #2D3142;
+            --border-color-light: #3A3D52;
+            --border-color-focus: var(--primary-color);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+            --transition-normal: 0.2s ease;
+            --z-sidebar: 1030;
+            --z-navbar: 1020;
+        }
+
+        body {
+            background: var(--background-dark);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: var(--surface-primary);
+            border-right: 1px solid var(--border-color);
+            z-index: var(--z-sidebar);
+            transform: translateX(-100%);
+            transition: transform var(--transition-normal);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .sidebar-logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .sidebar-nav {
+            padding: var(--spacing-md) 0;
+        }
+
+        .nav-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .nav-section-title {
+            padding: 0 var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+            list-style: none;
+            margin: 0;
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all var(--transition-normal);
+            border-left: 3px solid transparent;
+        }
+
+        .nav-link-custom:hover {
+            background: var(--surface-secondary);
+            color: var(--text-primary);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-link-custom.active {
+            background: rgba(95, 92, 255, 0.1);
+            color: var(--primary-color);
+            border-left-color: var(--primary-color);
+        }
+
+        .nav-icon {
+            width: 20px;
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        /* Navbar */
+        .navbar-custom {
+            background: var(--surface-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding: var(--spacing-md) 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: var(--z-navbar);
+            transition: left var(--transition-normal);
+        }
+
+        .navbar-custom.sidebar-open {
+            left: 280px;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: var(--spacing-sm);
+            margin-right: var(--spacing-md);
+            transition: color var(--transition-normal);
+        }
+
+        .sidebar-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            transition: margin-left var(--transition-normal);
+            padding-top: 80px;
+        }
+
+        .main-layout.sidebar-open {
+            margin-left: 280px;
+        }
+
+        .main-content {
+            padding: var(--spacing-lg);
+        }
+
+        /* Cards */
+        .card-standard {
+            background: var(--surface-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+        }
+
+        .card-standard:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .card-header-standard {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--border-color);
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        }
+
+        .card-body-standard {
+            padding: var(--spacing-lg);
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            transition: all var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, var(--primary-hover) 0%, var(--secondary-hover) 100%);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+            color: white;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumb-custom {
+            background: transparent;
+            padding: var(--spacing-md) 0;
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+        .breadcrumb-custom .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb-custom .breadcrumb-item + .breadcrumb-item::before {
+            content: '/';
+            color: var(--text-muted);
+            margin: 0 var(--spacing-sm);
+        }
+
+        .breadcrumb-custom .breadcrumb-item a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color var(--transition-normal);
+        }
+
+        .breadcrumb-custom .breadcrumb-item a:hover {
+            color: var(--primary-color);
+        }
+
+        .breadcrumb-custom .breadcrumb-item.active {
+            color: var(--text-primary);
+        }
+
+        /* Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: calc(var(--z-sidebar) - 1);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-normal);
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .main-layout.sidebar-open {
+                margin-left: 0;
+            }
+            
+            .navbar-custom.sidebar-open {
+                left: 0;
+            }
+            
+            .sidebar {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--surface-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: var(--spacing-sm);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .feature-card {
+            background: var(--surface-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            transition: all var(--transition-normal);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-color);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .feature-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        /* Success Message */
+        .success-banner {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .success-banner h3 {
+            margin: 0 0 var(--spacing-sm) 0;
+            font-weight: 700;
+        }
+
+        .success-banner p {
+            margin: 0;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <header class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <i class="fas fa-chart-line"></i>
+                PNSB 2024
+            </a>
+        </header>
+        
+        <nav class="sidebar-nav" role="navigation" aria-label="Menu principal">
+            <div class="nav-section">
+                <h6 class="nav-section-title">Principal</h6>
+                <ul>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link-custom active">
+                            <i class="nav-icon fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link-custom">
+                            <i class="nav-icon fas fa-calendar-alt"></i>
+                            <span>Visitas</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link-custom">
+                            <i class="nav-icon fas fa-tasks"></i>
+                            <span>Checklist</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h6 class="nav-section-title">Gestão</h6>
+                <ul>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link-custom">
+                            <i class="nav-icon fas fa-address-book"></i>
+                            <span>Contatos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link-custom">
+                            <i class="nav-icon fas fa-chart-bar"></i>
+                            <span>Relatórios</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <h6 class="nav-section-title">PNSB Avançado</h6>
+                <ul>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link-custom">
+                            <i class="nav-icon fas fa-cogs"></i>
+                            <span>Funcionalidades</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link-custom">
+                            <i class="nav-icon fas fa-map"></i>
+                            <span>Mapa Progresso</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link-custom">
+                            <i class="nav-icon fas fa-users"></i>
+                            <span>Produtividade</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Overlay -->
+    <div class="sidebar-overlay"></div>
+    
+    <!-- Navbar -->
+    <nav class="navbar-custom">
+        <div class="container-fluid">
+            <button class="sidebar-toggle" type="button" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="navbar-brand d-flex align-items-center">
+                <span class="text-gradient">Sistema PNSB</span>
+            </div>
+            
+            <div class="ms-auto d-flex align-items-center gap-3">
+                <div class="d-none d-md-block">
+                    <small class="text-muted">Pesquisa Nacional de Saneamento Básico 2024</small>
+                </div>
+                <button class="btn-primary-custom" type="button">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+        <div class="container-fluid main-content">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb-custom">
+                    <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                </ol>
+            </nav>
+
+            <!-- Success Banner -->
+            <div class="success-banner">
+                <h3>🎉 Sistema PNSB Totalmente Renovado!</h3>
+                <p>Interface moderna, responsiva e 46+ funcionalidades PNSB implementadas</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">46+</div>
+                    <div class="stat-label">Endpoints PNSB</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">9</div>
+                    <div class="stat-label">Módulos Implementados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">11</div>
+                    <div class="stat-label">Municípios SC</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Funcional</div>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="feature-title">Perfil Inteligente do Informante</div>
+                    <div class="feature-description">
+                        Análise comportamental, histórico de abordagens e estratégias personalizadas para cada informante.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="feature-title">Logística com Google Maps</div>
+                    <div class="feature-description">
+                        Otimização de rotas diárias, cálculo de tempos de viagem e monitoramento de trânsito em tempo real.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="feature-title">Rastreamento de Questionários</div>
+                    <div class="feature-description">
+                        Mapa visual de progresso por município, alertas de prazo e relatórios executivos de coleta.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="feature-title">Assistente de Abordagem</div>
+                    <div class="feature-description">
+                        Scripts personalizados, banco de argumentos eficazes e técnicas para contornar objeções.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-title">Sistema de Contingência</div>
+                    <div class="feature-description">
+                        Identificação automática de informantes alternativos e planos de backup por município.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-title">Comunicação Eficiente</div>
+                    <div class="feature-description">
+                        Templates multicanal, seleção automática do melhor canal e lembretes programáveis.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="feature-title">Análise de Resistência</div>
+                    <div class="feature-description">
+                        Mapeamento de objeções, banco de soluções e estratégias diferenciadas por perfil.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="feature-title">Dashboard de Produtividade</div>
+                    <div class="feature-description">
+                        Métricas individuais, ranking de equipe, gamificação e identificação de melhores práticas.
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="feature-title">Otimizador de Cronograma</div>
+                    <div class="feature-description">
+                        Simulação de cenários, previsões realistas e redistribuição inteligente de carga.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Features -->
+            <div class="card-standard mt-5">
+                <div class="card-header-standard">
+                    <h5 class="mb-0">
+                        <i class="fas fa-flask text-gradient"></i>
+                        Testar Componentes Interativos
+                    </h5>
+                </div>
+                <div class="card-body-standard">
+                    <div class="d-flex gap-3 flex-wrap">
+                        <button class="btn-primary-custom" onclick="testNotification('success')">
+                            <i class="fas fa-check"></i> Teste Sucesso
+                        </button>
+                        <button class="btn-primary-custom" onclick="testNotification('error')">
+                            <i class="fas fa-times"></i> Teste Erro
+                        </button>
+                        <button class="btn-primary-custom" onclick="testNotification('warning')">
+                            <i class="fas fa-exclamation"></i> Teste Aviso
+                        </button>
+                        <button class="btn-primary-custom" onclick="testNotification('info')">
+                            <i class="fas fa-info"></i> Teste Info
+                        </button>
+                        <button class="btn-primary-custom" onclick="testSidebar()">
+                            <i class="fas fa-bars"></i> Toggle Sidebar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Sistema de Notificações Demo
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--surface-primary);
+                border: 1px solid var(--border-color);
+                border-left: 4px solid var(--${type === 'success' ? 'secondary-color' : type === 'error' ? 'error-color' : type === 'warning' ? 'warning-color' : 'primary-color'});
+                border-radius: var(--radius-lg);
+                padding: var(--spacing-md);
+                z-index: 1070;
+                max-width: 400px;
+                box-shadow: var(--shadow-lg);
+                animation: slideIn 0.3s ease;
+                color: var(--text-primary);
+            `;
+            
+            const colors = {
+                success: '#10B981',
+                error: '#EF4444', 
+                warning: '#F59E0B',
+                info: '#3B82F6'
+            };
+            
+            notification.style.borderLeftColor = colors[type] || colors.info;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: var(--spacing-md);">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}" style="color: ${colors[type]};"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: var(--text-muted); cursor: pointer; margin-left: auto; padding: 0; font-size: 1.25rem;">&times;</button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove após 5 segundos
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Testes de Notificação
+        function testNotification(type) {
+            const messages = {
+                success: 'Operação realizada com sucesso!',
+                error: 'Ocorreu um erro na operação!',
+                warning: 'Atenção: Verifique os dados!',
+                info: 'Informação importante para o usuário!'
+            };
+            
+            showNotification(messages[type], type);
+        }
+
+        // Gerenciador de Sidebar
+        let sidebarOpen = false;
+
+        function testSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            const mainLayout = document.querySelector('.main-layout');
+            const navbar = document.querySelector('.navbar-custom');
+            
+            sidebarOpen = !sidebarOpen;
+            
+            if (sidebarOpen) {
+                sidebar.classList.add('active');
+                overlay.classList.add('active');
+                if (window.innerWidth > 768) {
+                    mainLayout.classList.add('sidebar-open');
+                    navbar.classList.add('sidebar-open');
+                }
+                document.body.style.overflow = window.innerWidth <= 768 ? 'hidden' : 'auto';
+            } else {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+                mainLayout.classList.remove('sidebar-open');
+                navbar.classList.remove('sidebar-open');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Auto-inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle button
+            document.querySelector('.sidebar-toggle').addEventListener('click', testSidebar);
+            
+            // Overlay click
+            document.querySelector('.sidebar-overlay').addEventListener('click', testSidebar);
+            
+            // Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && sidebarOpen) {
+                    testSidebar();
+                }
+            });
+            
+            // Auto-abrir em desktop
+            if (window.innerWidth > 768) {
+                testSidebar();
+            }
+            
+            // Responsive handler
+            window.addEventListener('resize', () => {
+                const isMobile = window.innerWidth <= 768;
+                const mainLayout = document.querySelector('.main-layout');
+                const navbar = document.querySelector('.navbar-custom');
+                
+                if (sidebarOpen) {
+                    if (isMobile) {
+                        mainLayout.classList.remove('sidebar-open');
+                        navbar.classList.remove('sidebar-open');
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        mainLayout.classList.add('sidebar-open');
+                        navbar.classList.add('sidebar-open');
+                        document.body.style.overflow = 'auto';
+                    }
+                }
+            });
+            
+            // Mensagem de boas-vindas
+            setTimeout(() => {
+                showNotification('🎉 Bem-vindo ao Sistema PNSB renovado! Teste todos os componentes.', 'success');
+            }, 1000);
+        });
+
+        // Animação CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

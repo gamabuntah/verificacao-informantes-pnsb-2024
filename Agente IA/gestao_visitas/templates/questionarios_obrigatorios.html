@@ -1,0 +1,2107 @@
+{% extends "base.html" %}
+
+{% block title %}Questionários Obrigatórios - Sistema PNSB{% endblock %}
+
+{% block head %}
+<!-- Garantir que jQuery está disponível via CDN permitido pelo CSP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0">📋 Questionários Obrigatórios PNSB 2024</h2>
+        <div class="d-flex gap-2">
+            <button class="btn-primary-custom" onclick="adicionarEntidade()">
+                <i class="fas fa-plus"></i> Adicionar Entidade
+            </button>
+            <button class="btn-outline-custom" onclick="recalcularProgresso()">
+                <i class="fas fa-sync"></i> Recalcular Progresso
+            </button>
+            <button class="btn-info" onclick="validarEstrutura()">
+                <i class="fas fa-check-circle"></i> Validar Estrutura
+            </button>
+        </div>
+    </div>
+
+    <!-- Resumo Geral -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card-standard">
+                <div class="card-body-standard text-center">
+                    <h4 class="text-primary" id="total-municipios">11</h4>
+                    <p class="mb-0">Municípios</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-standard">
+                <div class="card-body-standard text-center">
+                    <h4 class="text-success" id="questionarios-mrs">0</h4>
+                    <p class="mb-0">♻️ Questionários MRS</p>
+                    <small class="text-muted">Resíduos Sólidos</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-standard">
+                <div class="card-body-standard text-center">
+                    <h4 class="text-info" id="questionarios-map">0</h4>
+                    <p class="mb-0">💧 Questionários MAP</p>
+                    <small class="text-muted">Águas Pluviais</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-standard">
+                <div class="card-body-standard text-center">
+                    <h4 class="text-warning" id="entidades-identificadas">0</h4>
+                    <p class="mb-0">🏢 Total Entidades</p>
+                    <small class="text-muted">Todas as fontes</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card-standard mb-4">
+        <div class="card-header-standard">
+            <h5 class="mb-0">
+                <i class="fas fa-filter text-gradient"></i>
+                Filtros
+            </h5>
+        </div>
+        <div class="card-body-standard">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="filtroMunicipio">Município</label>
+                        <select class="select-custom" id="filtroMunicipio" onchange="aplicarFiltros()">
+                            <option value="">Todos os municípios</option>
+                            <option value="Balneário Camboriú">Balneário Camboriú</option>
+                            <option value="Balneário Piçarras">Balneário Piçarras</option>
+                            <option value="Bombinhas">Bombinhas</option>
+                            <option value="Camboriú">Camboriú</option>
+                            <option value="Itajaí">Itajaí</option>
+                            <option value="Itapema">Itapema</option>
+                            <option value="Luiz Alves">Luiz Alves</option>
+                            <option value="Navegantes">Navegantes</option>
+                            <option value="Penha">Penha</option>
+                            <option value="Porto Belo">Porto Belo</option>
+                            <option value="Ilhota">Ilhota</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="filtroTipoEntidade">Tipo de Entidade</label>
+                        <select class="select-custom" id="filtroTipoEntidade" onchange="aplicarFiltros()">
+                            <option value="">Todas as entidades</option>
+                            <option value="prefeitura">Prefeitura</option>
+                            <option value="empresa_terceirizada">Empresa Terceirizada</option>
+                            <option value="entidade_catadores">Entidade de Catadores</option>
+                            <option value="empresa_nao_vinculada">Empresa Não Vinculada</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="filtroStatus">Status dos Questionários</label>
+                        <select class="select-custom" id="filtroStatus" onchange="aplicarFiltros()">
+                            <option value="">Todos os status</option>
+                            <option value="nao_iniciado">Não Iniciado</option>
+                            <option value="respondido">Respondido</option>
+                            <option value="validado_concluido">Validado/Concluído</option>
+                            <option value="nao_aplicavel">Não Aplicável</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="card-standard">
+        <div class="card-header-standard">
+            <ul class="nav nav-tabs" id="questionariosTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="obrigatorios-tab" data-bs-toggle="tab" data-bs-target="#obrigatorios" type="button" role="tab">
+                        📋 Questionários Obrigatórios
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="prioritarias-tab" data-bs-toggle="tab" data-bs-target="#prioritarias" type="button" role="tab">
+                        🔴 Entidades Prioritárias (Prioridade 1)
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="entidades-tab" data-bs-toggle="tab" data-bs-target="#entidades" type="button" role="tab">
+                        🏢 Entidades Identificadas
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="progresso-tab" data-bs-toggle="tab" data-bs-target="#progresso" type="button" role="tab">
+                        📊 Progresso por Município
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body-standard">
+            <div class="tab-content" id="questionariosTabsContent">
+                <!-- Tab Questionários Obrigatórios -->
+                <div class="tab-pane fade show active" id="obrigatorios" role="tabpanel">
+                    <div id="questionarios-obrigatorios-lista">
+                        <div class="loading text-center py-4">
+                            <i class="fas fa-spinner fa-spin text-primary"></i> <span class="loading-text">Carregando questionários obrigatórios...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Entidades Prioritárias (Prioridade 1) -->
+                <div class="tab-pane fade" id="prioritarias" role="tabpanel">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <button class="btn-success" onclick="importarListaMRS()">
+                                <i class="fas fa-recycle"></i> Importar Entidades MRS (Prioridade 1)
+                            </button>
+                            <button class="btn-info" onclick="importarListaMAP()">
+                                <i class="fas fa-tint"></i> Importar Entidades MAP (Prioridade 1)
+                            </button>
+                            <button class="btn-warning-custom" onclick="processarTodasPrioritarias()">
+                                <i class="fas fa-cogs"></i> Processar Todas
+                            </button>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-outline-danger" onclick="excluirTodasEntidades()">
+                                <i class="fas fa-trash-alt"></i> Excluir Todas
+                            </button>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <small class="text-muted">
+                                <strong>Prioridade 1:</strong> Lista oficial da UF
+                            </small>
+                        </div>
+                    </div>
+                    <div id="entidades-prioritarias-lista">
+                        <div class="loading text-center py-4">
+                            <i class="fas fa-spinner fa-spin text-primary"></i> <span class="loading-text">Carregando entidades prioritárias...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Entidades Identificadas -->
+                <div class="tab-pane fade" id="entidades" role="tabpanel">
+                    <div id="entidades-identificadas-lista">
+                        <div class="loading text-center py-4">
+                            <i class="fas fa-spinner fa-spin"></i> Carregando entidades identificadas...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Progresso -->
+                <div class="tab-pane fade" id="progresso" role="tabpanel">
+                    <div id="progresso-municipios-lista">
+                        <div class="loading text-center py-4">
+                            <i class="fas fa-spinner fa-spin"></i> Carregando progresso por município...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar/Editar Entidade -->
+<div class="modal fade" id="modalEntidade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEntidadeTitulo">Adicionar Entidade</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formEntidade">
+                    <input type="hidden" id="entidadeId" name="id">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entidadeMunicipio">Município *</label>
+                                <select class="form-control" id="entidadeMunicipio" name="municipio" required>
+                                    <option value="">Selecionar município</option>
+                                    <option value="Balneário Camboriú">Balneário Camboriú</option>
+                                    <option value="Balneário Piçarras">Balneário Piçarras</option>
+                                    <option value="Bombinhas">Bombinhas</option>
+                                    <option value="Camboriú">Camboriú</option>
+                                    <option value="Itajaí">Itajaí</option>
+                                    <option value="Itapema">Itapema</option>
+                                    <option value="Luiz Alves">Luiz Alves</option>
+                                    <option value="Navegantes">Navegantes</option>
+                                    <option value="Penha">Penha</option>
+                                    <option value="Porto Belo">Porto Belo</option>
+                                    <option value="Ilhota">Ilhota</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entidadeTipo">Tipo de Entidade *</label>
+                                <select class="form-control" id="entidadeTipo" name="tipo_entidade" required>
+                                    <option value="">Selecionar tipo</option>
+                                    <option value="empresa_terceirizada">Empresa Terceirizada</option>
+                                    <option value="entidade_catadores">Entidade de Catadores</option>
+                                    <option value="empresa_nao_vinculada">Empresa Não Vinculada</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="entidadeNome">Nome da Entidade *</label>
+                        <input type="text" class="form-control" id="entidadeNome" name="nome_entidade" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entidadeCNPJ">CNPJ</label>
+                                <input type="text" class="form-control" id="entidadeCNPJ" name="cnpj" placeholder="XX.XXX.XXX/XXXX-XX">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entidadeTelefone">Telefone</label>
+                                <input type="text" class="form-control" id="entidadeTelefone" name="telefone">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="entidadeEndereco">Endereço</label>
+                        <textarea class="form-control" id="entidadeEndereco" name="endereco" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entidadeEmail">E-mail</label>
+                                <input type="email" class="form-control" id="entidadeEmail" name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entidadeResponsavel">Responsável</label>
+                                <input type="text" class="form-control" id="entidadeResponsavel" name="responsavel">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Prioridade da Entidade -->
+                    <div class="form-group mb-3">
+                        <div class="card border-info">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">🏷️ Classificação da Entidade</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="entidadeInformativa" name="informativa" value="true">
+                                    <label class="form-check-label" for="entidadeInformativa">
+                                        <strong>Entidade P3 - Informativa</strong>
+                                        <br><small class="text-muted">
+                                            Marque esta opção se a entidade é apenas para <strong>trabalho completo</strong> 
+                                            (não obrigatória para metas PNSB). Entidades P3 são feitas apenas se houver tempo disponível.
+                                        </small>
+                                    </label>
+                                </div>
+                                <div class="mt-2">
+                                    <small class="text-info">
+                                        <i class="fas fa-info-circle"></i>
+                                        <strong>Não marcado:</strong> Entidade P2 (Importante - obrigatória quando incluída)<br>
+                                        <strong>Marcado:</strong> Entidade P3 (Informativa - trabalho completo)
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Questionários Obrigatórios -->
+                    <div class="form-group mb-3">
+                        <div class="card border-warning">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">📋 Questionários Obrigatórios</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="entidadeMrsObrigatorio" name="mrs_obrigatorio" value="true">
+                                            <label class="form-check-label" for="entidadeMrsObrigatorio">
+                                                <strong>MRS Obrigatório</strong>
+                                                <br><small class="text-muted">Manejo de Resíduos Sólidos</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="entidadeMapObrigatorio" name="map_obrigatorio" value="true">
+                                            <label class="form-check-label" for="entidadeMapObrigatorio">
+                                                <strong>MAP Obrigatório</strong>
+                                                <br><small class="text-muted">Manejo de Águas Pluviais</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entidadeStatusMRS">Status MRS</label>
+                                <select class="form-control" id="entidadeStatusMRS" name="status_mrs">
+                                    <option value="nao_iniciado">Não Iniciado</option>
+                                    <option value="respondido">Respondido</option>
+                                    <option value="validado_concluido">Validado/Concluído</option>
+                                    <option value="nao_aplicavel">Não Aplicável</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="entidadeStatusMAP">Status MAP</label>
+                                <select class="form-control" id="entidadeStatusMAP" name="status_map">
+                                    <option value="nao_iniciado">Não Iniciado</option>
+                                    <option value="respondido">Respondido</option>
+                                    <option value="validado_concluido">Validado/Concluído</option>
+                                    <option value="nao_aplicavel">Não Aplicável</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="entidadeObservacoes">Observações</label>
+                        <textarea class="form-control" id="entidadeObservacoes" name="observacoes" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="salvarEntidade()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirmação de Exclusão -->
+<div class="modal fade" id="modalConfirmacaoExclusao" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalExclusaoTitulo">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>ATENÇÃO:</strong> Esta ação não pode ser desfeita!
+                </div>
+                
+                <div id="conteudoConfirmacaoExclusao">
+                    <!-- Conteúdo será preenchido dinamicamente -->
+                </div>
+                
+                <div id="campoConfirmacao" style="display: none;">
+                    <label for="textoConfirmacao" class="form-label">
+                        <strong>Digite "CONFIRMAR" para prosseguir:</strong>
+                    </label>
+                    <input type="text" class="form-control" id="textoConfirmacao" placeholder="Digite CONFIRMAR">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">
+                    <i class="fas fa-trash"></i> <span id="textoConfirmar">Excluir</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Importar CSV Simples -->
+<div class="modal fade" id="modalImportacaoSimples" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalImportacaoSimplesTitulo">Importar Entidades</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert" id="alertaTipoImportacao">
+                    <strong id="iconeAlerta">📋</strong> <strong id="tituloAlerta">Formato Simples:</strong><br>
+                    <span id="descricaoAlerta">Importe apenas: <strong>Município, CNPJ, Razão Social</strong><br>
+                    Os demais campos podem ser preenchidos manualmente depois.</span>
+                </div>
+                
+                <form id="formImportacaoSimples" enctype="multipart/form-data">
+                    <input type="hidden" id="tipoImportacao" name="tipo_importacao" value="">
+                    
+                    <div class="form-group mb-3">
+                        <label for="arquivoImportacaoSimples">Arquivo CSV *</label>
+                        <input type="file" class="form-control" id="arquivoImportacaoSimples" name="arquivo" accept=".csv" required>
+                        <small class="form-text text-muted">
+                            Formato: Município, CNPJ, Razão Social
+                        </small>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="tipoEntidadePadrao">Tipo de Entidade (opcional)</label>
+                        <select class="form-control" id="tipoEntidadePadrao" name="tipo_entidade">
+                            <option value="">Deixar em branco (preencher depois)</option>
+                            <option value="empresa_terceirizada">Empresa Terceirizada</option>
+                            <option value="entidade_catadores">Entidade de Catadores</option>
+                            <option value="empresa_nao_vinculada">Empresa Não Vinculada</option>
+                        </select>
+                        <small class="form-text text-muted">
+                            Se não selecionado, poderá ser preenchido individualmente após a importação
+                        </small>
+                    </div>
+                    
+                    <div class="alert alert-secondary" id="infoQuestionarios">
+                        <strong>📊 Questionários que serão marcados como obrigatórios:</strong>
+                        <div id="listaQuestionarios"></div>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <strong>Exemplo de formato CSV:</strong>
+                        <pre class="bg-light p-2 small" id="exemploCSV">Município,CNPJ,Razão Social
+Balneário Camboriú,03.094.629/0002-17,AMBIENTAL LIMPEZA URBANA E SANEAMENTO LTDA
+Balneário Camboriú,11.673.189/0001-08,COOPERMAR AMBIENTAL
+Itajaí,12.345.678/0001-90,EMPRESA EXEMPLO LTDA</pre>
+                    </div>
+                </form>
+                
+                <div id="resultadoImportacaoSimples" style="display: none;">
+                    <h6>Resultado da Importação:</h6>
+                    <div id="resumoImportacaoSimples"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnImportarSimples" onclick="executarImportacaoSimples()">
+                    <i class="fas fa-upload"></i> Importar Entidades
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Importar Lista UF -->
+<div class="modal fade" id="modalImportacao" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalImportacaoTitulo">Importar Lista de Entidades Prioritárias da UF</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <strong>🔥 Entidades Prioritárias da UF:</strong><br>
+                    Estas são as entidades <strong>mais obrigatórias de todas</strong>. Elas têm prioridade 1 e precisam ser validadas quanto à obrigatoriedade dos questionários MRS e/ou MAP.
+                </div>
+                
+                <form id="formImportacao" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="arquivoImportacao">Arquivo CSV da Lista UF *</label>
+                        <input type="file" class="form-control" id="arquivoImportacao" name="arquivo" accept=".csv" required>
+                        <small class="form-text text-muted">
+                            Formato: codigo_uf, municipio, nome_entidade, tipo_entidade, mrs_obrigatorio, map_obrigatorio, etc.
+                        </small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Campos Esperados no CSV:</label>
+                        <div class="row text-sm">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li><strong>codigo_uf*</strong> - Código único</li>
+                                    <li><strong>municipio*</strong> - Município</li>
+                                    <li><strong>nome_entidade*</strong> - Nome da entidade</li>
+                                    <li><strong>tipo_entidade*</strong> - Tipo</li>
+                                    <li>mrs_obrigatorio - true/false</li>
+                                    <li>map_obrigatorio - true/false</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li>cnpj - CNPJ da entidade</li>
+                                    <li>endereco_completo - Endereço</li>
+                                    <li>categoria_uf - Categoria</li>
+                                    <li>motivo_mrs - Motivo MRS</li>
+                                    <li>motivo_map - Motivo MAP</li>
+                                    <li>observacoes_uf - Observações</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                <div id="resultadoImportacao" style="display: none;">
+                    <h6>Resultado da Importação:</h6>
+                    <div id="resumoImportacao"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="executarImportacaoUF()">
+                    <i class="fas fa-upload"></i> Importar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.questionario-card {
+    background: #2D3142;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid #5F5CFF;
+    transition: all 0.3s ease;
+}
+
+.questionario-card:hover {
+    background: #343751;
+    transform: translateY(-2px);
+}
+
+.questionario-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.municipio-nome {
+    font-size: 18px;
+    font-weight: 600;
+    color: #F1F1F1;
+}
+
+.tipo-entidade {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #5F5CFF;
+    color: white;
+}
+
+.questionario-status {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.status-mrs { background: #28a745; color: white; }
+.status-map { background: #17a2b8; color: white; }
+.status-nao_iniciado { background: #6c757d; color: white; }
+.status-respondido { background: #ffc107; color: #212529; }
+.status-validado_concluido { background: #28a745; color: white; }
+.status-nao_aplicavel { background: #dc3545; color: white; }
+
+.entidade-card {
+    background: #23263B;
+    border: 2px solid #2D3142;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.entidade-card:hover {
+    border-color: #5F5CFF;
+    transform: translateY(-2px);
+}
+
+.progresso-bar {
+    background: #2D3142;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progresso-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #5F5CFF, #6EE7B7);
+    transition: width 0.3s ease;
+}
+
+.loading {
+    color: #495057 !important;
+}
+
+.nav-tabs .nav-link {
+    background: #2D3142;
+    border-color: #23263B;
+    color: #E9ECEF;
+}
+
+.nav-tabs .nav-link.active {
+    background: #5F5CFF;
+    border-color: #5F5CFF;
+    color: white;
+}
+
+.prioridade-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.prioridade-1 {
+    background: #dc3545;
+    color: white;
+}
+
+.prioridade-2 {
+    background: #ffc107;
+    color: #212529;
+}
+
+.entidade-prioritaria-card {
+    background: #23263B;
+    border: 2px solid #dc3545;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.entidade-prioritaria-card:hover {
+    border-color: #ff6b7a;
+    transform: translateY(-2px);
+}
+
+.entidade-prioritaria-card.processada {
+    border-color: #28a745;
+    background: rgba(40, 167, 69, 0.1);
+}
+
+.btn-warning-custom {
+    background: #ffc107;
+    color: #212529;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-warning-custom:hover {
+    background: #e0a800;
+    transform: translateY(-1px);
+}
+
+.questionario-obrigatorio-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    margin: 2px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.questionario-mrs {
+    background: #28a745;
+    color: white;
+}
+
+.questionario-map {
+    background: #17a2b8;
+    color: white;
+}
+</style>
+
+<script>
+let questionariosObrigatorios = [];
+let entidadesPrioritarias = [];
+let entidadesIdentificadas = [];
+let progressoMunicipios = [];
+
+// Carregar dados
+async function carregarDados() {
+    try {
+        // Carregar questionários obrigatórios
+        const respQuestionarios = await fetch('/api/questionarios/questionarios-obrigatorios');
+        const dataQuestionarios = await respQuestionarios.json();
+        if (dataQuestionarios.success) {
+            questionariosObrigatorios = dataQuestionarios.data;
+        }
+
+        // Carregar entidades prioritárias UF
+        const respPrioritarias = await fetch('/api/questionarios/entidades-prioritarias-uf');
+        const dataPrioritarias = await respPrioritarias.json();
+        if (dataPrioritarias.success) {
+            entidadesPrioritarias = dataPrioritarias.data;
+        }
+
+        // Carregar entidades identificadas
+        const respEntidades = await fetch('/api/questionarios/entidades-identificadas');
+        const dataEntidades = await respEntidades.json();
+        if (dataEntidades.success) {
+            entidadesIdentificadas = dataEntidades.data;
+        }
+
+        // Carregar progresso
+        const respProgresso = await fetch('/api/questionarios/progresso-questionarios');
+        const dataProgresso = await respProgresso.json();
+        if (dataProgresso.success) {
+            progressoMunicipios = dataProgresso.data;
+        }
+
+        // Atualizar interface
+        atualizarResumo();
+        renderizarQuestionariosObrigatorios();
+        renderizarEntidadesPrioritarias();
+        renderizarEntidadesIdentificadas();
+        renderizarProgressoMunicipios();
+
+    } catch (error) {
+        console.error('Erro ao carregar dados:', error);
+    }
+}
+
+// Atualizar resumo
+function atualizarResumo() {
+    // CONCEITO CORRETO: Empresas em municípios diferentes = questionários separados
+    // Contar TODAS as entidades: identificadas + UF (mesmo que processadas = questionários separados por município)
+    
+    // Contar questionários MRS obrigatórios (cada município é questionário separado)
+    const mrsQuestionarios = questionariosObrigatorios.filter(q => q.mrs_obrigatorio).length;
+    const mrsEntidadesIdentificadas = entidadesIdentificadas.filter(e => e.mrs_obrigatorio).length;
+    const mrsPrioritarias = entidadesPrioritarias.filter(e => e.mrs_obrigatorio).length;
+    const totalMRS = mrsQuestionarios + mrsEntidadesIdentificadas + mrsPrioritarias;
+
+    // Contar questionários MAP obrigatórios (cada município é questionário separado)
+    const mapQuestionarios = questionariosObrigatorios.filter(q => q.map_obrigatorio).length;
+    const mapEntidadesIdentificadas = entidadesIdentificadas.filter(e => e.map_obrigatorio).length;
+    const mapPrioritarias = entidadesPrioritarias.filter(e => e.map_obrigatorio).length;
+    const totalMAP = mapQuestionarios + mapEntidadesIdentificadas + mapPrioritarias;
+
+    // Total de entidades (11 prefeituras + 27 UF = 38 entidades)
+    // Matemática esperada: 11 municípios (prefeituras) + 27 entidades UF = 38 questionários separados
+    const totalEntidadesEsperado = 11 + entidadesPrioritarias.length; // 11 + 27 = 38
+    const totalEntidadesReal = entidadesIdentificadas.length; // 37 atual (faltando 1)
+
+    console.log('📊 Resumo calculado (questionários separados por município):');
+    console.log(`MRS: ${mrsQuestionarios} questionários + ${mrsEntidadesIdentificadas} identificadas + ${mrsPrioritarias} UF = ${totalMRS}`);
+    console.log(`MAP: ${mapQuestionarios} questionários + ${mapEntidadesIdentificadas} identificadas + ${mapPrioritarias} UF = ${totalMAP}`);
+    console.log(`Entidades: ${totalEntidadesReal} atual / ${totalEntidadesEsperado} esperado (faltando ${totalEntidadesEsperado - totalEntidadesReal})`);
+
+    document.getElementById('questionarios-mrs').textContent = totalMRS;
+    document.getElementById('questionarios-map').textContent = totalMAP;
+    document.getElementById('entidades-identificadas').textContent = totalEntidadesEsperado; // Mostrar total esperado
+}
+
+// Renderizar questionários obrigatórios
+function renderizarQuestionariosObrigatorios() {
+    const container = document.getElementById('questionarios-obrigatorios-lista');
+    
+    if (questionariosObrigatorios.length === 0) {
+        container.innerHTML = '<div class="text-center py-4"><p>Nenhum questionário obrigatório configurado</p></div>';
+        return;
+    }
+
+    const html = questionariosObrigatorios.map(q => `
+        <div class="questionario-card">
+            <div class="questionario-header">
+                <div class="municipio-nome">${q.municipio}</div>
+                <div class="tipo-entidade">${getTipoEntidadeLabel(q.tipo_entidade)}</div>
+            </div>
+            <div class="questionario-status">
+                ${q.mrs_obrigatorio ? '<div class="status-item"><span class="status-badge status-mrs">MRS</span></div>' : ''}
+                ${q.map_obrigatorio ? '<div class="status-item"><span class="status-badge status-map">MAP</span></div>' : ''}
+            </div>
+            ${q.observacoes ? `<p class="text-muted small">${q.observacoes}</p>` : ''}
+        </div>
+    `).join('');
+
+    container.innerHTML = html;
+}
+
+// Renderizar entidades prioritárias UF
+function renderizarEntidadesPrioritarias() {
+    const container = document.getElementById('entidades-prioritarias-lista');
+    
+    if (entidadesPrioritarias.length === 0) {
+        container.innerHTML = '<div class="text-center py-4"><p>Nenhuma entidade prioritária da UF cadastrada</p></div>';
+        return;
+    }
+
+    const html = entidadesPrioritarias.map(e => `
+        <div class="entidade-prioritaria-card ${e.processado ? 'processada' : ''}">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <h6 class="text-primary mb-0">${e.nome_entidade}</h6>
+                        <span class="prioridade-badge prioridade-${e.prioridade_uf || 1}">PRIORIDADE ${e.prioridade_uf || 1}</span>
+                        ${e.processado ? '<span class="badge bg-success">PROCESSADA</span>' : '<span class="badge bg-warning">PENDENTE</span>'}
+                    </div>
+                    <small class="text-muted">${e.municipio} • ${getTipoEntidadeLabel(e.tipo_entidade)}</small>
+                    ${e.codigo_uf ? `<small class="text-muted d-block">Código UF: ${e.codigo_uf}</small>` : ''}
+                </div>
+                <div class="d-flex flex-column gap-1">
+                    ${e.mrs_obrigatorio ? '<span class="questionario-obrigatorio-badge questionario-mrs">MRS Obrigatório</span>' : ''}
+                    ${e.map_obrigatorio ? '<span class="questionario-obrigatorio-badge questionario-map">MAP Obrigatório</span>' : ''}
+                </div>
+            </div>
+            
+            <div class="row text-sm mb-3">
+                ${e.cnpj ? `<div class="col-md-6"><strong>CNPJ:</strong> ${e.cnpj}</div>` : ''}
+                ${e.categoria_uf ? `<div class="col-md-6"><strong>Categoria:</strong> ${e.categoria_uf}</div>` : ''}
+                ${e.responsavel_uf ? `<div class="col-md-6"><strong>Responsável:</strong> ${e.responsavel_uf}</div>` : ''}
+                ${e.telefone_uf ? `<div class="col-md-6"><strong>Telefone:</strong> ${e.telefone_uf}</div>` : ''}
+            </div>
+            
+            ${e.motivo_mrs || e.motivo_map ? `
+                <div class="mb-3">
+                    ${e.motivo_mrs ? `<div class="small text-success"><strong>Motivo MRS:</strong> ${e.motivo_mrs}</div>` : ''}
+                    ${e.motivo_map ? `<div class="small text-info"><strong>Motivo MAP:</strong> ${e.motivo_map}</div>` : ''}
+                </div>
+            ` : ''}
+            
+            ${e.observacoes_uf ? `<div class="mb-3"><small class="text-muted">${e.observacoes_uf}</small></div>` : ''}
+            
+            <div class="d-flex gap-2">
+                ${!e.processado ? `
+                    <button class="btn btn-sm btn-success" onclick="processarEntidadePrioritaria(${e.id})">
+                        <i class="fas fa-cogs"></i> Processar
+                    </button>
+                ` : ''}
+                <button class="btn btn-sm btn-outline-primary" onclick="editarEntidadePrioritaria(${e.id})">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="btn btn-sm btn-outline-info" onclick="verDetalhesEntidade(${e.id})">
+                    <i class="fas fa-eye"></i> Detalhes
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="excluirEntidade(${e.id})">
+                    <i class="fas fa-trash"></i> Excluir
+                </button>
+            </div>
+        </div>
+    `).join('');
+
+    container.innerHTML = html;
+}
+
+// Renderizar entidades identificadas
+function renderizarEntidadesIdentificadas() {
+    const container = document.getElementById('entidades-identificadas-lista');
+    
+    if (entidadesIdentificadas.length === 0) {
+        container.innerHTML = '<div class="text-center py-4"><p>Nenhuma entidade identificada</p></div>';
+        return;
+    }
+
+    const html = entidadesIdentificadas.map(e => `
+        <div class="entidade-card">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h6 class="text-primary mb-1">${e.nome_entidade}</h6>
+                    <small class="text-muted">${e.municipio} • ${getTipoEntidadeLabel(e.tipo_entidade)}</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <span class="status-badge status-${e.status_mrs}">MRS: ${getStatusLabel(e.status_mrs)}</span>
+                    <span class="status-badge status-${e.status_map}">MAP: ${getStatusLabel(e.status_map)}</span>
+                </div>
+            </div>
+            
+            <div class="row text-sm">
+                ${e.cnpj ? `<div class="col-md-6"><strong>CNPJ:</strong> ${e.cnpj}</div>` : ''}
+                ${e.telefone ? `<div class="col-md-6"><strong>Telefone:</strong> ${e.telefone}</div>` : ''}
+                ${e.email ? `<div class="col-md-6"><strong>E-mail:</strong> ${e.email}</div>` : ''}
+                ${e.responsavel ? `<div class="col-md-6"><strong>Responsável:</strong> ${e.responsavel}</div>` : ''}
+            </div>
+            
+            ${e.observacoes ? `<div class="mt-2"><small class="text-muted">${e.observacoes}</small></div>` : ''}
+            
+            <div class="mt-3">
+                <button class="btn btn-sm btn-outline-primary" onclick="editarEntidade(${e.id})">
+                    <i class="fas fa-edit"></i> Editar
+                </button>
+            </div>
+        </div>
+    `).join('');
+
+    container.innerHTML = html;
+}
+
+// Renderizar progresso por município
+function renderizarProgressoMunicipios() {
+    const container = document.getElementById('progresso-municipios-lista');
+    
+    if (progressoMunicipios.length === 0) {
+        container.innerHTML = '<div class="text-center py-4"><p>Nenhum progresso calculado</p></div>';
+        return;
+    }
+
+    const html = progressoMunicipios.map(p => `
+        <div class="entidade-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="text-primary mb-0">${p.municipio}</h6>
+                <span class="status-badge status-${p.status_geral}">${getStatusGeralLabel(p.status_geral)}</span>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-3 text-center">
+                    <div class="h5 text-success mb-1">${p.mrs_concluidos}/${p.total_mrs_obrigatorios}</div>
+                    <small class="text-muted">MRS</small>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="h5 text-info mb-1">${p.map_concluidos}/${p.total_map_obrigatorios}</div>
+                    <small class="text-muted">MAP</small>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="h5 text-warning mb-1">${p.percentual_mrs}%</div>
+                    <small class="text-muted">Progresso MRS</small>
+                </div>
+                <div class="col-md-3 text-center">
+                    <div class="h5 text-primary mb-1">${p.percentual_geral}%</div>
+                    <small class="text-muted">Progresso Geral</small>
+                </div>
+            </div>
+            
+            <div class="progresso-bar">
+                <div class="progresso-fill" style="width: ${p.percentual_geral}%"></div>
+            </div>
+        </div>
+    `).join('');
+
+    container.innerHTML = html;
+}
+
+// Funções auxiliares
+function getTipoEntidadeLabel(tipo) {
+    const labels = {
+        'prefeitura': 'Prefeitura',
+        'empresa_terceirizada': 'Empresa Terceirizada',
+        'entidade_catadores': 'Entidade de Catadores',
+        'empresa_nao_vinculada': 'Empresa Não Vinculada'
+    };
+    return labels[tipo] || (tipo || 'Tipo a definir');
+}
+
+function getStatusLabel(status) {
+    const labels = {
+        'nao_iniciado': 'Não Iniciado',
+        'respondido': 'Respondido',
+        'validado_concluido': 'Validado/Concluído',
+        'nao_aplicavel': 'Não Aplicável'
+    };
+    return labels[status] || status;
+}
+
+function getStatusGeralLabel(status) {
+    const labels = {
+        'nao_iniciado': 'Não Iniciado',
+        'em_andamento': 'Em Andamento',
+        'concluido': 'Concluído'
+    };
+    return labels[status] || status;
+}
+
+// Adicionar entidade
+function adicionarEntidade() {
+    document.getElementById('modalEntidadeTitulo').textContent = 'Adicionar Entidade';
+    document.getElementById('formEntidade').reset();
+    document.getElementById('entidadeId').value = '';
+    $('#modalEntidade').modal('show');
+}
+
+// Editar entidade
+function editarEntidade(id) {
+    const entidade = entidadesIdentificadas.find(e => e.id === id);
+    if (!entidade) return;
+    
+    document.getElementById('modalEntidadeTitulo').textContent = 'Editar Entidade';
+    document.getElementById('entidadeId').value = entidade.id;
+    document.getElementById('entidadeMunicipio').value = entidade.municipio;
+    document.getElementById('entidadeTipo').value = entidade.tipo_entidade;
+    document.getElementById('entidadeNome').value = entidade.nome_entidade;
+    document.getElementById('entidadeCNPJ').value = entidade.cnpj || '';
+    document.getElementById('entidadeTelefone').value = entidade.telefone || '';
+    document.getElementById('entidadeEndereco').value = entidade.endereco || '';
+    document.getElementById('entidadeEmail').value = entidade.email || '';
+    document.getElementById('entidadeResponsavel').value = entidade.responsavel || '';
+    document.getElementById('entidadeStatusMRS').value = entidade.status_mrs;
+    document.getElementById('entidadeStatusMAP').value = entidade.status_map;
+    document.getElementById('entidadeObservacoes').value = entidade.observacoes || '';
+    
+    // Campos de prioridade e questionários obrigatórios
+    document.getElementById('entidadeInformativa').checked = entidade.prioridade === 3;
+    document.getElementById('entidadeMrsObrigatorio').checked = entidade.mrs_obrigatorio || false;
+    document.getElementById('entidadeMapObrigatorio').checked = entidade.map_obrigatorio || false;
+    
+    $('#modalEntidade').modal('show');
+}
+
+// Salvar entidade
+async function salvarEntidade() {
+    const form = document.getElementById('formEntidade');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    try {
+        const entidadeId = document.getElementById('entidadeId').value;
+        let response;
+        
+        if (entidadeId) {
+            // Editar
+            response = await fetch(`/api/questionarios/entidades-identificadas/${entidadeId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        } else {
+            // Criar
+            response = await fetch('/api/questionarios/entidades-identificadas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Fechar modal de entidade
+            const modal = document.getElementById('modalEntidade');
+            if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                bootstrap.Modal.getInstance(modal)?.hide();
+            } else if (typeof $ !== 'undefined') {
+                $('#modalEntidade').modal('hide');
+            } else {
+                modal.style.display = 'none';
+                modal.classList.remove('show');
+            }
+            carregarDados(); // Recarregar dados
+        } else {
+            alert('Erro: ' + result.error);
+        }
+        
+    } catch (error) {
+        console.error('Erro ao salvar entidade:', error);
+        alert('Erro ao salvar entidade');
+    }
+}
+
+// Recalcular progresso
+async function recalcularProgresso() {
+    try {
+        // Mostrar indicador de carregamento
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spin fa-sync"></i> Recalculando...';
+        
+        const response = await fetch('/api/questionarios/recalcular-progresso', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}) // Enviar objeto vazio
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            alert(`✅ Sucesso!\n${result.message}\nMunicípios processados: ${result.municipios_processados}`);
+            carregarDados(); // Recarregar dados
+        } else {
+            alert('❌ Erro: ' + result.error);
+        }
+        
+        // Restaurar botão
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        
+    } catch (error) {
+        console.error('Erro ao recalcular progresso:', error);
+        alert('❌ Erro ao recalcular progresso: ' + error.message);
+        
+        // Restaurar botão em caso de erro
+        if (typeof event !== 'undefined' && event.target) {
+            const btn = event.target;
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-sync"></i> Recalcular Progresso';
+        }
+    }
+}
+
+// Aplicar filtros
+function aplicarFiltros() {
+    // Obter valores dos filtros
+    const municipio = document.getElementById('filtroMunicipio').value;
+    const tipoEntidade = document.getElementById('filtroTipoEntidade').value;
+    const status = document.getElementById('filtroStatus').value;
+    
+    // Aplicar filtros aos dados de entidades identificadas
+    let entidadesFiltradas = [...entidadesIdentificadas];
+    
+    if (municipio) {
+        entidadesFiltradas = entidadesFiltradas.filter(e => e.municipio === municipio);
+    }
+    
+    if (tipoEntidade) {
+        entidadesFiltradas = entidadesFiltradas.filter(e => e.tipo_entidade === tipoEntidade);
+    }
+    
+    if (status) {
+        entidadesFiltradas = entidadesFiltradas.filter(e => 
+            e.status_mrs === status || e.status_map === status
+        );
+    }
+    
+    // Aplicar filtros aos dados de questionários obrigatórios
+    let questionariosFiltrados = [...questionariosObrigatorios];
+    
+    if (municipio) {
+        questionariosFiltrados = questionariosFiltrados.filter(q => q.municipio === municipio);
+    }
+    
+    if (tipoEntidade && tipoEntidade === 'prefeitura') {
+        questionariosFiltrados = questionariosFiltrados.filter(q => q.origem_prefeitura);
+    }
+    
+    // Renderizar com dados filtrados
+    renderizarEntidadesIdentificadasFiltradas(entidadesFiltradas);
+    renderizarQuestionariosObrigatoriosFiltrados(questionariosFiltrados);
+    renderizarProgressoMunicipios(); // Progresso sempre geral
+    
+    // Atualizar contador de resultados
+    atualizarContadorResultados(entidadesFiltradas.length, questionariosFiltrados.length);
+}
+
+// Função auxiliar para renderizar entidades filtradas
+function renderizarEntidadesIdentificadasFiltradas(entidadesFiltradas) {
+    const container = document.getElementById('entidades-identificadas-lista');
+    
+    if (entidadesFiltradas.length === 0) {
+        container.innerHTML = '<div class="text-center py-4"><p class="text-muted">Nenhuma entidade encontrada com os filtros aplicados</p></div>';
+        return;
+    }
+
+    const html = entidadesFiltradas.map(e => `
+        <div class="entidade-card" data-municipio="${e.municipio}" data-tipo="${e.tipo_entidade}" data-status-mrs="${e.status_mrs}" data-status-map="${e.status_map}">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h6 class="text-primary mb-1">${e.nome_entidade}</h6>
+                    <small class="text-muted">${e.municipio} • ${getTipoEntidadeLabel(e.tipo_entidade)}</small>
+                </div>
+                <div class="d-flex gap-2">
+                    <span class="status-badge status-${e.status_mrs}">MRS: ${getStatusLabel(e.status_mrs)}</span>
+                    <span class="status-badge status-${e.status_map}">MAP: ${getStatusLabel(e.status_map)}</span>
+                </div>
+            </div>
+            
+            <div class="row text-sm">
+                ${e.cnpj ? `<div class="col-md-6"><strong>CNPJ:</strong> ${e.cnpj}</div>` : ''}
+                ${e.endereco ? `<div class="col-md-6"><strong>Endereço:</strong> ${e.endereco}</div>` : ''}
+                ${e.telefone ? `<div class="col-md-6"><strong>Telefone:</strong> ${e.telefone}</div>` : ''}
+                ${e.email ? `<div class="col-md-6"><strong>E-mail:</strong> ${e.email}</div>` : ''}
+                ${e.responsavel ? `<div class="col-md-6"><strong>Responsável:</strong> ${e.responsavel}</div>` : ''}
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="d-flex gap-2">
+                    <span class="badge ${e.prioridade === 1 ? 'bg-danger' : e.prioridade === 2 ? 'bg-warning text-dark' : 'bg-secondary'}">
+                        P${e.prioridade} ${e.prioridade === 1 ? 'Crítico' : e.prioridade === 2 ? 'Importante' : 'Opcional'}
+                    </span>
+                    ${e.mrs_obrigatorio ? '<span class="badge bg-success">MRS Obrigatório</span>' : ''}
+                    ${e.map_obrigatorio ? '<span class="badge bg-info">MAP Obrigatório</span>' : ''}
+                </div>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-outline-primary" onclick="editarEntidade(${e.id})" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="excluirEntidade(${e.id})" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            ${e.observacoes ? `<div class="mt-2"><small class="text-muted"><strong>Observações:</strong> ${e.observacoes}</small></div>` : ''}
+        </div>
+    `).join('');
+    
+    container.innerHTML = html;
+}
+
+// Função auxiliar para renderizar questionários filtrados
+function renderizarQuestionariosObrigatoriosFiltrados(questionariosFiltrados) {
+    const container = document.getElementById('questionarios-obrigatorios-lista');
+    
+    if (questionariosFiltrados.length === 0) {
+        container.innerHTML = '<div class="text-center py-4"><p class="text-muted">Nenhum questionário obrigatório encontrado com os filtros aplicados</p></div>';
+        return;
+    }
+
+    const html = questionariosFiltrados.map(q => `
+        <div class="questionario-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-primary mb-1">${q.nome_entidade}</h6>
+                    <small class="text-muted">${q.municipio}</small>
+                </div>
+                <div class="d-flex gap-2">
+                    ${q.mrs_obrigatorio ? '<span class="badge bg-success">MRS</span>' : ''}
+                    ${q.map_obrigatorio ? '<span class="badge bg-info">MAP</span>' : ''}
+                </div>
+            </div>
+            
+            ${q.observacoes ? `<div class="mt-2"><small class="text-muted">${q.observacoes}</small></div>` : ''}
+            
+            <div class="mt-2">
+                <button class="btn btn-primary btn-sm" onclick="processarEntidadePrioritaria(${q.id})">
+                    <i class="fas fa-check"></i> Processar
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    container.innerHTML = html;
+}
+
+// Função auxiliar para atualizar contador de resultados
+function atualizarContadorResultados(entidadesCount, questionariosCount) {
+    // Criar ou atualizar elemento contador se não existir
+    let contador = document.getElementById('contador-resultados');
+    if (!contador) {
+        contador = document.createElement('div');
+        contador.id = 'contador-resultados';
+        contador.className = 'alert alert-info mb-3';
+        
+        // Inserir antes do primeiro card container
+        const container = document.querySelector('.container-fluid .row');
+        if (container) {
+            container.insertBefore(contador, container.firstChild);
+        }
+    }
+    
+    contador.innerHTML = `
+        <i class="fas fa-filter"></i>
+        <strong>Resultados filtrados:</strong> 
+        ${entidadesCount} entidade(s) identificada(s) • 
+        ${questionariosCount} questionário(s) obrigatório(s)
+    `;
+}
+
+// Processar entidade prioritária
+async function processarEntidadePrioritaria(id) {
+    if (!confirm('Deseja processar esta entidade prioritária? Ela será convertida em uma entidade identificada ativa.')) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`/api/questionarios/processar-entidade-prioritaria/${id}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            carregarDados(); // Recarregar dados
+            alert('Entidade processada com sucesso!');
+        } else {
+            alert('Erro: ' + result.error);
+        }
+        
+    } catch (error) {
+        console.error('Erro ao processar entidade:', error);
+        alert('Erro ao processar entidade');
+    }
+}
+
+// Processar todas as entidades prioritárias
+async function processarTodasPrioritarias() {
+    if (!confirm('Deseja processar todas as entidades prioritárias não processadas? Esta ação não pode ser desfeita.')) {
+        return;
+    }
+    
+    try {
+        console.log('🔄 Iniciando processamento de todas as entidades...');
+        
+        const response = await fetch('/api/questionarios/processar-todas-prioritarias', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}) // Enviar body vazio para não processar só um município
+        });
+        
+        console.log('📡 Resposta recebida:', response.status);
+        
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        console.log('📊 Resultado:', result);
+        
+        if (result.success) {
+            carregarDados(); // Recarregar dados
+            
+            let mensagem = `✅ Processamento concluído!\n`;
+            mensagem += `• ${result.total_processadas} entidades processadas\n`;
+            if (result.municipios_afetados && result.municipios_afetados.length > 0) {
+                mensagem += `• Municípios afetados: ${result.municipios_afetados.join(', ')}\n`;
+            }
+            
+            if (result.erros && result.erros.length > 0) {
+                mensagem += `\n⚠️ ${result.total_erros} erro(s) durante o processamento:\n`;
+                mensagem += result.erros.slice(0, 3).join('\n');
+                if (result.erros.length > 3) {
+                    mensagem += `\n... e mais ${result.erros.length - 3} erro(s)`;
+                }
+            }
+            
+            alert(mensagem);
+        } else {
+            console.error('❌ Erro no processamento:', result.error);
+            alert('Erro: ' + result.error);
+        }
+        
+    } catch (error) {
+        console.error('❌ Erro ao processar entidades:', error);
+        alert(`Erro ao processar entidades: ${error.message}`);
+    }
+}
+
+// Importar lista UF
+function importarListaUF() {
+    document.getElementById('modalImportacaoTitulo').textContent = 'Importar Lista de Entidades Prioritárias da UF';
+    document.getElementById('formImportacao').reset();
+    
+    // Usar Bootstrap 5 nativo (método mais compatível)
+    const modal = document.getElementById('modalImportacao');
+    
+    try {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            // Bootstrap 5 nativo - método preferido
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+        } else {
+            // Fallback manual para Bootstrap 5
+            modal.style.display = 'block';
+            modal.classList.add('show', 'fade');
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('role', 'dialog');
+            
+            // Adicionar backdrop
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.id = 'modal-backdrop-importacao';
+            document.body.appendChild(backdrop);
+            
+            // Prevenir scroll do body
+            document.body.classList.add('modal-open');
+        }
+    } catch (error) {
+        console.error('Erro ao abrir modal:', error);
+        // Fallback simples
+        modal.style.display = 'block';
+    }
+}
+
+// Executar importação UF
+async function executarImportacaoUF() {
+    const form = document.getElementById('formImportacao');
+    const formData = new FormData(form);
+    
+    const arquivoInput = document.getElementById('arquivoImportacao');
+    if (!arquivoInput.files.length) {
+        alert('Por favor, selecione um arquivo CSV');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/questionarios/importar-lista-uf', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Fechar modal usando Bootstrap 5 nativo
+            fecharModalImportacao();
+            carregarDados(); // Recarregar dados
+            
+            let mensagem = `Importação concluída:\n`;
+            mensagem += `• ${result.entidades_criadas} entidades criadas\n`;
+            mensagem += `• ${result.entidades_atualizadas} entidades atualizadas`;
+            
+            if (result.erros && result.erros.length > 0) {
+                mensagem += `\n• ${result.total_erros} erros encontrados`;
+                if (result.total_erros <= 5) {
+                    mensagem += `:\n${result.erros.join('\n')}`;
+                }
+            }
+            
+            alert(mensagem);
+        } else {
+            alert('Erro: ' + result.error);
+        }
+        
+    } catch (error) {
+        console.error('Erro ao importar lista UF:', error);
+        alert('Erro ao importar lista UF');
+    }
+}
+
+// Editar entidade prioritária
+function editarEntidadePrioritaria(id) {
+    const entidade = entidadesPrioritarias.find(e => e.id === id);
+    if (!entidade) return;
+    
+    // Preencher modal de edição (implementar conforme necessário)
+    alert('Funcionalidade de edição em desenvolvimento');
+}
+
+// Ver detalhes da entidade
+function verDetalhesEntidade(id) {
+    const entidade = entidadesPrioritarias.find(e => e.id === id);
+    if (!entidade) return;
+    
+    let detalhes = `Detalhes da Entidade Prioritária:\n\n`;
+    detalhes += `Nome: ${entidade.nome_entidade}\n`;
+    detalhes += `Código UF: ${entidade.codigo_uf}\n`;
+    detalhes += `Município: ${entidade.municipio}\n`;
+    detalhes += `Tipo: ${getTipoEntidadeLabel(entidade.tipo_entidade)}\n`;
+    if (entidade.cnpj) detalhes += `CNPJ: ${entidade.cnpj}\n`;
+    if (entidade.categoria_uf) detalhes += `Categoria: ${entidade.categoria_uf}\n`;
+    if (entidade.responsavel_uf) detalhes += `Responsável: ${entidade.responsavel_uf}\n`;
+    if (entidade.telefone_uf) detalhes += `Telefone: ${entidade.telefone_uf}\n`;
+    if (entidade.email_uf) detalhes += `E-mail: ${entidade.email_uf}\n`;
+    
+    detalhes += `\nQuestionários Obrigatórios:\n`;
+    if (entidade.mrs_obrigatorio) detalhes += `• MRS: ${entidade.motivo_mrs || 'Sim'}\n`;
+    if (entidade.map_obrigatorio) detalhes += `• MAP: ${entidade.motivo_map || 'Sim'}\n`;
+    
+    if (entidade.observacoes_uf) {
+        detalhes += `\nObservações: ${entidade.observacoes_uf}`;
+    }
+    
+    alert(detalhes);
+}
+
+// Função auxiliar para fechar modal de importação
+function fecharModalImportacao() {
+    const modal = document.getElementById('modalImportacao');
+    
+    try {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            // Bootstrap 5 nativo
+            const bsModal = bootstrap.Modal.getInstance(modal);
+            if (bsModal) {
+                bsModal.hide();
+            }
+        } else {
+            // Fallback manual
+            modal.style.display = 'none';
+            modal.classList.remove('show', 'fade');
+            modal.removeAttribute('aria-modal');
+            modal.removeAttribute('role');
+            
+            // Remover backdrop
+            const backdrop = document.getElementById('modal-backdrop-importacao');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            
+            // Restaurar scroll do body
+            document.body.classList.remove('modal-open');
+        }
+    } catch (error) {
+        console.error('Erro ao fechar modal:', error);
+        // Fallback simples
+        modal.style.display = 'none';
+    }
+}
+
+// Importar lista MRS
+function importarListaMRS() {
+    configurarModalImportacao('MRS', {
+        titulo: 'Importar Entidades MRS - Prioridade 1 (Manejo de Resíduos Sólidos)',
+        icone: '♻️',
+        classe: 'alert-success',
+        descricao: '<strong>🔴 PRIORIDADE 1:</strong> Empresas e entidades prioritárias responsáveis por <strong>coleta, tratamento e destinação de resíduos sólidos</strong>.<br><small class="text-muted">O tipo de entidade pode ser definido após a importação.</small>',
+        questionarios: '✅ MRS (Manejo de Resíduos Sólidos) será marcado como obrigatório<br>🔴 Prioridade 1 (máxima prioridade)',
+        exemplo: `Município,CNPJ,Razão Social
+Balneário Camboriú,03.094.629/0002-17,AMBIENTAL LIMPEZA URBANA E SANEAMENTO LTDA
+Itajaí,11.673.189/0001-08,COOPERATIVA DE CATADORES UNIDOS
+Bombinhas,12.345.678/0001-90,EMPRESA DE COLETA SELETIVA LTDA`,
+        botaoTexto: 'Importar Entidades MRS'
+    });
+}
+
+// Importar lista MAP
+function importarListaMAP() {
+    configurarModalImportacao('MAP', {
+        titulo: 'Importar Entidades MAP - Prioridade 1 (Manejo de Águas Pluviais)',
+        icone: '💧',
+        classe: 'alert-info',
+        descricao: '<strong>🔴 PRIORIDADE 1:</strong> Empresas e entidades prioritárias responsáveis por <strong>drenagem urbana e manejo de águas pluviais</strong>.<br><small class="text-muted">O tipo de entidade pode ser definido após a importação.</small>',
+        questionarios: '✅ MAP (Manejo de Águas Pluviais) será marcado como obrigatório<br>🔴 Prioridade 1 (máxima prioridade)',
+        exemplo: `Município,CNPJ,Razão Social
+Itajaí,34.567.890/0001-12,ITAJAÍ SANEAMENTO E DRENAGEM S.A.
+Navegantes,45.678.901/0001-23,PORTO DRENAGEM ESPECIALIZADA LTDA
+Bombinhas,56.789.012/0001-34,BOMBINHAS AMBIENTAL DRENAGEM`,
+        botaoTexto: 'Importar Entidades MAP'
+    });
+}
+
+// Configurar modal de importação
+function configurarModalImportacao(tipo, config) {
+    // Configurar elementos do modal
+    document.getElementById('modalImportacaoSimplesTitulo').textContent = config.titulo;
+    document.getElementById('formImportacaoSimples').reset();
+    document.getElementById('tipoImportacao').value = tipo;
+    
+    // Configurar alerta
+    const alerta = document.getElementById('alertaTipoImportacao');
+    alerta.className = `alert ${config.classe}`;
+    document.getElementById('iconeAlerta').textContent = config.icone;
+    document.getElementById('tituloAlerta').textContent = `Entidades ${tipo}:`;
+    document.getElementById('descricaoAlerta').innerHTML = config.descricao;
+    
+    // Configurar informações dos questionários
+    document.getElementById('listaQuestionarios').innerHTML = config.questionarios;
+    
+    // Configurar exemplo
+    document.getElementById('exemploCSV').textContent = config.exemplo;
+    
+    // Configurar botão
+    document.getElementById('btnImportarSimples').innerHTML = `<i class="fas fa-upload"></i> ${config.botaoTexto}`;
+    
+    // Abrir modal
+    abrirModalImportacao();
+}
+
+// Abrir modal de importação
+function abrirModalImportacao() {
+    const modal = document.getElementById('modalImportacaoSimples');
+    
+    try {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            // Bootstrap 5 nativo - método preferido
+            const bsModal = new bootstrap.Modal(modal);
+            bsModal.show();
+        } else {
+            // Fallback manual para Bootstrap 5
+            modal.style.display = 'block';
+            modal.classList.add('show', 'fade');
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('role', 'dialog');
+            
+            // Adicionar backdrop
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop fade show';
+            backdrop.id = 'modal-backdrop-importacao-simples';
+            document.body.appendChild(backdrop);
+            
+            // Prevenir scroll do body
+            document.body.classList.add('modal-open');
+        }
+    } catch (error) {
+        console.error('Erro ao abrir modal:', error);
+        // Fallback simples
+        modal.style.display = 'block';
+    }
+}
+
+// Executar importação simples
+async function executarImportacaoSimples() {
+    const form = document.getElementById('formImportacaoSimples');
+    const formData = new FormData(form);
+    
+    const arquivoInput = document.getElementById('arquivoImportacaoSimples');
+    if (!arquivoInput.files.length) {
+        alert('Por favor, selecione um arquivo CSV');
+        return;
+    }
+    
+    const tipoEntidade = document.getElementById('tipoEntidadePadrao').value || null;
+    
+    const tipoImportacao = document.getElementById('tipoImportacao').value;
+    if (!tipoImportacao) {
+        alert('Erro: Tipo de importação não identificado');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/questionarios/importar-csv-simples', {
+            method: 'POST',
+            body: formData
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Fechar modal usando Bootstrap 5 nativo
+            fecharModalImportacaoSimples();
+            carregarDados(); // Recarregar dados
+            
+            const tipoTexto = tipoImportacao === 'MRS' ? 'MRS (Resíduos Sólidos)' : 'MAP (Águas Pluviais)';
+            let mensagem = `Importação ${tipoTexto} concluída:\n`;
+            mensagem += `• ${result.entidades_criadas} entidades criadas\n`;
+            mensagem += `• ${result.entidades_atualizadas} entidades atualizadas`;
+            
+            if (result.erros && result.erros.length > 0) {
+                mensagem += `\n• ${result.total_erros} erros encontrados`;
+                
+                // Mostrar detalhes dos erros em modal
+                setTimeout(() => {
+                    mostrarDetalhesErros(result.erros, tipoTexto);
+                }, 500);
+            }
+            
+            alert(mensagem);
+            
+            // Mostrar dica sobre edição manual
+            if (result.entidades_criadas > 0 || result.entidades_atualizadas > 0) {
+                setTimeout(() => {
+                    alert(`💡 Dica: Todas as entidades foram marcadas com questionário ${tipoTexto} obrigatório. Você pode editar individualmente cada entidade para completar as informações restantes!`);
+                }, 1000);
+            }
+        } else {
+            alert('Erro: ' + result.error);
+        }
+        
+    } catch (error) {
+        console.error('Erro ao importar CSV simples:', error);
+        alert('Erro ao importar CSV simples');
+    }
+}
+
+// Fechar modal de importação simples
+function fecharModalImportacaoSimples() {
+    const modal = document.getElementById('modalImportacaoSimples');
+    
+    try {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+            // Bootstrap 5 nativo
+            const bsModal = bootstrap.Modal.getInstance(modal);
+            if (bsModal) {
+                bsModal.hide();
+            }
+        } else {
+            // Fallback manual
+            modal.style.display = 'none';
+            modal.classList.remove('show', 'fade');
+            modal.removeAttribute('aria-modal');
+            modal.removeAttribute('role');
+            
+            // Remover backdrop
+            const backdrop = document.getElementById('modal-backdrop-importacao-simples');
+            if (backdrop) {
+                backdrop.remove();
+            }
+            
+            // Restaurar scroll do body
+            document.body.classList.remove('modal-open');
+        }
+    } catch (error) {
+        console.error('Erro ao fechar modal:', error);
+        // Fallback simples
+        modal.style.display = 'none';
+    }
+}
+
+// Excluir entidade individual
+function excluirEntidade(id) {
+    const entidade = entidadesPrioritarias.find(e => e.id === id);
+    if (!entidade) {
+        alert('Entidade não encontrada');
+        return;
+    }
+    
+    // Configurar modal de confirmação
+    document.getElementById('modalExclusaoTitulo').textContent = 'Excluir Entidade';
+    document.getElementById('conteudoConfirmacaoExclusao').innerHTML = `
+        <p><strong>Entidade a ser excluída:</strong></p>
+        <div class="border p-3 mb-3">
+            <h6 class="text-primary">${entidade.nome_entidade}</h6>
+            <small class="text-muted">${entidade.municipio} • ${getTipoEntidadeLabel(entidade.tipo_entidade)}</small>
+            ${entidade.cnpj ? `<br><small>CNPJ: ${entidade.cnpj}</small>` : ''}
+        </div>
+        <p class="text-danger">Tem certeza que deseja excluir esta entidade?</p>
+    `;
+    
+    document.getElementById('campoConfirmacao').style.display = 'none';
+    document.getElementById('textoConfirmar').textContent = 'Excluir Entidade';
+    
+    // Configurar ação do botão
+    const btnConfirmar = document.getElementById('btnConfirmarExclusao');
+    btnConfirmar.onclick = () => executarExclusaoEntidade(id);
+    
+    // Abrir modal
+    const modal = new bootstrap.Modal(document.getElementById('modalConfirmacaoExclusao'));
+    modal.show();
+}
+
+// Executar exclusão de entidade
+async function executarExclusaoEntidade(id) {
+    const entidade = entidadesPrioritarias.find(e => e.id === id);
+    
+    try {
+        const response = await fetch(`/api/questionarios/entidade-prioritaria/${id}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        // Fechar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmacaoExclusao'));
+        modal.hide();
+        
+        if (result.success) {
+            alert(`✅ Entidade "${entidade.nome_entidade}" excluída com sucesso!`);
+            carregarDados(); // Recarregar a lista
+        } else {
+            alert(`❌ Erro ao excluir entidade: ${result.error}`);
+        }
+        
+    } catch (error) {
+        console.error('Erro ao excluir entidade:', error);
+        alert('❌ Erro ao excluir entidade. Tente novamente.');
+    }
+}
+
+// Excluir todas as entidades
+function excluirTodasEntidades() {
+    if (entidadesPrioritarias.length === 0) {
+        alert('Não há entidades para excluir.');
+        return;
+    }
+    
+    // Configurar modal de confirmação
+    document.getElementById('modalExclusaoTitulo').textContent = 'Excluir TODAS as Entidades';
+    document.getElementById('conteudoConfirmacaoExclusao').innerHTML = `
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>ATENÇÃO CRÍTICA:</strong> Você está prestes a excluir TODAS as entidades!
+        </div>
+        
+        <p><strong>Esta ação irá:</strong></p>
+        <ul class="text-danger">
+            <li>Excluir <strong>${entidadesPrioritarias.length} entidades</strong> importadas</li>
+            <li>Remover todos os dados de MRS/MAP associados</li>
+            <li>Apagar todo o histórico de importação</li>
+            <li><strong>NÃO poderá ser desfeita</strong></li>
+        </ul>
+        
+        <div class="border p-3 mb-3 bg-light">
+            <strong>Entidades que serão excluídas:</strong>
+            <div style="max-height: 150px; overflow-y: auto;">
+                ${entidadesPrioritarias.slice(0, 10).map(e => `
+                    <div class="small">• ${e.nome_entidade} (${e.municipio})</div>
+                `).join('')}
+                ${entidadesPrioritarias.length > 10 ? `<div class="small text-muted">... e mais ${entidadesPrioritarias.length - 10} entidades</div>` : ''}
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('campoConfirmacao').style.display = 'block';
+    document.getElementById('textoConfirmacao').value = '';
+    document.getElementById('textoConfirmar').textContent = 'Excluir Todas';
+    
+    // Configurar ação do botão
+    const btnConfirmar = document.getElementById('btnConfirmarExclusao');
+    btnConfirmar.onclick = executarExclusaoTodas;
+    
+    // Abrir modal
+    const modal = new bootstrap.Modal(document.getElementById('modalConfirmacaoExclusao'));
+    modal.show();
+}
+
+// Executar exclusão de todas as entidades
+async function executarExclusaoTodas() {
+    const textoConfirmacao = document.getElementById('textoConfirmacao').value;
+    
+    if (textoConfirmacao !== 'CONFIRMAR') {
+        alert('❌ Digite "CONFIRMAR" exatamente como solicitado para prosseguir.');
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/questionarios/excluir-todas-entidades', {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        // Fechar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirmacaoExclusao'));
+        modal.hide();
+        
+        if (result.success) {
+            alert(`✅ ${result.entidades_excluidas} entidades excluídas com sucesso!`);
+            carregarDados(); // Recarregar a lista
+        } else {
+            alert(`❌ Erro ao excluir entidades: ${result.error}`);
+        }
+        
+    } catch (error) {
+        console.error('Erro ao excluir todas as entidades:', error);
+        alert('❌ Erro ao excluir entidades. Tente novamente.');
+    }
+}
+
+// Mostrar detalhes dos erros de importação
+function mostrarDetalhesErros(erros, tipoImportacao) {
+    // Criar modal dinâmico para mostrar erros
+    const modalId = 'modalDetalhesErros';
+    let modal = document.getElementById(modalId);
+    
+    if (modal) {
+        modal.remove();
+    }
+    
+    const modalHtml = `
+    <div class="modal fade" id="${modalId}" tabindex="-1" aria-labelledby="${modalId}Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="${modalId}Label">
+                        ⚠️ Erros na Importação ${tipoImportacao}
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <strong>📊 Resumo:</strong> ${erros.length} erro(s) encontrado(s) durante a importação.<br>
+                        <em>Verifique os problemas abaixo e corrija o arquivo CSV antes de tentar novamente.</em>
+                    </div>
+                    
+                    <h6 class="fw-bold mb-3">🔍 Detalhes dos Erros:</h6>
+                    <div class="list-group">
+                        ${erros.map((erro, index) => `
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1 text-danger">${index + 1}. ${erro}</h6>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="alert alert-info mt-3">
+                        <h6 class="fw-bold">💡 Dicas para Corrigir:</h6>
+                        <ul class="mb-0">
+                            <li><strong>Município inválido:</strong> Verifique se o município está na lista oficial do PNSB</li>
+                            <li><strong>Campos obrigatórios:</strong> Certifique-se de que Município, CNPJ e Razão Social estão preenchidos</li>
+                            <li><strong>Formato CSV:</strong> Use exatamente as colunas: Município, CNPJ, Razão Social</li>
+                            <li><strong>CNPJ duplicado:</strong> Remova entradas duplicadas do arquivo</li>
+                            <li><strong>Codificação UTF-8:</strong> Salve o arquivo como UTF-8 (Excel: Salvar Como > Mais opções > UTF-8)</li>
+                            <li><strong>Caracteres especiais:</strong> Evite acentos ou símbolos problemáticos nos nomes</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        ✅ Entendi
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="downloadArquivoExemplo('${tipoImportacao}')">
+                        📥 Baixar Exemplo ${tipoImportacao}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>`;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Mostrar modal
+    modal = document.getElementById(modalId);
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    } else {
+        modal.style.display = 'block';
+        modal.classList.add('show');
+    }
+}
+
+// Download arquivo de exemplo
+function downloadArquivoExemplo(tipo) {
+    let conteudoCsv, nomeArquivo;
+    
+    if (tipo === 'MRS') {
+        conteudoCsv = `Município,CNPJ,Razão Social
+Balneário Camboriú,03.094.629/0002-17,AMBIENTAL LIMPEZA URBANA E SANEAMENTO LTDA
+Itajaí,12.345.678/0001-90,COOPERATIVA DE CATADORES UNIDOS
+Bombinhas,23.456.789/0001-01,EMPRESA DE COLETA SELETIVA LTDA`;
+        nomeArquivo = 'exemplo_entidades_mrs.csv';
+    } else {
+        conteudoCsv = `Município,CNPJ,Razão Social
+Itajaí,34.567.890/0001-12,ITAJAÍ SANEAMENTO E DRENAGEM S.A.
+Navegantes,45.678.901/0001-23,PORTO DRENAGEM ESPECIALIZADA LTDA
+Bombinhas,56.789.012/0001-34,BOMBINHAS AMBIENTAL DRENAGEM`;
+        nomeArquivo = 'exemplo_entidades_map.csv';
+    }
+    
+    // Criar e baixar arquivo
+    const blob = new Blob([conteudoCsv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', nomeArquivo);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Função removida: inicializar prefeituras agora é automático
+
+// Validar estrutura do sistema
+async function validarEstrutura() {
+    try {
+        console.log('🔍 Iniciando validação da estrutura PNSB completa...');
+        
+        const response = await fetch('/api/questionarios/validar-estrutura', {
+            method: 'GET'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            let mensagem = `🔍 Validação da Estrutura PNSB 2024 Completa\n\n`;
+            
+            // Status geral
+            if (result.status_geral === 'ok') {
+                mensagem += `✅ STATUS GERAL: OK - Estrutura PNSB íntegra\n\n`;
+            } else {
+                mensagem += `⚠️ STATUS GERAL: PROBLEMAS ENCONTRADOS\n\n`;
+            }
+            
+            // Validação global
+            const validacao = result.validacao_global;
+            mensagem += `📊 Resumo Geral:\n`;
+            mensagem += `• ${validacao.municipios_pnsb} municípios PNSB validados\n`;
+            mensagem += `• ${validacao.problemas_encontrados} problema(s) encontrado(s)\n`;
+            mensagem += `• ${validacao.cobertura_municipios.prefeituras_ok}/${validacao.municipios_pnsb} prefeituras OK (${validacao.cobertura_municipios.percentual_prefeituras}%)\n\n`;
+            
+            // Estrutura por prioridades
+            const prioridades = result.estrutura_prioridades;
+            mensagem += `🔴 P1 CRÍTICA (Obrigatórias para metas PNSB):\n`;
+            mensagem += `   📍 Prefeituras: ${prioridades.p1_critica.prefeituras.prefeituras_ok}/${prioridades.p1_critica.prefeituras.total_municipios} municípios\n`;
+            mensagem += `      ↳ ${prioridades.p1_critica.prefeituras.mrs_obrigatorio} questionários MRS + ${prioridades.p1_critica.prefeituras.map_obrigatorio} questionários MAP\n`;
+            mensagem += `   📋 Lista UF: ${prioridades.p1_critica.lista_uf.total_entidades} entidades (${prioridades.p1_critica.lista_uf.processadas} processadas)\n`;
+            mensagem += `      ↳ ${prioridades.p1_critica.lista_uf.mrs_obrigatorio} questionários MRS + ${prioridades.p1_critica.lista_uf.map_obrigatorio} questionários MAP\n`;
+            mensagem += `   🎯 Total P1: ${prioridades.p1_critica.totais_p1.entidades_total} entidades | ${prioridades.p1_critica.totais_p1.mrs_obrigatorio} MRS + ${prioridades.p1_critica.totais_p1.map_obrigatorio} MAP\n\n`;
+            
+            mensagem += `🟡 P2 IMPORTANTE (Se incluídas, tornam-se obrigatórias):\n`;
+            mensagem += `   📍 Entidades campo: ${prioridades.p2_importante.total_entidades} entidades\n`;
+            mensagem += `   🏠 Visitadas: ${prioridades.p2_importante.visitadas}/${prioridades.p2_importante.total_entidades}\n`;
+            mensagem += `   📋 Questionários: ${prioridades.p2_importante.mrs_obrigatorio} MRS + ${prioridades.p2_importante.map_obrigatorio} MAP\n\n`;
+            
+            mensagem += `⚪ P3 OPCIONAL (Trabalho completo, não obrigatório):\n`;
+            mensagem += `   📍 Entidades referência: ${prioridades.p3_opcional.total_entidades} entidades\n`;
+            mensagem += `   🏠 Visitadas: ${prioridades.p3_opcional.visitadas}/${prioridades.p3_opcional.total_entidades}\n`;
+            mensagem += `   📋 Questionários: ${prioridades.p3_opcional.mrs_opcional} MRS + ${prioridades.p3_opcional.map_opcional} MAP\n\n`;
+            
+            // Métricas consolidadas
+            const metricas = result.metricas_consolidadas;
+            mensagem += `📊 MÉTRICAS CONSOLIDADAS:\n`;
+            mensagem += `🔴 QUESTIONÁRIOS OBRIGATÓRIOS (P1+P2):\n`;
+            mensagem += `   📋 Total: ${metricas.questionarios_obrigatorios.total_obrigatorio} questionários\n`;
+            mensagem += `   ♻️ MRS: ${metricas.questionarios_obrigatorios.mrs_total} questionários\n`;
+            mensagem += `   💧 MAP: ${metricas.questionarios_obrigatorios.map_total} questionários\n\n`;
+            mensagem += `⚪ QUESTIONÁRIOS OPCIONAIS (P3):\n`;
+            mensagem += `   📋 Total: ${metricas.questionarios_opcionais.total_opcional} questionários\n`;
+            mensagem += `   ♻️ MRS: ${metricas.questionarios_opcionais.mrs_total} questionários\n`;
+            mensagem += `   💧 MAP: ${metricas.questionarios_opcionais.map_total} questionários\n\n`;
+            
+            // Total de entidades
+            mensagem += `🏢 TOTAL ENTIDADES NO SISTEMA: ${metricas.entidades_por_tipo.total_sistema} entidades\n`;
+            mensagem += `   🏛️ Prefeituras: ${metricas.entidades_por_tipo.prefeituras} entidades\n`;
+            mensagem += `   📋 Lista UF: ${metricas.entidades_por_tipo.lista_uf} entidades\n`;
+            mensagem += `   🏗️ Campo P2: ${metricas.entidades_por_tipo.campo_p2} entidades\n`;
+            mensagem += `   📚 Referência P3: ${metricas.entidades_por_tipo.referencia_p3} entidades\n\n`;
+            
+            // Problemas encontrados
+            if (result.problemas_detalhados.total_problemas > 0) {
+                mensagem += `❌ PROBLEMAS ENCONTRADOS:\n`;
+                
+                if (result.problemas_detalhados.prefeituras.length > 0) {
+                    mensagem += `   Prefeituras:\n`;
+                    result.problemas_detalhados.prefeituras.slice(0, 3).forEach(problema => {
+                        mensagem += `   • ${problema.municipio}: ${problema.problema}\n`;
+                    });
+                    if (result.problemas_detalhados.prefeituras.length > 3) {
+                        mensagem += `   ... e mais ${result.problemas_detalhados.prefeituras.length - 3} problema(s)\n`;
+                    }
+                }
+                
+                if (result.problemas_detalhados.inconsistencias_sistema.length > 0) {
+                    mensagem += `   Inconsistências:\n`;
+                    result.problemas_detalhados.inconsistencias_sistema.slice(0, 2).forEach(problema => {
+                        mensagem += `   • ${problema}\n`;
+                    });
+                }
+                mensagem += `\n`;
+            }
+            
+            // Metodologia
+            mensagem += `🎯 METODOLOGIA PNSB:\n`;
+            mensagem += `${result.estrutura_esperada_pnsb.metodologia}\n`;
+            mensagem += `✅ Obrigatórios: ${result.estrutura_esperada_pnsb.obrigatorios_meta_pnsb}\n`;
+            mensagem += `⚪ Opcionais: ${result.estrutura_esperada_pnsb.opcionais_trabalho_completo}`;
+            
+            alert(mensagem);
+        } else {
+            alert(`❌ Erro na validação: ${result.error}`);
+        }
+        
+    } catch (error) {
+        console.error('❌ Erro ao validar estrutura:', error);
+        alert(`❌ Erro ao validar estrutura: ${error.message || error}`);
+    }
+}
+
+// Debug: Verificar bibliotecas disponíveis
+function verificarBibliotecas() {
+    console.log('🔍 Verificando bibliotecas disponíveis:');
+    console.log('jQuery:', typeof $ !== 'undefined' ? '✅ Disponível' : '❌ Não disponível');
+    console.log('Bootstrap:', typeof bootstrap !== 'undefined' ? '✅ Disponível' : '❌ Não disponível');
+    console.log('Bootstrap Modal:', typeof bootstrap !== 'undefined' && bootstrap.Modal ? '✅ Disponível' : '❌ Não disponível');
+}
+
+// Inicializar
+document.addEventListener('DOMContentLoaded', function() {
+    verificarBibliotecas();
+    carregarDados();
+});
+</script>
+{% endblock %}

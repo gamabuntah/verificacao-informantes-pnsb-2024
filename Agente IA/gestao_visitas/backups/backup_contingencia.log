@@ -1,0 +1,6 @@
+2025-07-01 04:50:05,935 - backup_contingencia - INFO - Iniciando backup completo: backup_completo_20250701_045005
+2025-07-01 04:50:06,126 - backup_contingencia - ERROR - Erro ao criar backup completo: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.

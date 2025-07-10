@@ -1,0 +1,504 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4">Busca de Contatos</h2>
+    
+    <!-- Filtros -->
+    <div class="card-standard mb-4">
+        <div class="card-header-standard">
+            <h5 class="mb-0">
+                <i class="fas fa-filter text-gradient"></i>
+                Filtros de Busca
+            </h5>
+        </div>
+        <div class="card-body-standard">
+            <div class="row">
+                <!-- Filtros Principais -->
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filtroMunicipio">Município</label>
+                        <select class="select-custom" id="filtroMunicipio">
+                            <option value="">Todos</option>
+                            <option value="Balneário Camboriú">Balneário Camboriú</option>
+                            <option value="Balneário Piçarras">Balneário Piçarras</option>
+                            <option value="Bombinhas">Bombinhas</option>
+                            <option value="Camboriú">Camboriú</option>
+                            <option value="Itajaí">Itajaí</option>
+                            <option value="Itapema">Itapema</option>
+                            <option value="Luiz Alves">Luiz Alves</option>
+                            <option value="Navegantes">Navegantes</option>
+                            <option value="Penha">Penha</option>
+                            <option value="Porto Belo">Porto Belo</option>
+                            <option value="Ilhota">Ilhota</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filtroTipoPesquisa">Tipo de Pesquisa</label>
+                        <select class="select-custom" id="filtroTipoPesquisa">
+                            <option value="">Todos</option>
+                            <option value="MRS">MRS - Manejo de Resíduos Sólidos</option>
+                            <option value="MAP">MAP - Manejo de Águas Pluviais</option>
+                            <option value="AMBOS">Ambos</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filtroTipoInformante">Tipo de Informante</label>
+                        <select class="select-custom" id="filtroTipoInformante">
+                            <option value="">Todos</option>
+                            <option value="prefeitura">Prefeitura</option>
+                            <option value="empresa_terceirizada">Contratada</option>
+                            <option value="entidade_catadores">Entidade de Catadores</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filtroCampo">Campo</label>
+                        <select class="form-control" id="filtroCampo">
+                            <option value="">Todos</option>
+                            <option value="Local">Local</option>
+                            <option value="Responsável">Responsável</option>
+                            <option value="Endereço">Endereço</option>
+                            <option value="Contato">Contato</option>
+                            <option value="Horário">Horário</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filtros Secundários -->
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="filtroIA">Fonte IA</label>
+                        <select class="form-control" id="filtroIA">
+                            <option value="">Todas</option>
+                            <option value="ChatGPT">ChatGPT</option>
+                            <option value="Gemini">Gemini</option>
+                            <option value="Grok">Grok</option>
+                            <option value="Mais Provável">Mais Provável</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                        <label for="filtroBusca">Busca Avançada</label>
+                        <input type="text" class="input-custom" id="filtroBusca" placeholder="Buscar em todos os campos...">
+                        <small class="form-text text-muted">Busca em todos os campos, incluindo respostas das IAs</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Indicadores de Filtros Ativos -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div id="filtrosAtivos" class="d-flex flex-wrap gap-2">
+                        <!-- Filtros ativos serão inseridos aqui via JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="row mt-3">
+                <div class="col-12">
+                    <button class="btn-primary-custom" onclick="aplicarFiltros()">
+                        <i class="fas fa-filter"></i> Aplicar Filtros
+                    </button>
+                    <button class="btn-secondary-custom" onclick="limparFiltros()">
+                        <i class="fas fa-times"></i> Limpar Filtros
+                    </button>
+                    <button class="btn-outline-custom" onclick="exportarCSV()">
+                        <i class="fas fa-file-export"></i> Exportar CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Contatos -->
+    <div class="card-standard">
+        <div class="card-body-standard">
+            <div class="table-responsive-custom table-responsive-stack">
+                <table class="table table-custom tabela-contatos">
+                    <thead>
+                        <tr>
+                            <th>Município</th>
+                            <th>Tipo de Pesquisa</th>
+                            <th>Tipo de Informante</th>
+                            <th>Campo</th>
+                            <th class="col-ia col-chatgpt">ChatGPT</th>
+                            <th class="col-ia col-gemini">Gemini</th>
+                            <th class="col-ia col-grok">Grok</th>
+                            <th class="col-ia col-mais_provavel">Mais provável</th>
+                        </tr>
+                    </thead>
+                    <tbody id="corpoTabelaContatos">
+                        <!-- Os contatos serão inseridos aqui via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Detalhes -->
+<div class="modal fade" id="modalDetalhes" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Contato</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Informações Principais</h6>
+                        <p><strong>Município:</strong> <span id="detalheMunicipio"></span></p>
+                        <p><strong>Tipo de Pesquisa:</strong> <span id="detalheTipoPesquisa"></span></p>
+                        <p><strong>Campo:</strong> <span id="detalheCampo"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Respostas das IAs</h6>
+                        <p><strong>ChatGPT:</strong> <span id="detalheChatGPT"></span></p>
+                        <p><strong>Gemini:</strong> <span id="detalheGemini"></span></p>
+                        <p><strong>Grok:</strong> <span id="detalheGrok"></span></p>
+                        <p><strong>Mais Provável:</strong> <span id="detalheMaisProvavel"></span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.tabela-contatos-wrapper {
+    max-height: 500px;
+    overflow-x: auto;
+    overflow-y: auto;
+    border-radius: 10px;
+    border: 1.5px solid #23263B;
+    background: #181a23;
+}
+.tabela-contatos {
+    min-width: 900px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+.tabela-contatos th, .tabela-contatos td {
+    padding: 2px 8px;
+    vertical-align: middle;
+    border-right: 1px solid #23263B;
+    border-bottom: 1px solid #23263B;
+    font-size: 1rem;
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+    width: auto;
+}
+.tabela-contatos th:nth-child(1), .tabela-contatos td:nth-child(1) { min-width: 120px; max-width: 180px; }
+.tabela-contatos th:nth-child(2), .tabela-contatos td:nth-child(2) { min-width: 140px; max-width: 200px; }
+.tabela-contatos th:nth-child(3), .tabela-contatos td:nth-child(3) { min-width: 120px; max-width: 160px; }
+.tabela-contatos th:nth-child(4), .tabela-contatos td:nth-child(4) { min-width: 120px; max-width: 180px; }
+.tabela-contatos th:nth-child(5), .tabela-contatos td:nth-child(5),
+.tabela-contatos th:nth-child(6), .tabela-contatos td:nth-child(6),
+.tabela-contatos th:nth-child(7), .tabela-contatos td:nth-child(7),
+.tabela-contatos th:nth-child(8), .tabela-contatos td:nth-child(8) {
+    min-width: 500px;
+    max-width: 1200px;
+}
+.tabela-contatos th {
+    position: sticky;
+    top: 0;
+    background: #23263B;
+    z-index: 2;
+    color: #6EE7B7;
+    font-weight: 700;
+    font-size: 1.05rem;
+    text-align: left;
+    box-shadow: 0 2px 6px #0002;
+}
+.tabela-contatos tr:nth-child(even) td {
+    background: #23263B;
+}
+.tabela-contatos tr:hover td {
+    background: #2e324d;
+    color: #fff;
+}
+.tabela-contatos td {
+    color: #e0e6f0;
+    cursor: pointer;
+    line-height: 1.3;
+}
+@media (max-width: 900px) {
+    .tabela-contatos {
+        min-width: 600px;
+    }
+    .tabela-contatos th, .tabela-contatos td {
+        font-size: 0.92rem;
+        padding: 2px 4px;
+        max-width: 120px;
+    }
+}
+</style>
+
+<script>
+let contatos = [];
+let contatosFiltrados = [];
+
+function carregarContatos() {
+    fetch('/api/contatos_csv')
+        .then(response => response.json())
+        .then(data => {
+            contatos = data;
+            aplicarFiltros();
+        })
+        .catch(error => {
+            console.error('Erro ao carregar contatos:', error);
+        });
+}
+
+function renderizarTabela(dados) {
+    const corpo = document.getElementById('corpoTabelaContatos');
+    corpo.innerHTML = '';
+    
+    dados.forEach(contato => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${contato.municipio || ''}</td>
+            <td>${contato.tipo_pesquisa || ''}</td>
+            <td>${contato.tipo_informante || ''}</td>
+            <td>${contato.campo || ''}</td>
+            <td class="col-ia col-chatgpt">${contato.chatgpt || ''}</td>
+            <td class="col-ia col-gemini">${contato.gemini || ''}</td>
+            <td class="col-ia col-grok">${contato.grok || ''}</td>
+            <td class="col-ia col-mais_provavel">${contato.mais_provavel || ''}</td>
+        `;
+        corpo.appendChild(tr);
+    });
+    
+    // Aplicar filtro de IA após renderizar
+    aplicarFiltroIA();
+}
+
+function normalizarTexto(texto) {
+    if (!texto) return '';
+    return texto.normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim();
+}
+
+function buscarTexto(texto, termo) {
+    if (!texto || !termo) return false;
+    const textoNormalizado = normalizarTexto(texto);
+    const termoNormalizado = normalizarTexto(termo);
+    
+    // Busca por palavras completas ou parciais
+    const palavras = termoNormalizado.split(/\s+/);
+    return palavras.every(palavra => textoNormalizado.includes(palavra));
+}
+
+function atualizarFiltrosAtivos() {
+    const filtrosAtivos = document.getElementById('filtrosAtivos');
+    filtrosAtivos.innerHTML = '';
+    
+    const filtros = {
+        'Município': document.getElementById('filtroMunicipio').value,
+        'Tipo de Pesquisa': document.getElementById('filtroTipoPesquisa').value,
+        'Tipo de Informante': document.getElementById('filtroTipoInformante').value,
+        'Campo': document.getElementById('filtroCampo').value,
+        'Fonte IA': document.getElementById('filtroIA').value,
+        'Busca': document.getElementById('filtroBusca').value
+    };
+
+    Object.entries(filtros).forEach(([nome, valor]) => {
+        if (valor) {
+            const badge = document.createElement('span');
+            badge.className = 'badge bg-primary';
+            badge.innerHTML = `${nome}: ${valor} <i class="fas fa-times ms-1" onclick="removerFiltro('${nome}')"></i>`;
+            filtrosAtivos.appendChild(badge);
+        }
+    });
+}
+
+function removerFiltro(nome) {
+    const filtros = {
+        'Município': 'filtroMunicipio',
+        'Tipo de Pesquisa': 'filtroTipoPesquisa',
+        'Tipo de Informante': 'filtroTipoInformante',
+        'Campo': 'filtroCampo',
+        'Fonte IA': 'filtroIA',
+        'Busca': 'filtroBusca'
+    };
+
+    const elemento = document.getElementById(filtros[nome]);
+    if (elemento) {
+        elemento.value = '';
+        aplicarFiltros();
+    }
+}
+
+function aplicarFiltros() {
+    const filtroMunicipio = document.getElementById('filtroMunicipio').value;
+    const filtroTipoPesquisa = document.getElementById('filtroTipoPesquisa').value;
+    const filtroTipoInformante = document.getElementById('filtroTipoInformante').value;
+    const filtroCampo = document.getElementById('filtroCampo').value;
+    const filtroBusca = document.getElementById('filtroBusca').value;
+
+    contatosFiltrados = contatos.filter(contato => {
+        let passa = true;
+        
+        // Filtro por município
+        if (filtroMunicipio && normalizarTexto(contato.municipio) !== normalizarTexto(filtroMunicipio)) {
+            passa = false;
+        }
+        
+        // Filtro por tipo de pesquisa
+        if (filtroTipoPesquisa) {
+            if (filtroTipoPesquisa === 'AMBOS') {
+                passa = true;
+            } else if (normalizarTexto(contato.tipo_pesquisa) !== normalizarTexto(filtroTipoPesquisa)) {
+                passa = false;
+            }
+        }
+        
+        // Filtro por tipo de informante
+        if (filtroTipoInformante && normalizarTexto(contato.tipo_informante) !== normalizarTexto(filtroTipoInformante)) {
+            passa = false;
+        }
+        
+        // Filtro por campo
+        if (filtroCampo) {
+            const campoContato = normalizarTexto(contato.campo || '');
+            const campoFiltro = normalizarTexto(filtroCampo);
+            if (campoContato !== campoFiltro) passa = false;
+        }
+        
+        // Filtro por busca
+        if (filtroBusca) {
+            const buscaNormalizada = normalizarTexto(filtroBusca);
+            const campos = ['chatgpt', 'gemini', 'grok', 'mais_provavel'];
+            let encontrou = false;
+            
+            campos.forEach(campo => {
+                if (contato[campo] && normalizarTexto(contato[campo]).includes(buscaNormalizada)) {
+                    encontrou = true;
+                }
+            });
+            
+            if (!encontrou) passa = false;
+        }
+        
+        return passa;
+    });
+    
+    renderizarTabela(contatosFiltrados);
+    atualizarFiltrosAtivos();
+}
+
+function aplicarFiltroIA() {
+    // Sempre mostrar todas as colunas IA antes de aplicar filtro
+    document.querySelectorAll('th.col-ia, td.col-ia').forEach(col => {
+        col.style.display = '';
+    });
+    // Filtro IA: mostrar só a coluna da IA selecionada
+    let filtroIA = (document.getElementById('filtroIA').value || '').trim().toLowerCase();
+    if (filtroIA && filtroIA !== 'todas') {
+        // Normalizar para tratar 'Mais Provável' e 'Mais Provavel' igual
+        if (filtroIA === 'mais provável' || filtroIA === 'mais provavel') filtroIA = 'mais_provavel';
+        const mapIA = {
+            'chatgpt': 'col-chatgpt',
+            'gemini': 'col-gemini',
+            'grok': 'col-grok',
+            'mais_provavel': 'col-mais_provavel'
+        };
+        Object.entries(mapIA).forEach(([ia, classe]) => {
+            if (ia !== filtroIA) {
+                document.querySelectorAll('th.' + classe + ', td.' + classe).forEach(cell => {
+                    cell.style.display = 'none';
+                });
+            }
+        });
+    }
+}
+
+function limparFiltros() {
+    document.getElementById('filtroMunicipio').value = '';
+    document.getElementById('filtroTipoPesquisa').value = '';
+    document.getElementById('filtroTipoInformante').value = '';
+    document.getElementById('filtroCampo').value = '';
+    document.getElementById('filtroIA').value = '';
+    document.getElementById('filtroBusca').value = '';
+    aplicarFiltros();
+}
+
+function mostrarDetalhes(municipio, tipoPesquisa, campo, chatgpt, gemini, grok, maisProvavel) {
+    document.getElementById('detalheMunicipio').textContent = municipio;
+    document.getElementById('detalheTipoPesquisa').textContent = tipoPesquisa;
+    document.getElementById('detalheCampo').textContent = campo;
+    document.getElementById('detalheChatGPT').textContent = chatgpt || 'Não disponível';
+    document.getElementById('detalheGemini').textContent = gemini || 'Não disponível';
+    document.getElementById('detalheGrok').textContent = grok || 'Não disponível';
+    document.getElementById('detalheMaisProvavel').textContent = maisProvavel || 'Não disponível';
+    $('#modalDetalhes').modal('show');
+}
+
+function exportarCSV() {
+    const headers = ['Município', 'Tipo de Pesquisa', 'Tipo de Informante', 'Campo', 'ChatGPT', 'Gemini', 'Grok', 'Mais Provável'];
+    const csvContent = [
+        headers.join(','),
+        ...contatosFiltrados.map(item => [
+            item.municipio,
+            item.tipo_pesquisa,
+            item.tipo_informante,
+            item.campo,
+            item.chatgpt || '',
+            item.gemini || '',
+            item.grok || '',
+            item.mais_provavel || ''
+        ].join(','))
+    ].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'contatos_exportados.csv';
+    link.click();
+}
+
+// Eventos de input para filtros em tempo real
+document.getElementById('filtroMunicipio').addEventListener('change', aplicarFiltros);
+document.getElementById('filtroTipoPesquisa').addEventListener('change', aplicarFiltros);
+document.getElementById('filtroTipoInformante').addEventListener('change', aplicarFiltros);
+document.getElementById('filtroCampo').addEventListener('change', aplicarFiltros);
+document.getElementById('filtroIA').addEventListener('change', aplicarFiltros);
+document.getElementById('filtroBusca').addEventListener('input', debounce(aplicarFiltros, 300));
+
+// Carregar contatos ao iniciar a página
+document.addEventListener('DOMContentLoaded', carregarContatos);
+
+
+// Função para debounce da busca
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+</script>
+{% endblock %} 

@@ -1,0 +1,69 @@
+{
+  "is_running": true,
+  "tasks": {
+    "relatorio_diario": {
+      "enabled": true,
+      "interval_minutes": 1440,
+      "next_execution": "2025-07-10T19:20:40.047658",
+      "last_execution": "2025-07-09T19:20:40.028146",
+      "params": {
+        "tipo": "diario",
+        "auto_save": true
+      }
+    },
+    "backup_dados": {
+      "enabled": true,
+      "interval_minutes": 360,
+      "next_execution": "2025-07-10T03:32:01.066041",
+      "last_execution": "2025-07-09T21:32:00.948751",
+      "params": {
+        "include_metadata": true
+      }
+    },
+    "verificacao_status": {
+      "enabled": true,
+      "interval_minutes": 120,
+      "next_execution": "2025-07-10T01:15:03.362187",
+      "last_execution": "2025-07-09T23:15:01.764772",
+      "params": {
+        "auto_update": true
+      }
+    },
+    "notificacao_followup": {
+      "enabled": true,
+      "interval_minutes": 240,
+      "next_execution": "2025-07-10T01:33:08.719656",
+      "last_execution": "2025-07-09T21:33:08.309355",
+      "params": {
+        "dias_antecedencia": 2
+      }
+    },
+    "otimizacao_agenda": {
+      "enabled": false,
+      "interval_minutes": 720,
+      "next_execution": "2025-07-08T07:19:37.613735",
+      "last_execution": null,
+      "params": {
+        "usar_ia": true
+      }
+    },
+    "deteccao_conflitos": {
+      "enabled": true,
+      "interval_minutes": 180,
+      "next_execution": "2025-07-10T02:04:51.901747",
+      "last_execution": "2025-07-09T23:04:51.834889",
+      "params": {
+        "auto_resolve": true
+      }
+    },
+    "lembrete_whatsapp": {
+      "enabled": false,
+      "interval_minutes": 480,
+      "next_execution": "2025-07-08T03:19:37.613739",
+      "last_execution": null,
+      "params": {
+        "horas_antecedencia": 24
+      }
+    }
+  }
+}

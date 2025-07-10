@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otimizador de Rotas - PNSB 2024</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/design-system.css') }}" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0F1419 0%, #181A20 50%, #23263B 100%);
+            color: #F1F1F1;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: rgba(35, 38, 59, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(95, 92, 255, 0.2);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .optimizer-card {
+            background: linear-gradient(145deg, #23263B 0%, #2D3142 100%);
+            border: 1px solid rgba(95, 92, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .optimizer-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(95, 92, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(95, 92, 255, 0.1);
+        }
+
+        .optimization-type-card {
+            background: #2D3142;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .optimization-type-card.selected {
+            border-color: #5F5CFF;
+            background: rgba(95, 92, 255, 0.1);
+        }
+
+        .optimization-type-card:hover {
+            border-color: rgba(95, 92, 255, 0.5);
+        }
+
+        .type-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 15px;
+            background: #5F5CFF;
+            color: white;
+        }
+
+        .route-point {
+            background: #3A3F54;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .route-point.priority-1 {
+            border-left-color: #dc3545;
+        }
+
+        .route-point.priority-2 {
+            border-left-color: #ffc107;
+        }
+
+        .route-point.priority-3 {
+            border-left-color: #28a745;
+        }
+
+        .point-order {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #5F5CFF;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .route-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: #2D3142;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(95, 92, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #5F5CFF;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #B8BCC8;
+        }
+
+        .optimization-score {
+            background: linear-gradient(135deg, #5F5CFF, #6EE7B7);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 auto 10px;
+        }
+
+        .action-button {
+            background: linear-gradient(90deg, #5F5CFF 0%, #6EE7B7 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(95, 92, 255, 0.4);
+        }
+
+        .action-button:disabled {
+            background: #3A3F54;
+            color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .alternative-route {
+            background: #23263B;
+            border: 1px solid rgba(95, 92, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .route-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .comparison-item {
+            background: #2D3142;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #3A3F54;
+            border-top: 4px solid #5F5CFF;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .schedule-timeline {
+            background: #2D3142;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(95, 92, 255, 0.1);
+        }
+
+        .timeline-time {
+            background: #5F5CFF;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 80px;
+            text-align: center;
+            margin-right: 15px;
+        }
+
+        .timeline-content {
+            flex-grow: 1;
+        }
+
+        .timeline-duration {
+            color: #B8BCC8;
+            font-size: 12px;
+        }
+
+        .efficiency-meter {
+            background: #3A3F54;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .efficiency-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #dc3545, #ffc107, #28a745);
+            transition: width 0.6s ease;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            background: #2D3142;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .tab-button {
+            background: transparent;
+            border: none;
+            color: #B8BCC8;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab-button.active {
+            background: #5F5CFF;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-control {
+            background: #2D3142;
+            border: 1px solid #3A3F54;
+            border-radius: 8px;
+            color: #F1F1F1;
+            padding: 12px;
+        }
+
+        .form-control:focus {
+            background: #2D3142;
+            border-color: #5F5CFF;
+            color: #F1F1F1;
+            box-shadow: 0 0 0 0.2rem rgba(95, 92, 255, 0.25);
+        }
+
+        .form-select {
+            background: #2D3142;
+            border: 1px solid #3A3F54;
+            color: #F1F1F1;
+        }
+
+        .recommendation-item {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            color: #28a745;
+        }
+
+        .warning-item {
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="h2 mb-0">
+                        <i class="fas fa-route me-2"></i>
+                        Otimizador de Rotas Inteligente
+                    </h1>
+                    <p class="text-muted mb-0">Planejamento avançado de rotas para pesquisa PNSB 2024</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-outline-light" onclick="window.location.href='/dashboard-offline'">
+                        <i class="fas fa-wifi me-2"></i>Sistema Offline
+                    </button>
+                    <button class="btn btn-outline-light ms-2" onclick="window.location.href='/'">
+                        <i class="fas fa-home me-2"></i>Início
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Optimization Type Selection -->
+        <div class="optimizer-card">
+            <h4 class="mb-3">
+                <i class="fas fa-cogs me-2"></i>
+                Configuração da Otimização
+            </h4>
+            
+            <div class="tabs-nav">
+                <button class="tab-button active" onclick="showTab('daily')">
+                    <i class="fas fa-calendar-day me-2"></i>Rota Diária
+                </button>
+                <button class="tab-button" onclick="showTab('weekly')">
+                    <i class="fas fa-calendar-week me-2"></i>Plano Semanal
+                </button>
+                <button class="tab-button" onclick="showTab('alternatives')">
+                    <i class="fas fa-random me-2"></i>Alternativas
+                </button>
+            </div>
+
+            <!-- Daily Route Tab -->
+            <div id="daily-tab" class="tab-content active">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Município:</label>
+                            <select class="form-select" id="municipality-select">
+                                <option value="">Todos os municípios</option>
+                                <option value="Balneário Camboriú">Balneário Camboriú</option>
+                                <option value="Balneário Piçarras">Balneário Piçarras</option>
+                                <option value="Bombinhas">Bombinhas</option>
+                                <option value="Camboriú">Camboriú</option>
+                                <option value="Itajaí">Itajaí</option>
+                                <option value="Itapema">Itapema</option>
+                                <option value="Luiz Alves">Luiz Alves</option>
+                                <option value="Navegantes">Navegantes</option>
+                                <option value="Penha">Penha</option>
+                                <option value="Porto Belo">Porto Belo</option>
+                                <option value="Ilhota">Ilhota</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Horário de Término Desejado:</label>
+                            <input type="time" class="form-control" id="target-end-time" value="17:00">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Tipo de Otimização:</label>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="optimization-type-card" data-type="balanced">
+                                <div class="type-icon">
+                                    <i class="fas fa-balance-scale"></i>
+                                </div>
+                                <h6>Equilibrada</h6>
+                                <p class="small text-muted">Melhor custo-benefício geral</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="optimization-type-card" data-type="distance">
+                                <div class="type-icon">
+                                    <i class="fas fa-ruler"></i>
+                                </div>
+                                <h6>Menor Distância</h6>
+                                <p class="small text-muted">Economia de combustível</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="optimization-type-card" data-type="time">
+                                <div class="type-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <h6>Menor Tempo</h6>
+                                <p class="small text-muted">Máxima eficiência temporal</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="optimization-type-card" data-type="priority">
+                                <div class="type-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <h6>Por Prioridade</h6>
+                                <p class="small text-muted">Foco em entidades P1</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="action-button" onclick="optimizeDailyRoute()">
+                        <i class="fas fa-magic"></i>Otimizar Rota Diária
+                    </button>
+                </div>
+            </div>
+
+            <!-- Weekly Plan Tab -->
+            <div id="weekly-tab" class="tab-content">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Data de Início:</label>
+                            <input type="date" class="form-control" id="start-date">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Dias Úteis:</label>
+                            <select class="form-select" id="working-days">
+                                <option value="5">5 dias (seg-sex)</option>
+                                <option value="6">6 dias (seg-sáb)</option>
+                                <option value="4">4 dias</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Município:</label>
+                            <select class="form-select" id="weekly-municipality-select">
+                                <option value="">Todos os municípios</option>
+                                <option value="Balneário Camboriú">Balneário Camboriú</option>
+                                <option value="Balneário Piçarras">Balneário Piçarras</option>
+                                <option value="Bombinhas">Bombinhas</option>
+                                <option value="Camboriú">Camboriú</option>
+                                <option value="Itajaí">Itajaí</option>
+                                <option value="Itapema">Itapema</option>
+                                <option value="Luiz Alves">Luiz Alves</option>
+                                <option value="Navegantes">Navegantes</option>
+                                <option value="Penha">Penha</option>
+                                <option value="Porto Belo">Porto Belo</option>
+                                <option value="Ilhota">Ilhota</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="action-button" onclick="optimizeWeeklyPlan()">
+                        <i class="fas fa-calendar-alt"></i>Criar Plano Semanal
+                    </button>
+                </div>
+            </div>
+
+            <!-- Alternatives Tab -->
+            <div id="alternatives-tab" class="tab-content">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Município:</label>
+                            <select class="form-select" id="alternatives-municipality-select">
+                                <option value="">Todos os municípios</option>
+                                <option value="Balneário Camboriú">Balneário Camboriú</option>
+                                <option value="Balneário Piçarras">Balneário Piçarras</option>
+                                <option value="Bombinhas">Bombinhas</option>
+                                <option value="Camboriú">Camboriú</option>
+                                <option value="Itajaí">Itajaí</option>
+                                <option value="Itapema">Itapema</option>
+                                <option value="Luiz Alves">Luiz Alves</option>
+                                <option value="Navegantes">Navegantes</option>
+                                <option value="Penha">Penha</option>
+                                <option value="Porto Belo">Porto Belo</option>
+                                <option value="Ilhota">Ilhota</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Número de Alternativas:</label>
+                            <select class="form-select" id="alternatives-count">
+                                <option value="3">3 alternativas</option>
+                                <option value="4">4 alternativas</option>
+                                <option value="5">5 alternativas</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="action-button" onclick="generateAlternatives()">
+                        <i class="fas fa-random"></i>Gerar Alternativas
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" style="display: none;">
+            <!-- Results will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let selectedOptimizationType = 'balanced';
+        let currentResults = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeOptimizationTypes();
+            setDefaultDate();
+        });
+
+        // Initialize optimization type selection
+        function initializeOptimizationTypes() {
+            const cards = document.querySelectorAll('.optimization-type-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selection from all cards
+                    cards.forEach(c => c.classList.remove('selected'));
+                    
+                    // Select current card
+                    this.classList.add('selected');
+                    selectedOptimizationType = this.dataset.type;
+                });
+            });
+
+            // Select default (balanced)
+            document.querySelector('[data-type="balanced"]').classList.add('selected');
+        }
+
+        // Set default date to today
+        function setDefaultDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('start-date').value = today;
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Optimize daily route
+        async function optimizeDailyRoute() {
+            try {
+                showLoading();
+                
+                const municipality = document.getElementById('municipality-select').value;
+                const targetEndTime = document.getElementById('target-end-time').value;
+                
+                const requestData = {
+                    municipality: municipality || null,
+                    optimization_type: selectedOptimizationType
+                };
+
+                const response = await fetch('/api/routes/optimize/daily-route', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentResults = data.data;
+                    displayDailyRouteResults(data.data);
+                } else {
+                    showError('Erro na otimização: ' + data.error);
+                }
+
+            } catch (error) {
+                showError('Erro na requisição: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Optimize weekly plan
+        async function optimizeWeeklyPlan() {
+            try {
+                showLoading();
+                
+                const startDate = document.getElementById('start-date').value;
+                const workingDays = parseInt(document.getElementById('working-days').value);
+                const municipality = document.getElementById('weekly-municipality-select').value;
+                
+                if (!startDate) {
+                    showError('Data de início é obrigatória');
+                    return;
+                }
+
+                const requestData = {
+                    start_date: startDate,
+                    working_days: workingDays,
+                    municipality: municipality || null
+                };
+
+                const response = await fetch('/api/routes/optimize/weekly-plan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentResults = data.data;
+                    displayWeeklyPlanResults(data.data);
+                } else {
+                    showError('Erro no planejamento: ' + data.error);
+                }
+
+            } catch (error) {
+                showError('Erro na requisição: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Generate alternatives
+        async function generateAlternatives() {
+            try {
+                showLoading();
+                
+                const municipality = document.getElementById('alternatives-municipality-select').value;
+                const count = parseInt(document.getElementById('alternatives-count').value);
+                
+                const requestData = {
+                    municipality: municipality || null,
+                    count: count
+                };
+
+                const response = await fetch('/api/routes/optimize/alternatives', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentResults = data.data;
+                    displayAlternativesResults(data.data);
+                } else {
+                    showError('Erro ao gerar alternativas: ' + data.error);
+                }
+
+            } catch (error) {
+                showError('Erro na requisição: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Display daily route results
+        function displayDailyRouteResults(data) {
+            const container = document.getElementById('results-container');
+            const route = data.optimized_route;
+            const schedule = data.schedule_suggestion;
+            const efficiency = data.efficiency_analysis;
+            
+            container.innerHTML = `
+                <div class="optimizer-card">
+                    <h4 class="mb-3">
+                        <i class="fas fa-route me-2"></i>
+                        Rota Otimizada
+                    </h4>
+                    
+                    <div class="route-stats">
+                        <div class="stat-box">
+                            <div class="optimization-score">${Math.round(route.optimization_score)}</div>
+                            <div class="stat-label">Score de Otimização</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${route.total_distance_km}</div>
+                            <div class="stat-label">Distância Total (km)</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${Math.round(route.total_duration_minutes / 60 * 10) / 10}</div>
+                            <div class="stat-label">Duração Total (h)</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${route.points.length}</div>
+                            <div class="stat-label">Pontos de Visita</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">R$ ${data.optimization_summary.estimated_fuel_cost.estimated_cost_brl}</div>
+                            <div class="stat-label">Custo Estimado</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${data.optimization_summary.environmental_impact.co2_emissions_kg}</div>
+                            <div class="stat-label">CO₂ (kg)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <h5>Sequência de Visitas</h5>
+                            <div class="route-points-container">
+                                ${route.points.map((point, index) => `
+                                    <div class="route-point priority-${point.priority}">
+                                        <div class="point-order">${index + 1}</div>
+                                        <h6>${point.name}</h6>
+                                        <div class="small text-muted">
+                                            <i class="fas fa-map-marker-alt me-1"></i>${point.municipality}
+                                            ${point.requirements.length > 0 ? `<span class="ms-2"><i class="fas fa-clipboard-list me-1"></i>${point.requirements.join(', ')}</span>` : ''}
+                                        </div>
+                                        <div class="small">
+                                            <i class="fas fa-clock me-1"></i>${point.estimated_duration_minutes} minutos
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <h5>Cronograma Sugerido</h5>
+                            <div class="schedule-timeline">
+                                <div class="mb-3">
+                                    <strong>Início recomendado:</strong> ${schedule.recommended_start}<br>
+                                    <strong>Término previsto:</strong> ${schedule.estimated_end}
+                                </div>
+                                ${schedule.point_schedule ? schedule.point_schedule.map(item => `
+                                    <div class="timeline-item">
+                                        <div class="timeline-time">${item.arrival_time}</div>
+                                        <div class="timeline-content">
+                                            <div class="fw-bold">${item.point_name}</div>
+                                            <div class="timeline-duration">${item.duration_minutes} min</div>
+                                        </div>
+                                    </div>
+                                `).join('') : ''}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Análise de Eficiência</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Métricas</h6>
+                                <div class="mb-2">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Tempo de Trabalho:</span>
+                                        <span>${Math.round(efficiency.efficiency_metrics.work_time_ratio * 100)}%</span>
+                                    </div>
+                                    <div class="efficiency-meter">
+                                        <div class="efficiency-fill" style="width: ${efficiency.efficiency_metrics.work_time_ratio * 100}%"></div>
+                                    </div>
+                                </div>
+                                <div class="small text-muted">
+                                    <div>Pontos por hora: ${efficiency.efficiency_metrics.points_per_hour}</div>
+                                    <div>Dispersão geográfica: ${efficiency.efficiency_metrics.geographic_spread_km} km</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Recomendações</h6>
+                                ${efficiency.suggestions.map(suggestion => `
+                                    <div class="recommendation-item">
+                                        <i class="fas fa-lightbulb me-2"></i>${suggestion}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="action-button" onclick="exportRoute()">
+                            <i class="fas fa-download"></i>Exportar Rota
+                        </button>
+                        <button class="action-button" onclick="generateAlternatives()">
+                            <i class="fas fa-random"></i>Ver Alternativas
+                        </button>
+                        <button class="action-button" onclick="integrateWithVisits()">
+                            <i class="fas fa-calendar-plus"></i>Agendar Visitas
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        // Display weekly plan results
+        function displayWeeklyPlanResults(data) {
+            const container = document.getElementById('results-container');
+            const weeklyPlan = data.weekly_plan;
+            const stats = data.weekly_statistics;
+            
+            container.innerHTML = `
+                <div class="optimizer-card">
+                    <h4 class="mb-3">
+                        <i class="fas fa-calendar-week me-2"></i>
+                        Plano Semanal Otimizado
+                    </h4>
+                    
+                    <div class="route-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">${stats.total_days}</div>
+                            <div class="stat-label">Dias Planejados</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${stats.total_points}</div>
+                            <div class="stat-label">Total de Pontos</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${stats.total_distance_km}</div>
+                            <div class="stat-label">Distância Total (km)</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${stats.total_duration_hours}</div>
+                            <div class="stat-label">Duração Total (h)</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">R$ ${stats.estimated_total_cost.estimated_cost_brl}</div>
+                            <div class="stat-label">Custo Total</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${stats.average_points_per_day}</div>
+                            <div class="stat-label">Média Pontos/Dia</div>
+                        </div>
+                    </div>
+                    
+                    <h5 class="mt-4 mb-3">Cronograma Diário</h5>
+                    <div class="row">
+                        ${weeklyPlan.daily_routes.map(day => `
+                            <div class="col-lg-6 mb-3">
+                                <div class="alternative-route">
+                                    <h6>
+                                        Dia ${day.day} - ${new Date(day.planned_date).toLocaleDateString('pt-BR')}
+                                        <span class="badge bg-primary ms-2">${day.points.length} pontos</span>
+                                    </h6>
+                                    <div class="small text-muted mb-2">
+                                        ${day.total_distance_km} km • ${Math.round(day.total_duration_minutes / 60 * 10) / 10}h • Score: ${Math.round(day.optimization_score)}
+                                    </div>
+                                    <div class="small">
+                                        Início: ${day.schedule_suggestion.recommended_start} • 
+                                        Fim: ${day.schedule_suggestion.estimated_end}
+                                    </div>
+                                    <div class="mt-2">
+                                        ${day.points.slice(0, 3).map(point => `
+                                            <div class="small text-muted">• ${point.name}</div>
+                                        `).join('')}
+                                        ${day.points.length > 3 ? `<div class="small text-muted">... e mais ${day.points.length - 3} pontos</div>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Recomendações Semanais</h5>
+                        ${data.recommendations.map(rec => `
+                            <div class="recommendation-item">
+                                <i class="fas fa-lightbulb me-2"></i>${rec}
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button class="action-button" onclick="exportWeeklyPlan()">
+                            <i class="fas fa-download"></i>Exportar Plano
+                        </button>
+                        <button class="action-button" onclick="createCalendarEvents()">
+                            <i class="fas fa-calendar-plus"></i>Criar Eventos
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        // Display alternatives results
+        function displayAlternativesResults(data) {
+            const container = document.getElementById('results-container');
+            const alternatives = data.alternatives;
+            const comparison = data.comparison_summary;
+            
+            container.innerHTML = `
+                <div class="optimizer-card">
+                    <h4 class="mb-3">
+                        <i class="fas fa-random me-2"></i>
+                        Alternativas de Rota
+                    </h4>
+                    
+                    <div class="route-comparison">
+                        ${alternatives.map(alt => `
+                            <div class="comparison-item">
+                                <h6>Opção ${alt.option}: ${alt.optimization_type.charAt(0).toUpperCase() + alt.optimization_type.slice(1)}</h6>
+                                <div class="optimization-score">${Math.round(alt.optimization_score)}</div>
+                                <div class="small">
+                                    <div>${alt.total_distance_km} km</div>
+                                    <div>${Math.round(alt.total_duration_minutes / 60 * 10) / 10}h</div>
+                                    <div>${alt.points.length} pontos</div>
+                                </div>
+                                <div class="mt-2">
+                                    <div class="small text-success">
+                                        ${alt.pros_cons.pros.map(pro => `• ${pro}`).join('<br>')}
+                                    </div>
+                                    ${alt.pros_cons.cons.length > 0 ? `
+                                        <div class="small text-warning mt-1">
+                                            ${alt.pros_cons.cons.map(con => `• ${con}`).join('<br>')}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <div class="mt-2">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="selectAlternative(${alt.option - 1})">
+                                        Usar Esta Rota
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h5>Resumo Comparativo</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="small">
+                                    <strong>Melhor para distância:</strong><br>
+                                    ${comparison.best_for_distance}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="small">
+                                    <strong>Melhor para tempo:</strong><br>
+                                    ${comparison.best_for_time}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="small">
+                                    <strong>Melhor score geral:</strong><br>
+                                    ${comparison.best_overall_score}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2 small text-muted">
+                            <div>Variação de distância: ${comparison.distance_range}</div>
+                            <div>Variação de tempo: ${comparison.time_range}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            container.style.display = 'block';
+        }
+
+        // Utility functions
+        function showLoading() {
+            const container = document.getElementById('results-container');
+            container.innerHTML = `
+                <div class="optimizer-card text-center">
+                    <div class="loading-spinner"></div>
+                    <div>Otimizando rotas...</div>
+                </div>
+            `;
+            container.style.display = 'block';
+        }
+
+        function hideLoading() {
+            // Loading will be replaced by results
+        }
+
+        function showError(message) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = `
+                <div class="optimizer-card">
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        ${message}
+                    </div>
+                </div>
+            `;
+            container.style.display = 'block';
+        }
+
+        // Action functions
+        function selectAlternative(index) {
+            if (currentResults && currentResults.alternatives) {
+                const selected = currentResults.alternatives[index];
+                // Convert alternative to daily route format
+                const routeData = {
+                    optimized_route: {
+                        points: selected.points,
+                        total_distance_km: selected.total_distance_km,
+                        total_duration_minutes: selected.total_duration_minutes,
+                        optimization_score: selected.optimization_score,
+                        route_type: selected.optimization_type
+                    },
+                    schedule_suggestion: { recommended_start: "08:00", estimated_end: "17:00" },
+                    efficiency_analysis: { 
+                        efficiency_metrics: { work_time_ratio: 0.7, points_per_hour: 1.0 },
+                        suggestions: ["Rota alternativa selecionada"]
+                    },
+                    optimization_summary: {
+                        estimated_fuel_cost: { estimated_cost_brl: (selected.total_distance_km * 0.65).toFixed(2) },
+                        environmental_impact: { co2_emissions_kg: (selected.total_distance_km * 0.12).toFixed(2) }
+                    }
+                };
+                displayDailyRouteResults(routeData);
+            }
+        }
+
+        function exportRoute() {
+            if (currentResults) {
+                const data = JSON.stringify(currentResults, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `rota_otimizada_${new Date().toISOString().slice(0, 10)}.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        }
+
+        function exportWeeklyPlan() {
+            exportRoute(); // Same function for now
+        }
+
+        function integrateWithVisits() {
+            alert('Funcionalidade de integração com visitas será implementada em breve!');
+        }
+
+        function createCalendarEvents() {
+            alert('Funcionalidade de criação de eventos será implementada em breve!');
+        }
+    </script>
+</body>
+</html>
