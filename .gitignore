@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Flask
+instance/
+.webassets-cache
+
+# SQLite
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Backups automáticos (manter apenas os importantes)
+gestao_visitas/backups_automaticos/auto_backup_*.db
+gestao_visitas/backups_automaticos/auto_backup_*.json
+
+# Logs
+*.log
+app.log
+flask.log
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Node modules (se houver)
+node_modules/
+
+# Cache de teste
+.pytest_cache/
+test.db
+
+# Arquivos temporários
+*~
+.tmp/
+temp/
+
+# Configurações locais (manter .env.example)
+.env.local
+.env.production
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
