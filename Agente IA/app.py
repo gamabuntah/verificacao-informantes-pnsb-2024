@@ -2086,4 +2086,57 @@ init_google_maps_service(app)
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', port=5000, debug=True) 
+    
+    # Configuração de rede compatível com Windows
+    import os
+    import socket
+    
+    # Tentar determinar o melhor host
+    host = '127.0.0.1'  # Padrão seguro para Windows
+    port = 5000
+    
+    # Verificar se a porta está disponível
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)
+        result = sock.connect_ex((host, port))
+        sock.close()
+        
+        if result == 0:
+            print(f"⚠️ Porta {port} já está em uso. Tentando porta alternativa...")
+            port = 5001
+    except:
+        pass
+    
+    print(f"🚀 Iniciando servidor Flask em http://{host}:{port}")
+    print(f"📱 Acesse o sistema no seu navegador: http://{host}:{port}")
+    print(f"🛑 Para parar o servidor: Pressione CTRL+C")
+    print("=" * 60)
+    
+    try:
+        # Configurações específicas para Windows
+        app.run(
+            host=host, 
+            port=port, 
+            debug=True,
+            threaded=True,
+            use_reloader=False  # Evita problemas de permissão no Windows
+        )
+    except OSError as e:
+        if "WinError 10013" in str(e) or "Access is denied" in str(e):
+            print("\n❌ ERRO DE PERMISSÃO DE REDE")
+            print("=" * 50)
+            print("💡 SOLUÇÕES:")
+            print("   1. Execute como Administrador")
+            print("   2. Verifique o Windows Firewall") 
+            print("   3. Use executar_projeto_corrigido.bat")
+            print("   4. Consulte SOLUCAO_PROBLEMAS.md")
+            print("=" * 50)
+        else:
+            print(f"\n❌ Erro de rede: {e}")
+        raise
+    except KeyboardInterrupt:
+        print("\n✅ Servidor encerrado pelo usuário")
+    except Exception as e:
+        print(f"\n❌ Erro inesperado: {e}")
+        raise 

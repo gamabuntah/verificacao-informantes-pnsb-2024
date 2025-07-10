@@ -1,5 +1,41 @@
 # 🔧 SOLUÇÃO DE PROBLEMAS - SISTEMA PNSB 2024
 
+## ❌ Erro: "Foi feita uma tentativa de acesso a um soquete de uma maneira que é proibida pelas permissões de acesso"
+
+### 🎯 **Causa:**
+Problema de permissões de rede no Windows (WinError 10013)
+
+### 🛠️ **Soluções (em ordem de prioridade):**
+
+#### **1. Executar como Administrador (RECOMENDADO)**
+```bash
+# Clique com botão direito no executar_projeto_corrigido.bat
+# Selecione "Executar como administrador"
+```
+
+#### **2. Usar o arquivo corrigido:**
+```bash
+executar_projeto_corrigido.bat
+```
+
+#### **3. Verificar Windows Firewall:**
+- Vá em Configurações → Privacidade e Segurança → Segurança do Windows
+- Clique em "Firewall e proteção de rede"
+- Permita o Python através do firewall
+
+#### **4. Liberar porta manualmente:**
+```cmd
+# Abrir CMD como administrador
+netstat -ano | findstr :5000
+# Anote o PID e execute:
+taskkill /F /PID [número_do_pid]
+```
+
+#### **5. Usar porta alternativa:**
+O sistema tentará automaticamente a porta 5001 se 5000 estiver ocupada.
+
+---
+
 ## ❌ Erro: `ModuleNotFoundError: No module named 'pdfplumber'`
 
 ### 🎯 **Solução Rápida:**
