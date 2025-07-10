@@ -10,9 +10,16 @@ from ..utils.error_handlers import APIResponse
 import os
 import logging
 from datetime import datetime
-import pdfplumber
 from pathlib import Path
 import time
+
+# Importação opcional de pdfplumber
+try:
+    import pdfplumber
+    PDF_AVAILABLE = True
+except ImportError:
+    PDF_AVAILABLE = False
+    print("⚠️ pdfplumber não disponível. Funcionalidades de PDF desabilitadas.")
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +67,9 @@ def chat_manual_pnsb():
 
 def extract_complete_pdf_content(pdf_path):
     """Extrai TODO o conteúdo de um PDF - sem limitações"""
+    if not PDF_AVAILABLE:
+        return f"[PDF não disponível - pdfplumber não instalado] {os.path.basename(pdf_path)}"
+    
     try:
         content = ""
         filename = os.path.basename(pdf_path)
@@ -83,6 +93,9 @@ def extract_complete_pdf_content(pdf_path):
 
 def extract_pdf_content(pdf_path, max_pages=10, max_chars=3000, key_sections=None):
     """Extrai conteúdo de um PDF com priorização de seções-chave"""
+    if not PDF_AVAILABLE:
+        return f"[PDF não disponível - pdfplumber não instalado] {os.path.basename(pdf_path)}"
+    
     try:
         content = ""
         with pdfplumber.open(pdf_path) as pdf:

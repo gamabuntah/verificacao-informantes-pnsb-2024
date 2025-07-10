@@ -12,6 +12,14 @@ python-dateutil==2.8.2
 pytz==2024.1
 tzdata==2025.2
 
+# Dependências para processamento de PDFs
+pdfplumber==0.9.0
+
+# Dependências opcionais para melhor performance
+flask-compress==1.14
+geopy==2.4.1
+redis==5.0.1
+
 # Dependências para testes
 pytest==7.4.3
 pytest-flask==1.3.0
