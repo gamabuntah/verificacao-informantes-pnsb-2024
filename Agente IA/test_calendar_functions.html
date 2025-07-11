@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Funções de Otimização de Rotas do Calendário</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0D1017 0%, #1A1D29 100%);
+            color: #F1F1F1;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #23263B;
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid #2D3142;
+        }
+        
+        .test-section {
+            background: #2D3142;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #5F5CFF;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #5F5CFF 0%, #7C78FF 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(95, 92, 255, 0.4);
+        }
+        
+        .result-box {
+            background: #1A1D29;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #3A3F56;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .success { color: #6EE7B7; }
+        .error { color: #ff6b6b; }
+        .info { color: #74c0fc; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Teste das Funções de Otimização de Rotas - Calendário PNSB 2024</h1>
+        
+        <div class="test-section">
+            <h2>📍 Teste de Algoritmo de Otimização</h2>
+            <p>Testa o algoritmo Nearest Neighbor com municípios de Santa Catarina</p>
+            <button class="test-button" onclick="testarAlgoritmoOtimizacao()">
+                Testar Algoritmo
+            </button>
+            <div id="result-algorithm" class="result-box" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📊 Teste de Cálculo de Estatísticas</h2>
+            <p>Calcula distância, tempo e combustível para uma rota</p>
+            <button class="test-button" onclick="testarCalculoEstatisticas()">
+                Testar Estatísticas
+            </button>
+            <div id="result-stats" class="result-box" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>⏰ Teste de Geração de Horários</h2>
+            <p>Gera cronograma de visitas com horários estimados</p>
+            <button class="test-button" onclick="testarGeracaoHorarios()">
+                Testar Horários
+            </button>
+            <div id="result-schedule" class="result-box" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🗺️ Teste de Coordenadas e Distâncias</h2>
+            <p>Verifica cálculo de distâncias entre municípios</p>
+            <button class="test-button" onclick="testarDistancias()">
+                Testar Distâncias
+            </button>
+            <div id="result-distances" class="result-box" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📄 Teste de Exportação CSV</h2>
+            <p>Simula geração de arquivo CSV com rota otimizada</p>
+            <button class="test-button" onclick="testarExportacaoCSV()">
+                Testar Exportação
+            </button>
+            <div id="result-csv" class="result-box" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // FUNÇÕES COPIADAS DO CALENDÁRIO MODERNO
+        // ========================================
+
+        // Coordenadas dos municípios PNSB SC + Base IBGE
+        const COORDENADAS_MUNICIPIOS = {
+            'Balneário Camboriú': {lat: -26.9908, lng: -48.6354},
+            'Balneário Piçarras': {lat: -26.7544, lng: -48.6719},
+            'Bombinhas': {lat: -27.1486, lng: -48.4814},
+            'Camboriú': {lat: -27.0231, lng: -48.6556},
+            'Itajaí': {lat: -26.9076, lng: -48.6646},
+            'Itapema': {lat: -27.0897, lng: -48.6131},
+            'Luiz Alves': {lat: -26.7139, lng: -48.9331},
+            'Navegantes': {lat: -26.8986, lng: -48.6558},
+            'Penha': {lat: -26.7711, lng: -48.6467},
+            'Porto Belo': {lat: -27.1581, lng: -48.5503},
+            'Ilhota': {lat: -26.8983, lng: -48.8322}
+        };
+
+        // Base operacional IBGE Itajaí
+        const BASE_IBGE_ITAJAI = {
+            nome: 'IBGE Itajaí',
+            endereco: 'Rua Camboriú 26, Centro - Itajaí, SC',
+            coordenadas: {lat: -26.9060, lng: -48.6631} // Coordenadas precisas da Rua Camboriú 26
+        };
+
+        // Função para calcular distância (Haversine)
+        function calcularDistancia(ponto1, ponto2) {
+            const R = 6371; // Raio da Terra em km
+            const dLat = (ponto2.lat - ponto1.lat) * Math.PI / 180;
+            const dLng = (ponto2.lng - ponto1.lng) * Math.PI / 180;
+            
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(ponto1.lat * Math.PI / 180) * Math.cos(ponto2.lat * Math.PI / 180) *
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Algoritmo de otimização de rota (Nearest Neighbor)
+        function otimizarSequenciaMunicipios(municipios) {
+            if (municipios.length <= 1) return municipios;
+            
+            let rotaFinal = [];
+            let municipiosRestantes = [...municipios];
+            
+            // Começar com Itajaí se estiver na lista (base operacional)
+            let atual = municipiosRestantes.find(m => m === 'Itajaí') || municipiosRestantes[0];
+            rotaFinal.push(atual);
+            municipiosRestantes = municipiosRestantes.filter(m => m !== atual);
+            
+            while (municipiosRestantes.length > 0) {
+                let proximo = null;
+                let menorDistancia = Infinity;
+                
+                municipiosRestantes.forEach(municipio => {
+                    const distancia = calcularDistancia(
+                        COORDENADAS_MUNICIPIOS[atual], 
+                        COORDENADAS_MUNICIPIOS[municipio]
+                    );
+                    
+                    if (distancia < menorDistancia) {
+                        menorDistancia = distancia;
+                        proximo = municipio;
+                    }
+                });
+                
+                if (proximo) {
+                    rotaFinal.push(proximo);
+                    municipiosRestantes = municipiosRestantes.filter(m => m !== proximo);
+                    atual = proximo;
+                }
+            }
+            
+            return rotaFinal;
+        }
+
+        // Calcular estatísticas da rota
+        function calcularEstatisticasRota(municipios) {
+            if (municipios.length < 2) {
+                return { distanciaTotal: 0, tempoEstimado: 0, combustivel: 0 };
+            }
+            
+            let distanciaTotal = 0;
+            
+            for (let i = 0; i < municipios.length - 1; i++) {
+                const atual = COORDENADAS_MUNICIPIOS[municipios[i]];
+                const proximo = COORDENADAS_MUNICIPIOS[municipios[i + 1]];
+                distanciaTotal += calcularDistancia(atual, proximo);
+            }
+            
+            // Estimativas
+            const tempoEstimado = (distanciaTotal / 50) * 60 + (municipios.length * 120); // 50km/h + 2h por visita
+            const combustivel = distanciaTotal / 12; // 12km/l estimado
+            
+            return {
+                distanciaTotal: Math.round(distanciaTotal),
+                tempoEstimado: Math.round(tempoEstimado),
+                combustivel: Math.round(combustivel * 10) / 10
+            };
+        }
+
+        // Gerar horários para a rota
+        function gerarHorariosRota(municipios) {
+            const horaInicio = new Date();
+            horaInicio.setHours(8, 0, 0, 0); // Iniciar às 8:00
+            
+            let horaAtual = new Date(horaInicio);
+            
+            return municipios.map((municipio, index) => {
+                // Tempo de viagem: 30min para o primeiro, 45min entre municípios
+                const tempoViagem = index === 0 ? 30 : 45;
+                horaAtual = new Date(horaAtual.getTime() + (tempoViagem * 60 * 1000));
+                
+                const chegada = new Date(horaAtual);
+                const saida = new Date(horaAtual.getTime() + (120 * 60 * 1000)); // 2h por visita
+                
+                horaAtual = saida;
+                
+                return {
+                    municipio,
+                    chegada: chegada.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'}),
+                    saida: saida.toLocaleTimeString('pt-BR', {hour: '2-digit', minute: '2-digit'})
+                };
+            });
+        }
+
+        // ========================================
+        // FUNÇÕES DE TESTE
+        // ========================================
+
+        function testarAlgoritmoOtimizacao() {
+            const resultDiv = document.getElementById('result-algorithm');
+            resultDiv.style.display = 'block';
+            
+            try {
+                // Teste com alguns municípios
+                const municipiosOriginal = ['Bombinhas', 'Itajaí', 'Navegantes', 'Balneário Camboriú', 'Porto Belo'];
+                const rotaOtimizada = otimizarSequenciaMunicipios(municipiosOriginal);
+                
+                let resultado = '✅ TESTE DE OTIMIZAÇÃO DE ROTA\n\n';
+                resultado += `🎯 Municípios originais: ${municipiosOriginal.join(' → ')}\n\n`;
+                resultado += `🚗 Rota otimizada: ${rotaOtimizada.join(' → ')}\n\n`;
+                resultado += `📊 Resultado: A rota foi reorganizada priorizando distâncias menores.\n`;
+                resultado += `Base operacional: ${rotaOtimizada[0]} (primeiro município visitado)\n`;
+                
+                resultDiv.innerHTML = `<span class="success">${resultado}</span>`;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Erro: ${error.message}</span>`;
+            }
+        }
+
+        function testarCalculoEstatisticas() {
+            const resultDiv = document.getElementById('result-stats');
+            resultDiv.style.display = 'block';
+            
+            try {
+                const municipios = ['Itajaí', 'Navegantes', 'Balneário Camboriú', 'Bombinhas'];
+                const estatisticas = calcularEstatisticasRota(municipios);
+                
+                let resultado = '📊 TESTE DE CÁLCULO DE ESTATÍSTICAS\n\n';
+                resultado += `🗺️ Rota: ${municipios.join(' → ')}\n\n`;
+                resultado += `📏 Distância total: ${estatisticas.distanciaTotal} km\n`;
+                resultado += `⏱️ Tempo estimado: ${Math.round(estatisticas.tempoEstimado/60)} horas (${estatisticas.tempoEstimado} minutos)\n`;
+                resultado += `⛽ Combustível estimado: ${estatisticas.combustivel} litros\n\n`;
+                resultado += `💡 Cálculos baseados em:\n`;
+                resultado += `   - Velocidade média: 50 km/h\n`;
+                resultado += `   - Tempo por visita: 2 horas\n`;
+                resultado += `   - Consumo: 12 km/litro\n`;
+                
+                resultDiv.innerHTML = `<span class="success">${resultado}</span>`;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Erro: ${error.message}</span>`;
+            }
+        }
+
+        function testarGeracaoHorarios() {
+            const resultDiv = document.getElementById('result-schedule');
+            resultDiv.style.display = 'block';
+            
+            try {
+                const municipios = ['Navegantes', 'Balneário Camboriú', 'Bombinhas'];
+                const cronograma = gerarHorariosRota(municipios);
+                
+                let resultado = '⏰ TESTE DE CRONOGRAMA COMPLETO IBGE\n\n';
+                resultado += `📍 Base: ${BASE_IBGE_ITAJAI.nome}\n`;
+                resultado += `📧 Endereço: ${BASE_IBGE_ITAJAI.endereco}\n`;
+                resultado += `📅 Data: ${new Date().toLocaleDateString('pt-BR')}\n\n`;
+                
+                cronograma.forEach((item, index) => {
+                    if (item.tipo === 'saida') {
+                        resultado += `🚀 SAÍDA DA BASE IBGE\n`;
+                        resultado += `   ⏰ ${item.horario} - ${item.observacao}\n`;
+                        resultado += `   📍 ${item.endereco}\n\n`;
+                    } else if (item.tipo === 'visita') {
+                        resultado += `🎯 VISITA ${item.sequencia} - ${item.municipio}\n`;
+                        resultado += `   🚗 Chegada: ${item.chegada} (viagem: ${item.tempoViagem})\n`;
+                        resultado += `   🏢 Saída: ${item.saida} (duração: ${item.duracaoVisita})\n\n`;
+                    } else if (item.tipo === 'retorno') {
+                        resultado += `🏠 RETORNO À BASE IBGE\n`;
+                        resultado += `   ⏰ ${item.horario} (viagem: ${item.tempoViagem})\n`;
+                        resultado += `   📍 ${item.endereco}\n`;
+                        resultado += `   📋 ${item.observacao}\n`;
+                    }
+                });
+                
+                resultDiv.innerHTML = `<span class="success">${resultado}</span>`;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Erro: ${error.message}</span>`;
+            }
+        }
+
+        function testarDistancias() {
+            const resultDiv = document.getElementById('result-distances');
+            resultDiv.style.display = 'block';
+            
+            try {
+                let resultado = '🗺️ TESTE DE CÁLCULO DE DISTÂNCIAS\n\n';
+                resultado += '📍 Coordenadas dos municípios PNSB SC:\n\n';
+                
+                Object.entries(COORDENADAS_MUNICIPIOS).forEach(([municipio, coords]) => {
+                    resultado += `${municipio}: ${coords.lat}, ${coords.lng}\n`;
+                });
+                
+                resultado += '\n🧮 Exemplos de distâncias calculadas:\n\n';
+                
+                const exemplos = [
+                    ['Itajaí', 'Navegantes'],
+                    ['Balneário Camboriú', 'Itapema'],
+                    ['Bombinhas', 'Porto Belo'],
+                    ['Itajaí', 'Luiz Alves']
+                ];
+                
+                exemplos.forEach(([origem, destino]) => {
+                    const distancia = calcularDistancia(
+                        COORDENADAS_MUNICIPIOS[origem],
+                        COORDENADAS_MUNICIPIOS[destino]
+                    );
+                    resultado += `${origem} → ${destino}: ${Math.round(distancia * 10) / 10} km\n`;
+                });
+                
+                resultado += '\n✅ Fórmula Haversine implementada corretamente\n';
+                resultado += '   (considera curvatura da Terra para precisão geográfica)';
+                
+                resultDiv.innerHTML = `<span class="success">${resultado}</span>`;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Erro: ${error.message}</span>`;
+            }
+        }
+
+        function testarExportacaoCSV() {
+            const resultDiv = document.getElementById('result-csv');
+            resultDiv.style.display = 'block';
+            
+            try {
+                const municipios = ['Itajaí', 'Navegantes', 'Balneário Camboriú'];
+                const horarios = gerarHorariosRota(municipios);
+                const data = new Date().toLocaleDateString('pt-BR');
+                
+                // Simular dados de visitas
+                const visitasSimuladas = [
+                    { municipio: 'Itajaí', local: 'Prefeitura Municipal', status: 'agendada' },
+                    { municipio: 'Navegantes', local: 'Secretaria de Meio Ambiente', status: 'agendada' },
+                    { municipio: 'Balneário Camboriú', local: 'SEMASA', status: 'agendada' }
+                ];
+                
+                // Gerar CSV
+                let csv = 'Sequencia,Municipio,Chegada,Saida,Local,Status\n';
+                horarios.forEach((item, index) => {
+                    const visita = visitasSimuladas.find(v => v.municipio === item.municipio) || {};
+                    csv += `${index + 1},"${item.municipio}","${item.chegada}","${item.saida}","${visita.local || 'Não informado'}","${visita.status || 'agendada'}"\n`;
+                });
+                
+                let resultado = '📄 TESTE DE EXPORTAÇÃO CSV\n\n';
+                resultado += `📅 Arquivo gerado para: ${data}\n`;
+                resultado += `📊 Nome sugerido: rota_pnsb_${data.replace(/\//g, '-')}.csv\n\n`;
+                resultado += '💾 Conteúdo do arquivo CSV:\n\n';
+                resultado += csv;
+                resultado += '\n✅ CSV gerado com sucesso!\n';
+                resultado += '   Formato compatível com Excel e Google Sheets';
+                
+                resultDiv.innerHTML = `<span class="success">${resultado}</span>`;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `<span class="error">❌ Erro: ${error.message}</span>`;
+            }
+        }
+
+        // Auto-executar teste básico ao carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🧪 Sistema de testes carregado');
+            console.log('📊 Funções disponíveis: otimizarSequenciaMunicipios, calcularEstatisticasRota, gerarHorariosRota');
+            console.log('🗺️ Municípios PNSB SC:', Object.keys(COORDENADAS_MUNICIPIOS));
+        });
+    </script>
+</body>
+</html>

@@ -3,6 +3,12 @@ from gestao_visitas.db import db
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 import os
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    print("✅ Arquivo .env carregado com sucesso")
+except ImportError:
+    print("⚠️ python-dotenv não disponível. Usando variáveis de ambiente do sistema.")
 import requests
 from flask_migrate import Migrate
 try:
@@ -29,7 +35,9 @@ db_path = os.path.join(basedir, 'gestao_visitas', 'gestao_visitas.db')
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave_secreta_pnsb_2024_gestao_visitas')
-app.config['GOOGLE_MAPS_API_KEY'] = os.getenv('GOOGLE_MAPS_API_KEY')
+google_maps_key = os.getenv('GOOGLE_MAPS_API_KEY')
+app.config['GOOGLE_MAPS_API_KEY'] = google_maps_key
+print(f"🔍 Debug: Configurando GOOGLE_MAPS_API_KEY = '{google_maps_key}' (length: {len(google_maps_key or '')})")
 
 # Configurações de segurança adiccionais
 app.config['SESSION_COOKIE_SECURE'] = os.getenv('FLASK_ENV') == 'production'
@@ -139,8 +147,14 @@ def add_security_headers(response):
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
     
-    # Content Security Policy  
-    csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://maps.googleapis.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; img-src 'self' data: https: https://maps.gstatic.com https://maps.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.gstatic.com; connect-src 'self' https://servicodados.ibge.gov.br https://maps.googleapis.com"
+    # Content Security Policy - relaxado para desenvolvimento com Google Maps
+    if os.getenv('FLASK_ENV') == 'development':
+        # CSP mais permissivo para desenvolvimento
+        csp = "default-src 'self' 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: data:; style-src 'self' 'unsafe-inline' https: data:; img-src 'self' data: https: blob:; font-src 'self' data: https:; connect-src 'self' https: data:; frame-src 'self' https:"
+    else:
+        # CSP mais restritivo para produção
+        csp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://maps.googleapis.com *.googleapis.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com *.googleapis.com; img-src 'self' data: https: https://maps.gstatic.com https://maps.googleapis.com *.gstatic.com *.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.gstatic.com; connect-src 'self' https://servicodados.ibge.gov.br https://maps.googleapis.com *.googleapis.com"
+    
     response.headers['Content-Security-Policy'] = csp
     
     return response
@@ -184,7 +198,9 @@ def index():
 
 @app.route('/calendario')
 def calendario():
-    return render_template('calendario.html')
+    google_maps_api_key = app.config.get('GOOGLE_MAPS_API_KEY', '')
+    print(f"🔍 Debug: API Key no calendário = '{google_maps_api_key}' (length: {len(google_maps_api_key)})")
+    return render_template('calendario_moderno.html', google_maps_api_key=google_maps_api_key)
 
 @app.route('/visitas')
 def pagina_visitas():
@@ -216,7 +232,9 @@ def produtividade():
 
 @app.route('/mapa-progresso')
 def mapa_progresso():
-    return render_template('mapa_progresso.html')
+    google_maps_api_key = app.config.get('GOOGLE_MAPS_API_KEY', '')
+    print(f"🔍 Debug: API Key no route = '{google_maps_api_key}' (length: {len(google_maps_api_key)})")
+    return render_template('mapa_progresso.html', google_maps_api_key=google_maps_api_key)
 
 @app.route('/assistente-abordagem')
 def assistente_abordagem():
@@ -2092,7 +2110,7 @@ if __name__ == '__main__':
     import socket
     
     # Tentar determinar o melhor host
-    host = '127.0.0.1'  # Padrão seguro para Windows
+    host = '0.0.0.0'  # Permitir conexões de qualquer interface
     port = 5000
     
     # Verificar se a porta está disponível

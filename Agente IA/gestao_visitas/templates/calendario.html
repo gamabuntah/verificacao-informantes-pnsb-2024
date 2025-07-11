@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Calendário - Gestão de Visitas PNSB{% endblock %}
+{% block title %}✅ CALENDÁRIO ATUALIZADO - Gestão de Visitas PNSB{% endblock %}
 
 {% block content %}
 <h2 class="fw-bold mb-4">Calendário de Visitas</h2>
@@ -18,10 +18,17 @@
                     <label for="municipio" class="form-label">Município</label>
                     <select class="form-select bg-dark text-light" id="municipio" required>
                         <option value="">Selecione</option>
-                        <option>Blumenau</option>
-                        <option>Joinville</option>
-                        <option>Itajaí</option>
+                        <option>Balneário Camboriú</option>
+                        <option>Balneário Piçarras</option>
                         <option>Bombinhas</option>
+                        <option>Camboriú</option>
+                        <option>Itajaí</option>
+                        <option>Itapema</option>
+                        <option>Luiz Alves</option>
+                        <option>Navegantes</option>
+                        <option>Penha</option>
+                        <option>Porto Belo</option>
+                        <option>Ilhota</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -33,8 +40,8 @@
                     <input type="time" class="form-control bg-dark text-light" id="hora" required>
                 </div>
                 <div class="mb-3">
-                    <label for="informante" class="form-label">Informante</label>
-                    <input type="text" class="form-control bg-dark text-light" id="informante" required>
+                    <label for="local" class="form-label">Local</label>
+                    <input type="text" class="form-control bg-dark text-light" id="local" placeholder="Ex: Prefeitura Municipal" required>
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Agendar</button>
             </form>
@@ -64,13 +71,24 @@
 document.addEventListener('DOMContentLoaded', function() {
     fetch('/api/visitas')
       .then(res => res.json())
-      .then(visitas => {
+      .then(response => {
         const calendarEl = document.getElementById('calendario-visitas');
-        const events = visitas.map(v => ({
-            title: `${v.municipio} - ${v.status}`,
-            start: v.data + 'T' + (v.hora_inicio || '09:00'),
-            extendedProps: v
-        }));
+        // A API retorna {data: [...]} não um array direto
+        const visitas = response.data || response || [];
+        const events = visitas.map(v => {
+            // Converter data de "25/06/2025" para "2025-06-25"
+            let dateFormatted = v.data;
+            if (v.data && v.data.includes('/')) {
+                const [day, month, year] = v.data.split('/');
+                dateFormatted = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+            }
+            
+            return {
+                title: `${v.municipio} - ${v.status}`,
+                start: dateFormatted + 'T' + (v.hora_inicio || '09:00'),
+                extendedProps: v
+            };
+        });
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             height: 500,
@@ -87,22 +105,56 @@ document.addEventListener('DOMContentLoaded', function() {
                     <strong>Município:</strong> ${v.municipio}<br>
                     <strong>Data:</strong> ${v.data}<br>
                     <strong>Horário:</strong> ${v.hora_inicio || '--:--'}<br>
-                    <strong>Status:</strong> <span class="badge bg-${v.status === 'Realizada' ? 'success' : v.status === 'Pendente' ? 'warning' : 'primary'}">${v.status}</span><br>
-                    <strong>Informante:</strong> ${v.informante || '-'}
+                    <strong>Status:</strong> <span class="badge bg-${v.status === 'realizada' ? 'success' : v.status === 'agendada' ? 'warning' : 'primary'}">${v.status}</span><br>
+                    <strong>Local:</strong> ${v.local || '-'}
                 `;
                 const modal = new bootstrap.Modal(document.getElementById('modalDetalhesVisita'));
                 modal.show();
             }
         });
         calendar.render();
+        console.log(`✅ Calendário carregado com ${visitas.length} visitas`);
+      })
+      .catch(error => {
+        console.error('❌ Erro ao carregar visitas:', error);
+        const calendarEl = document.getElementById('calendario-visitas');
+        calendarEl.innerHTML = '<div class="alert alert-warning">Erro ao carregar visitas. Tente recarregar a página.</div>';
       });
 });
-// Simulação de agendamento
+// Agendamento real via API
 const form = document.getElementById('form-nova-visita');
-form.onsubmit = function(e) {
+form.onsubmit = async function(e) {
     e.preventDefault();
-    alert('Visita agendada! (Simulação)');
-    form.reset();
+    
+    const formData = {
+        municipio: document.getElementById('municipio').value,
+        data: document.getElementById('data').value,
+        hora_inicio: document.getElementById('hora').value,
+        local: document.getElementById('local').value,
+        status: 'agendada'
+    };
+    
+    try {
+        const response = await fetch('/api/visitas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        if (response.ok) {
+            alert('✅ Visita agendada com sucesso!');
+            form.reset();
+            // Recarregar calendário
+            location.reload();
+        } else {
+            const error = await response.json();
+            alert('❌ Erro ao agendar: ' + (error.message || 'Erro desconhecido'));
+        }
+    } catch (error) {
+        alert('❌ Erro de conexão: ' + error.message);
+    }
 };
 </script>
 {% endblock %} 
