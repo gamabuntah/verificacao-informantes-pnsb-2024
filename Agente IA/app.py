@@ -5,8 +5,24 @@ from datetime import datetime, timedelta
 import os
 try:
     from dotenv import load_dotenv
-    load_dotenv()
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    env_path = os.path.join(current_dir, '.env')
+    print(f"🔍 Debug: Procurando .env em: {env_path}")
+    print(f"🔍 Debug: Arquivo .env existe: {os.path.exists(env_path)}")
+    
+    # Se não existir no diretório atual, procurar no diretório pai
+    if not os.path.exists(env_path):
+        env_path = os.path.join(os.path.dirname(current_dir), '.env')
+        print(f"🔍 Debug: Tentando diretório pai: {env_path}")
+        print(f"🔍 Debug: Arquivo .env existe no pai: {os.path.exists(env_path)}")
+    
+    load_dotenv(env_path)
     print("✅ Arquivo .env carregado com sucesso")
+    
+    # Verificar se foi carregado
+    google_maps_test = os.getenv('GOOGLE_MAPS_API_KEY')
+    print(f"🔍 Debug: Teste de leitura da API Key: '{google_maps_test}' (length: {len(google_maps_test or '')})")
+    
 except ImportError:
     print("⚠️ python-dotenv não disponível. Usando variáveis de ambiente do sistema.")
 import requests
@@ -67,12 +83,21 @@ ErrorHandler.setup_logging(app)
 # Criar todas as tabelas
 with app.app_context():
     db.create_all()
+    
+    # Executar migração para horários de funcionamento
+    try:
+        from migrations.add_horarios_funcionamento import migrate_horarios_funcionamento
+        migrate_horarios_funcionamento()
+        print("✅ Migração de horários de funcionamento executada")
+    except Exception as e:
+        print(f"⚠️ Erro na migração de horários: {str(e)}")
 
 # Import models
 from gestao_visitas.models.agendamento import Visita, Calendario
 from gestao_visitas.models.checklist import Checklist
 from gestao_visitas.models.contatos import Contato, TipoEntidade, FonteInformacao
 from gestao_visitas.models.questionarios_obrigatorios import QuestionarioObrigatorio, EntidadeIdentificada, ProgressoQuestionarios, EntidadePrioritariaUF
+from gestao_visitas.models.horarios_funcionamento import HorariosFuncionamento
 
 # Import blueprints
 from gestao_visitas.routes.ibge_api import ibge_bp
@@ -1699,6 +1724,108 @@ def backup_emergencial():
         return jsonify({'message': 'Backup de emergência criado com sucesso', 'sucesso': True})
     else:
         return jsonify({'error': 'Erro ao criar backup de emergência', 'sucesso': False}), 500
+
+# API para horários reais dos estabelecimentos
+@app.route('/api/horarios/<municipio>/<tipo_estabelecimento>')
+def obter_horarios_reais(municipio, tipo_estabelecimento):
+    """
+    Obter horários reais de funcionamento de estabelecimentos
+    
+    Args:
+        municipio: Nome do município
+        tipo_estabelecimento: Tipo (prefeitura, saae, empresa)
+    """
+    try:
+        from gestao_visitas.services.google_places_service import places_service
+        
+        # Mapear tipos de estabelecimento para nomes de busca
+        nomes_estabelecimentos = {
+            'prefeitura': f'Prefeitura de {municipio}',
+            'saae': f'SAAE {municipio}',
+            'empresa': f'Empresa {municipio}',
+            'secretaria': f'Secretaria {municipio}'
+        }
+        
+        # Mapear tipos para categorias do Google Places
+        tipos_google = {
+            'prefeitura': 'local_government_office',
+            'saae': 'local_government_office',
+            'empresa': 'establishment',
+            'secretaria': 'local_government_office'
+        }
+        
+        nome_busca = nomes_estabelecimentos.get(tipo_estabelecimento, f'{tipo_estabelecimento} {municipio}')
+        localizacao = f'{municipio}, SC, Brasil'
+        
+        # Buscar horários via Google Places
+        horarios = places_service.get_opening_hours(nome_busca, localizacao, municipio, tipo_estabelecimento)
+        status_atual = places_service.get_current_status(nome_busca, localizacao)
+        melhores_horarios = places_service.get_best_visit_times(nome_busca, localizacao)
+        
+        if horarios:
+            return jsonify({
+                'success': True,
+                'municipio': municipio,
+                'tipo_estabelecimento': tipo_estabelecimento,
+                'horarios': horarios,
+                'status_atual': status_atual,
+                'melhores_horarios': melhores_horarios,
+                'fonte': 'Google Places API',
+                'timestamp': datetime.now().isoformat()
+            })
+        else:
+            # Fallback para horários padrão
+            horarios_padrao = obter_horarios_padrao(tipo_estabelecimento)
+            return jsonify({
+                'success': True,
+                'municipio': municipio,
+                'tipo_estabelecimento': tipo_estabelecimento,
+                'horarios': horarios_padrao,
+                'status_atual': {'is_open': None, 'message': 'Horários estimados'},
+                'melhores_horarios': [],
+                'fonte': 'Horários padrão estimados',
+                'timestamp': datetime.now().isoformat()
+            })
+            
+    except Exception as e:
+        logger.error(f"Erro ao obter horários: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'municipio': municipio,
+            'tipo_estabelecimento': tipo_estabelecimento
+        }), 500
+
+def obter_horarios_padrao(tipo_estabelecimento):
+    """Horários padrão como fallback"""
+    horarios_padrao = {
+        'prefeitura': {
+            'segunda_a_sexta': '08:00-17:00',
+            'almoco': '12:00-13:30',
+            'sabado': 'Fechado',
+            'domingo': 'Fechado'
+        },
+        'saae': {
+            'segunda_a_sexta': '08:00-17:00',
+            'almoco': '12:00-13:00',
+            'sabado': 'Fechado',
+            'domingo': 'Fechado'
+        },
+        'empresa': {
+            'segunda_a_sexta': '08:00-18:00',
+            'almoco': '12:00-13:00',
+            'sabado': '08:00-12:00',
+            'domingo': 'Fechado'
+        },
+        'secretaria': {
+            'segunda_a_sexta': '08:00-17:00',
+            'almoco': '12:00-14:00',
+            'sabado': 'Fechado',
+            'domingo': 'Fechado'
+        }
+    }
+    
+    return horarios_padrao.get(tipo_estabelecimento, horarios_padrao['prefeitura'])
 
 # API para otimização de rotas com Google Maps
 @app.route('/api/google-maps-config', methods=['GET'])
