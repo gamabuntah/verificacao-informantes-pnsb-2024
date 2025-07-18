@@ -487,15 +487,17 @@ class ProgressoQuestionarios(db.Model):
         if prefeitura_existente:
             return prefeitura_existente
         
-        # Remover prefeituras incompletas/duplicadas
-        prefeituras_problematicas = EntidadeIdentificada.query.filter_by(
+        # CORREÇÃO: Não remover prefeituras existentes indiscriminadamente
+        # Apenas verificar se existe alguma prefeitura funcional
+        prefeituras_existentes = EntidadeIdentificada.query.filter_by(
             municipio=municipio,
-            tipo_entidade='prefeitura',
-            origem_prefeitura=True
+            tipo_entidade='prefeitura'
         ).all()
         
-        for pref in prefeituras_problematicas:
-            db.session.delete(pref)
+        # Se já existe qualquer prefeitura, não fazer nada
+        if prefeituras_existentes:
+            print(f"⚠️ Prefeitura já existe para {municipio} - mantendo existente")
+            return prefeituras_existentes[0]
         
         # Criar prefeitura completa obrigatória
         nova_prefeitura = EntidadeIdentificada(

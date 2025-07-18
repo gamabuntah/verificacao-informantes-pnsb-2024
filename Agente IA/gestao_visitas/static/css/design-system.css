@@ -31,9 +31,10 @@ PNSB Design System - Sistema Consistente
   --info-color: #3B82F6;
   
   /* Bordas */
-  --border-color: #2D3142;
-  --border-color-light: #3A3D52;
+  --border-color: #4A4F66;
+  --border-color-light: #5A5F76;
   --border-color-focus: var(--primary-color);
+  --border-color-subtle: #3A3D52;
   
   /* Raios de Borda */
   --radius-xs: 4px;
@@ -637,13 +638,27 @@ h1, h2, h3, h4, h5, h6 {
   border: none;
   color: var(--text-primary);
   font-size: 1.2rem;
-  padding: 0.5rem;
+  padding: 0.75rem;
   cursor: pointer;
-  transition: color var(--transition-normal);
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  margin-right: var(--spacing-md);
 }
 
 .sidebar-toggle:hover {
   color: var(--primary-color);
+  background: rgba(95, 92, 255, 0.1);
+  transform: scale(1.05);
+}
+
+.sidebar-toggle:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 .main-layout {
@@ -665,6 +680,16 @@ h1, h2, h3, h4, h5, h6 {
   border-bottom: 1px solid var(--border-color);
   z-index: var(--z-navbar);
   transition: left var(--transition-normal);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-md);
+}
+
+.navbar-custom .container-fluid {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .navbar-custom.sidebar-open {
@@ -1338,30 +1363,38 @@ h1, h2, h3, h4, h5, h6 {
 /* Inputs Padronizados */
 .input-custom {
   background: var(--surface-secondary);
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--spacing-sm) var(--spacing-md);
   color: var(--text-primary);
   font-size: 0.875rem;
   transition: all var(--transition-normal);
   width: 100%;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .input-custom:focus {
   outline: none;
   border-color: var(--border-color-focus);
-  box-shadow: 0 0 0 3px rgba(95, 92, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(95, 92, 255, 0.15), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: var(--surface-primary);
+  transform: translateY(-1px);
+}
+
+.input-custom:hover {
+  border-color: var(--border-color-light);
   background: var(--surface-primary);
 }
 
 .input-custom::placeholder {
-  color: var(--text-muted);
+  color: var(--text-secondary);
+  font-weight: 400;
 }
 
 /* Select Customizado */
 .select-custom {
   background: var(--surface-secondary);
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: var(--radius-md);
   padding: var(--spacing-sm) var(--spacing-md);
   color: var(--text-primary);
@@ -1369,12 +1402,39 @@ h1, h2, h3, h4, h5, h6 {
   transition: all var(--transition-normal);
   width: 100%;
   cursor: pointer;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23B0B3C7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  padding-right: 2.5rem;
+  appearance: none;
 }
 
 .select-custom:focus {
   outline: none;
   border-color: var(--border-color-focus);
-  box-shadow: 0 0 0 3px rgba(95, 92, 255, 0.1);
+  box-shadow: 0 0 0 3px rgba(95, 92, 255, 0.15), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: var(--surface-primary);
+  transform: translateY(-1px);
+}
+
+.select-custom:hover {
+  border-color: var(--border-color-light);
+  background: var(--surface-primary);
+}
+
+.select-custom option {
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  padding: var(--spacing-sm);
+  border: none;
+}
+
+.select-custom option:hover,
+.select-custom option:checked {
+  background: var(--primary-color);
+  color: white;
 }
 
 /* ===== NAVEGAÇÃO LATERAL ===== */
@@ -1809,37 +1869,7 @@ h1, h2, h3, h4, h5, h6 {
   margin-left: 280px;
 }
 
-/* Navbar com toggle */
-.navbar-custom {
-  background: var(--surface-primary);
-  border-bottom: 1px solid var(--border-color);
-  padding: var(--spacing-md) 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--z-navbar);
-  transition: left var(--transition-normal);
-}
-
-.navbar-custom.sidebar-open {
-  left: 280px;
-}
-
-.sidebar-toggle {
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: var(--spacing-sm);
-  margin-right: var(--spacing-md);
-  transition: color var(--transition-fast);
-}
-
-.sidebar-toggle:hover {
-  color: var(--primary-color);
-}
+/* Duplicação removida - usando estilos unificados acima */
 
 /* Ajustes para mobile */
 @media (max-width: 768px) {
@@ -2006,10 +2036,30 @@ h1, h2, h3, h4, h5, h6 {
     padding-right: var(--spacing-md);
   }
   
-  /* Navbar mobile */
+  /* Navbar mobile - ajuste para botão toggle */
   .navbar-custom {
     height: var(--mobile-header-height);
     padding: var(--spacing-sm) var(--spacing-md);
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-custom .container-fluid {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Botão toggle mobile */
+  .sidebar-toggle {
+    padding: var(--spacing-sm);
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 1.1rem;
+    margin-right: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   /* Main content com padding mobile */
