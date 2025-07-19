@@ -1,0 +1,1623 @@
+{% extends 'base.html' %}
+
+{% block title %}📊 Centro de Otimização PNSB 2024 | Gestão Profissional de Rotas{% endblock %}
+
+{% block head %}
+<!-- Chart.js para gráficos -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Google Maps API -->
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config.GOOGLE_MAPS_API_KEY or 'AIzaSyBQagNrn5WHO-jXfkkNvzUMMR6UsWFBxLg' }}&libraries=geometry,places,visualization"></script>
+<!-- Leaflet como fallback -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        --dark-surface: rgba(30, 34, 45, 0.95);
+        --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        --text-primary: #E8E8E8;
+        --text-secondary: #B0B0B0;
+        --border-color: rgba(95, 92, 255, 0.2);
+    }
+    
+    .professional-dashboard {
+        background: linear-gradient(135deg, #0F1419 0%, #1A1D29 50%, #2D1B69 100%);
+        min-height: 100vh;
+        color: var(--text-primary);
+        font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+    
+    .dashboard-header {
+        background: var(--dark-surface);
+        backdrop-filter: blur(20px);
+        border-bottom: 3px solid #667eea;
+        padding: 2rem 0;
+        box-shadow: var(--card-shadow);
+    }
+    
+    .header-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .stat-card {
+        background: var(--dark-surface);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--card-shadow);
+    }
+    
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--primary-gradient);
+    }
+    
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        background: var(--primary-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .stat-change {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        display: inline-block;
+    }
+    
+    .stat-change.positive { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+    .stat-change.negative { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    
+    .main-content {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 2rem;
+        padding: 2rem 0;
+    }
+    
+    .primary-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .control-section {
+        background: var(--dark-surface);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--card-shadow);
+    }
+    
+    .section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    .section-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary-gradient);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1.5rem;
+        color: white;
+    }
+    
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    
+    .optimization-modes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .mode-card {
+        background: rgba(95, 92, 255, 0.1);
+        border: 2px solid transparent;
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    
+    .mode-card:hover {
+        border-color: #667eea;
+        background: rgba(95, 92, 255, 0.2);
+    }
+    
+    .mode-card.active {
+        border-color: #667eea;
+        background: var(--primary-gradient);
+        color: white;
+    }
+    
+    .mode-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .mode-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .mode-description {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+    
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-label {
+        color: var(--text-primary);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .form-control {
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 0.75rem 1rem;
+        color: var(--text-primary);
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        outline: none;
+    }
+    
+    .btn-optimize {
+        background: var(--primary-gradient);
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        color: white;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-optimize:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-optimize:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .results-panel {
+        background: var(--dark-surface);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--card-shadow);
+    }
+    
+    .results-tabs {
+        display: flex;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    .tab-button {
+        background: none;
+        border: none;
+        color: var(--text-secondary);
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border-bottom: 3px solid transparent;
+        font-weight: 500;
+    }
+    
+    .tab-button.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 300px;
+        margin: 1rem 0;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        padding: 1rem;
+    }
+    
+    .map-container {
+        height: 400px;
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 1rem 0;
+        border: 2px solid var(--border-color);
+    }
+    
+    .schedule-timeline {
+        max-height: 500px;
+        overflow-y: auto;
+        margin-top: 1rem;
+    }
+    
+    .timeline-item {
+        position: relative;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+    
+    .timeline-item:hover {
+        background: rgba(102, 126, 234, 0.1);
+        transform: translateX(5px);
+    }
+    
+    .timeline-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .timeline-sequence {
+        background: var(--primary-gradient);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 1rem;
+    }
+    
+    .timeline-info {
+        flex: 1;
+    }
+    
+    .timeline-municipality {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+    
+    .timeline-entity {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .timeline-badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .badge-primary { background: rgba(102, 126, 234, 0.2); color: #667eea; }
+    .badge-success { background: rgba(34, 197, 94, 0.2); color: #22c55e; }
+    .badge-warning { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .badge-info { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    
+    .timeline-times {
+        text-align: right;
+        font-family: 'Courier New', monospace;
+        font-weight: 600;
+    }
+    
+    .arrival-time {
+        color: #22c55e;
+        font-size: 1.1rem;
+    }
+    
+    .departure-time {
+        color: #f59e0b;
+        font-size: 0.9rem;
+    }
+    
+    .timeline-details {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .detail-item {
+        text-align: center;
+    }
+    
+    .detail-value {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+    
+    .detail-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .alert-panel {
+        background: rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .alert-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .alert-icon {
+        color: #f59e0b;
+        margin-right: 0.5rem;
+    }
+    
+    .alert-title {
+        font-weight: 600;
+        color: #f59e0b;
+    }
+    
+    .recommendations-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .recommendation-item {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        border-left: 3px solid #22c55e;
+    }
+    
+    .export-controls {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .btn-export {
+        background: var(--success-gradient);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .btn-export:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+    }
+    
+    .loading-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        border-radius: inherit;
+        z-index: 1000;
+    }
+    
+    .loading-spinner {
+        text-align: center;
+        color: var(--text-primary);
+    }
+    
+    .spinner {
+        border: 3px solid rgba(102, 126, 234, 0.3);
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .sidebar-panel {
+        background: var(--dark-surface);
+        border-radius: 20px;
+        padding: 2rem;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--card-shadow);
+        height: fit-content;
+        position: sticky;
+        top: 2rem;
+    }
+    
+    .project-info {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 2px solid var(--border-color);
+    }
+    
+    .project-logo {
+        width: 80px;
+        height: 80px;
+        background: var(--primary-gradient);
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 2rem;
+        color: white;
+    }
+    
+    .project-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .project-subtitle {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    .quick-stats {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .quick-stat {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .quick-stat-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #667eea;
+        margin-bottom: 0.25rem;
+    }
+    
+    .quick-stat-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    @media (max-width: 1200px) {
+        .main-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .optimization-modes {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="professional-dashboard">
+    <!-- Header com Estatísticas Principais -->
+    <div class="dashboard-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-4 fw-bold mb-2">📊 Centro de Otimização PNSB 2024</h1>
+                    <p class="lead mb-0">Sistema Profissional de Gestão e Otimização de Rotas de Campo</p>
+                </div>
+                <div class="text-end">
+                    <div class="badge badge-success fs-6 mb-2">✅ Sistema Ativo</div>
+                    <div class="small text-muted">Última atualização: <span id="lastUpdate">--:--</span></div>
+                </div>
+            </div>
+            
+            <!-- Estatísticas do Header -->
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalVisitsHeader">0</div>
+                    <div class="stat-label">Visitas Programadas</div>
+                    <div class="stat-change positive" id="visitsChange">+0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalMunicipalitiesHeader">11</div>
+                    <div class="stat-label">Municípios Cobertos</div>
+                    <div class="stat-change positive">100%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalDistanceHeader">0</div>
+                    <div class="stat-label">Km Otimizados</div>
+                    <div class="stat-change positive" id="distanceChange">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="efficiencyHeader">0%</div>
+                    <div class="stat-label">Eficiência Geral</div>
+                    <div class="stat-change positive" id="efficiencyChange">+0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="estimatedHoursHeader">0h</div>
+                    <div class="stat-label">Tempo Estimado</div>
+                    <div class="stat-change positive" id="hoursChange">-0h</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <!-- Painel Principal -->
+            <div class="primary-panel">
+                <!-- Controles de Otimização -->
+                <div class="control-section">
+                    <div class="section-header">
+                        <div class="section-icon">⚙️</div>
+                        <div>
+                            <h3 class="section-title">Configuração de Otimização</h3>
+                            <p class="mb-0 text-muted">Configure os parâmetros para otimização inteligente</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Modos de Otimização -->
+                    <div class="optimization-modes">
+                        <div class="mode-card active" data-mode="daily">
+                            <span class="mode-icon">📅</span>
+                            <div class="mode-title">Otimização Diária</div>
+                            <div class="mode-description">Otimizar visitas para um dia específico</div>
+                        </div>
+                        <div class="mode-card" data-mode="weekly">
+                            <span class="mode-icon">📋</span>
+                            <div class="mode-title">Planejamento Semanal</div>
+                            <div class="mode-description">Distribuir visitas ao longo da semana</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Formulário de Configuração -->
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-map-marker-alt"></i> Município (Filtro)
+                            </label>
+                            <select class="form-control" id="municipalityFilter">
+                                <option value="">🌍 Todos os municípios</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="startTimeGroup">
+                            <label class="form-label">
+                                <i class="fas fa-clock"></i> Horário de Início
+                            </label>
+                            <input type="time" class="form-control" id="startTime" value="08:00">
+                        </div>
+                        <div class="form-group" id="startDateGroup" style="display: none;">
+                            <label class="form-label">
+                                <i class="fas fa-calendar"></i> Data de Início
+                            </label>
+                            <input type="date" class="form-control" id="startDate">
+                        </div>
+                        <div class="form-group" id="workingDaysGroup" style="display: none;">
+                            <label class="form-label">
+                                <i class="fas fa-business-time"></i> Dias de Trabalho
+                            </label>
+                            <select class="form-control" id="workingDays">
+                                <option value="5">5 dias úteis</option>
+                                <option value="4">4 dias</option>
+                                <option value="3">3 dias</option>
+                                <option value="6">6 dias</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Botão de Otimização -->
+                    <button class="btn-optimize" id="optimizeBtn">
+                        <i class="fas fa-magic"></i>
+                        <span>Executar Otimização Inteligente</span>
+                    </button>
+                    
+                    <!-- Status da Otimização -->
+                    <div class="mt-3 text-center" id="optimizationStatus">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i> 
+                            Configure os parâmetros e execute a otimização
+                        </small>
+                    </div>
+                </div>
+                
+                <!-- Resultados da Otimização -->
+                <div class="results-panel" id="resultsPanel">
+                    <div class="loading-overlay" id="loadingOverlay">
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                            <p>Processando otimização inteligente...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="section-header">
+                        <div class="section-icon">📊</div>
+                        <div>
+                            <h3 class="section-title">Resultados da Otimização</h3>
+                            <p class="mb-0 text-muted">Análise completa e visualizações interativas</p>
+                        </div>
+                        <div class="ms-auto">
+                            <div class="export-controls">
+                                <button class="btn-export" id="exportPdfBtn" style="display: none;">
+                                    <i class="fas fa-file-pdf"></i> Relatório PDF
+                                </button>
+                                <button class="btn-export" id="exportExcelBtn" style="display: none;">
+                                    <i class="fas fa-file-excel"></i> Planilha Excel
+                                </button>
+                                <button class="btn-export" id="exportCsvBtn" style="display: none;">
+                                    <i class="fas fa-file-csv"></i> Dados CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Abas de Resultados -->
+                    <div class="results-tabs">
+                        <button class="tab-button active" data-tab="overview">📊 Visão Geral</button>
+                        <button class="tab-button" data-tab="schedule">📅 Cronograma</button>
+                        <button class="tab-button" data-tab="map">🗺️ Mapa Interativo</button>
+                        <button class="tab-button" data-tab="analytics">📈 Análises</button>
+                        <button class="tab-button" data-tab="recommendations">💡 Recomendações</button>
+                    </div>
+                    
+                    <!-- Conteúdo das Abas -->
+                    <div class="tab-content active" id="overviewTab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <canvas id="municipalitiesChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <canvas id="surveyTypesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <div class="chart-container">
+                                    <canvas id="timelineChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="scheduleTab">
+                        <div class="schedule-timeline" id="scheduleTimeline">
+                            <div class="text-center py-5 text-muted">
+                                <i class="fas fa-calendar-alt fa-4x mb-3" style="opacity: 0.3;"></i>
+                                <h4>Nenhum cronograma gerado</h4>
+                                <p>Execute uma otimização para visualizar o cronograma detalhado</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="mapTab">
+                        <div class="map-container" id="routeMap">
+                            <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                                <div class="text-center">
+                                    <i class="fas fa-map fa-4x mb-3" style="opacity: 0.3;"></i>
+                                    <h4>Mapa Interativo</h4>
+                                    <p>Execute uma otimização para visualizar as rotas no mapa</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="analyticsTab">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="chart-container">
+                                    <canvas id="performanceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tab-content" id="recommendationsTab">
+                        <div id="recommendationsContent">
+                            <div class="text-center py-5 text-muted">
+                                <i class="fas fa-lightbulb fa-4x mb-3" style="opacity: 0.3;"></i>
+                                <h4>Recomendações Inteligentes</h4>
+                                <p>Execute uma otimização para receber sugestões personalizadas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Painel Lateral -->
+            <div class="sidebar-panel">
+                <!-- Informações do Projeto -->
+                <div class="project-info">
+                    <div class="project-logo">🏛️</div>
+                    <div class="project-title">PNSB 2024</div>
+                    <div class="project-subtitle">Pesquisa Nacional de Saneamento Básico</div>
+                </div>
+                
+                <!-- Estatísticas Rápidas -->
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="activeMunicipalities">0</div>
+                        <div class="quick-stat-label">Municípios Ativos</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="pendingVisits">0</div>
+                        <div class="quick-stat-label">Visitas Pendentes</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="completedVisits">0</div>
+                        <div class="quick-stat-label">Concluídas</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="mrsCollections">0</div>
+                        <div class="quick-stat-label">Coletas MRS</div>
+                    </div>
+                    <div class="quick-stat">
+                        <div class="quick-stat-value" id="mapCollections">0</div>
+                        <div class="quick-stat-label">Coletas MAP</div>
+                    </div>
+                </div>
+                
+                <!-- Status do Sistema -->
+                <div class="mt-4">
+                    <h5 class="mb-3">🔧 Status do Sistema</h5>
+                    <div class="small">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Otimizador:</span>
+                            <span class="text-success">✅ Ativo</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Google Maps:</span>
+                            <span class="text-success" id="mapsStatus">✅ Conectado</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Base de Dados:</span>
+                            <span class="text-success">✅ Online</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Última Sync:</span>
+                            <span id="lastSync">Agora</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+class ProfessionalPNSBOptimizer {
+    constructor() {
+        this.currentMode = 'daily';
+        this.currentRoute = null;
+        this.municipalities = [];
+        this.charts = {};
+        this.map = null;
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupEventListeners();
+        this.loadInitialData();
+        this.initializeCharts();
+        this.setDefaultValues();
+        this.updateLastUpdate();
+        
+        // Atualizar dados a cada 30 segundos
+        setInterval(() => this.updateLastUpdate(), 30000);
+    }
+    
+    setupEventListeners() {
+        // Modos de otimização
+        document.querySelectorAll('.mode-card').forEach(card => {
+            card.addEventListener('click', () => this.switchMode(card.dataset.mode));
+        });
+        
+        // Abas de resultados
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => this.switchTab(button.dataset.tab));
+        });
+        
+        // Botões principais
+        document.getElementById('optimizeBtn').addEventListener('click', () => this.executeOptimization());
+        document.getElementById('exportPdfBtn').addEventListener('click', () => this.exportPDF());
+        document.getElementById('exportExcelBtn').addEventListener('click', () => this.exportExcel());
+        document.getElementById('exportCsvBtn').addEventListener('click', () => this.exportCSV());
+    }
+    
+    switchMode(mode) {
+        this.currentMode = mode;
+        
+        // Atualizar visual dos cartões
+        document.querySelectorAll('.mode-card').forEach(card => {
+            card.classList.toggle('active', card.dataset.mode === mode);
+        });
+        
+        // Mostrar/ocultar controles
+        document.getElementById('startTimeGroup').style.display = mode === 'daily' ? 'block' : 'none';
+        document.getElementById('startDateGroup').style.display = mode === 'weekly' ? 'block' : 'none';
+        document.getElementById('workingDaysGroup').style.display = mode === 'weekly' ? 'block' : 'none';
+        
+        this.updateStatus(`Modo alterado para: ${mode === 'daily' ? 'Otimização Diária' : 'Planejamento Semanal'}`);
+    }
+    
+    switchTab(tabId) {
+        // Atualizar botões
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.classList.toggle('active', button.dataset.tab === tabId);
+        });
+        
+        // Atualizar conteúdo
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(tabId + 'Tab').classList.add('active');
+        
+        // Ações específicas por aba
+        if (tabId === 'map' && this.currentRoute) {
+            setTimeout(() => this.renderMap(), 100);
+        }
+    }
+    
+    async loadInitialData() {
+        try {
+            // Carregar municípios
+            const municipalitiesResponse = await fetch('/api/pnsb-optimization/municipalities');
+            const municipalitiesData = await municipalitiesResponse.json();
+            
+            if (municipalitiesData.success) {
+                this.municipalities = municipalitiesData.municipalities;
+                this.populateMunicipalityFilter();
+                this.updateSidebarStats();
+            }
+            
+            // Carregar visitas pendentes
+            const visitsResponse = await fetch('/api/pnsb-optimization/visits/pending');
+            const visitsData = await visitsResponse.json();
+            
+            if (visitsData.success) {
+                this.updateHeaderStats(visitsData);
+            }
+            
+        } catch (error) {
+            console.error('Erro ao carregar dados iniciais:', error);
+        }
+    }
+    
+    populateMunicipalityFilter() {
+        const select = document.getElementById('municipalityFilter');
+        select.innerHTML = '<option value="">🌍 Todos os municípios</option>';
+        
+        this.municipalities.forEach(municipality => {
+            const option = document.createElement('option');
+            option.value = municipality.name;
+            option.textContent = `${municipality.name} (${municipality.scheduled_visits} visitas agendadas)`;
+            select.appendChild(option);
+        });
+    }
+    
+    updateHeaderStats(visitsData) {
+        document.getElementById('totalVisitsHeader').textContent = visitsData.total_visits || 0;
+        document.getElementById('totalMunicipalitiesHeader').textContent = visitsData.municipalities || 11;
+        document.getElementById('visitsChange').textContent = `+${visitsData.total_visits || 0}`;
+    }
+    
+    updateSidebarStats() {
+        const activeMunicipalities = this.municipalities.filter(m => m.scheduled_visits > 0).length;
+        const totalPending = this.municipalities.reduce((sum, m) => sum + m.scheduled_visits, 0);
+        
+        document.getElementById('activeMunicipalities').textContent = activeMunicipalities;
+        document.getElementById('pendingVisits').textContent = totalPending;
+        
+        // Simular dados de MRS/MAP (em uma implementação real, viriam da API)
+        document.getElementById('mrsCollections').textContent = Math.floor(totalPending * 0.6);
+        document.getElementById('mapCollections').textContent = Math.floor(totalPending * 0.4);
+    }
+    
+    setDefaultValues() {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        document.getElementById('startDate').value = tomorrow.toISOString().split('T')[0];
+    }
+    
+    updateLastUpdate() {
+        const now = new Date();
+        document.getElementById('lastUpdate').textContent = now.toLocaleTimeString('pt-BR');
+        document.getElementById('lastSync').textContent = 'Agora';
+    }
+    
+    async executeOptimization() {
+        const btn = document.getElementById('optimizeBtn');
+        btn.disabled = true;
+        
+        this.showLoading();
+        this.clearExportButtons();
+        
+        try {
+            let result;
+            
+            if (this.currentMode === 'daily') {
+                result = await this.optimizeDaily();
+            } else {
+                result = await this.optimizeWeekly();
+            }
+            
+            this.currentRoute = result;
+            this.displayResults(result);
+            this.showExportButtons();
+            
+            this.updateStatus('Otimização concluída com sucesso! ✅');
+            
+        } catch (error) {
+            this.showError('Erro na otimização: ' + error.message);
+            this.updateStatus('Erro na otimização ❌');
+        } finally {
+            btn.disabled = false;
+            this.hideLoading();
+        }
+    }
+    
+    async optimizeDaily() {
+        const municipalityFilter = document.getElementById('municipalityFilter').value;
+        const startTime = document.getElementById('startTime').value;
+        
+        const requestData = { start_time: startTime };
+        if (municipalityFilter) {
+            requestData.municipality_filter = municipalityFilter;
+        }
+        
+        const response = await fetch('/api/pnsb-optimization/optimize/daily', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestData)
+        });
+        
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Erro na otimização diária');
+        }
+        
+        return data;
+    }
+    
+    async optimizeWeekly() {
+        const startDate = document.getElementById('startDate').value;
+        const workingDays = parseInt(document.getElementById('workingDays').value);
+        const municipalityFilter = document.getElementById('municipalityFilter').value;
+        
+        const requestData = {
+            start_date: startDate,
+            working_days: workingDays
+        };
+        if (municipalityFilter) {
+            requestData.municipality_filter = municipalityFilter;
+        }
+        
+        const response = await fetch('/api/pnsb-optimization/optimize/weekly', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestData)
+        });
+        
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error || 'Erro na otimização semanal');
+        }
+        
+        return data;
+    }
+    
+    displayResults(result) {
+        if (this.currentMode === 'daily') {
+            this.displayDailyResults(result);
+        } else {
+            this.displayWeeklyResults(result);
+        }
+        
+        this.updateChartsWithData(result);
+        this.updateHeaderWithResults(result);
+    }
+    
+    displayDailyResults(result) {
+        const route = result.route;
+        const summary = result.summary;
+        
+        // Atualizar cronograma
+        this.renderScheduleTimeline(summary.schedule);
+        
+        // Atualizar recomendações
+        this.renderRecommendations(summary.recommendations);
+    }
+    
+    displayWeeklyResults(result) {
+        const schedule = result.weekly_schedule;
+        
+        // Criar cronograma combinado
+        const combinedSchedule = [];
+        schedule.forEach(day => {
+            combinedSchedule.push({
+                type: 'day-header',
+                date: day.date,
+                weekday: day.weekday,
+                totalVisits: day.points.length
+            });
+            combinedSchedule.push(...day.summary.schedule);
+        });
+        
+        this.renderScheduleTimeline(combinedSchedule);
+    }
+    
+    renderScheduleTimeline(scheduleData) {
+        const timeline = document.getElementById('scheduleTimeline');
+        timeline.innerHTML = '';
+        
+        scheduleData.forEach((item, index) => {
+            if (item.type === 'day-header') {
+                // Header do dia
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'timeline-day-header';
+                dayHeader.innerHTML = `
+                    <h5 class="text-primary mb-3 mt-4">
+                        📅 ${item.weekday}, ${new Date(item.date).toLocaleDateString('pt-BR')}
+                        <span class="badge badge-primary ms-2">${item.totalVisits} visitas</span>
+                    </h5>
+                `;
+                timeline.appendChild(dayHeader);
+            } else {
+                // Item de visita
+                const timelineItem = document.createElement('div');
+                timelineItem.className = 'timeline-item';
+                timelineItem.innerHTML = `
+                    <div class="timeline-header">
+                        <div class="d-flex align-items-center flex-grow-1">
+                            <div class="timeline-sequence">${item.sequence}</div>
+                            <div class="timeline-info">
+                                <div class="timeline-municipality">${item.municipality}</div>
+                                <div class="timeline-entity">${item.entity}</div>
+                                <div class="timeline-badges">
+                                    <span class="badge badge-primary">${item.survey_type}</span>
+                                    <span class="badge badge-info">Prioridade ${item.priority}</span>
+                                    <span class="badge badge-success">${item.duration_minutes}min</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-times">
+                            <div class="arrival-time">📍 ${item.arrival_time}</div>
+                            <div class="departure-time">🚀 ${item.departure_time}</div>
+                        </div>
+                    </div>
+                    <div class="timeline-details">
+                        <div class="detail-item">
+                            <div class="detail-value">${item.duration_minutes}min</div>
+                            <div class="detail-label">Duração</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">${item.survey_type}</div>
+                            <div class="detail-label">Tipo Coleta</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">P${item.priority}</div>
+                            <div class="detail-label">Prioridade</div>
+                        </div>
+                    </div>
+                `;
+                timeline.appendChild(timelineItem);
+            }
+        });
+    }
+    
+    renderRecommendations(recommendations) {
+        const container = document.getElementById('recommendationsContent');
+        
+        if (!recommendations || recommendations.length === 0) {
+            container.innerHTML = `
+                <div class="alert-panel">
+                    <div class="alert-header">
+                        <i class="fas fa-check-circle alert-icon"></i>
+                        <span class="alert-title">Otimização Excelente!</span>
+                    </div>
+                    <p class="mb-0">Não foram identificadas melhorias necessárias. A rota está otimizada.</p>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <div class="alert-panel">
+                    <div class="alert-header">
+                        <i class="fas fa-lightbulb alert-icon"></i>
+                        <span class="alert-title">Recomendações de Melhoria</span>
+                    </div>
+                    <ul class="recommendations-list">
+                        ${recommendations.map(rec => `<li class="recommendation-item">${rec}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+    }
+    
+    updateHeaderWithResults(result) {
+        if (this.currentMode === 'daily' && result.route) {
+            document.getElementById('totalDistanceHeader').textContent = result.route.total_distance_km.toFixed(1) + 'km';
+            document.getElementById('efficiencyHeader').textContent = result.route.efficiency.toFixed(0) + '%';
+            document.getElementById('estimatedHoursHeader').textContent = result.route.total_duration_hours.toFixed(1) + 'h';
+        } else if (this.currentMode === 'weekly' && result.weekly_schedule) {
+            const totalDistance = result.weekly_schedule.reduce((sum, day) => sum + day.total_distance_km, 0);
+            const avgEfficiency = result.avg_efficiency;
+            const totalHours = result.weekly_schedule.reduce((sum, day) => sum + day.total_duration_hours, 0);
+            
+            document.getElementById('totalDistanceHeader').textContent = totalDistance.toFixed(1) + 'km';
+            document.getElementById('efficiencyHeader').textContent = avgEfficiency.toFixed(0) + '%';
+            document.getElementById('estimatedHoursHeader').textContent = totalHours.toFixed(1) + 'h';
+        }
+    }
+    
+    initializeCharts() {
+        // Chart para municípios
+        const ctx1 = document.getElementById('municipalitiesChart');
+        if (ctx1) {
+            this.charts.municipalities = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Visitas por Município',
+                        data: [],
+                        backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Distribuição por Município',
+                            color: '#E8E8E8'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#B0B0B0' },
+                            grid: { color: 'rgba(176, 176, 176, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#B0B0B0' },
+                            grid: { color: 'rgba(176, 176, 176, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Chart para tipos de coleta
+        const ctx2 = document.getElementById('surveyTypesChart');
+        if (ctx2) {
+            this.charts.surveyTypes = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['MRS', 'MAP', 'Ambos'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(59, 130, 246, 0.7)',
+                            'rgba(168, 85, 247, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(59, 130, 246, 1)',
+                            'rgba(168, 85, 247, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#E8E8E8' }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Tipos de Coleta',
+                            color: '#E8E8E8'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Chart de timeline
+        const ctx3 = document.getElementById('timelineChart');
+        if (ctx3) {
+            this.charts.timeline = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Cronograma de Visitas',
+                        data: [],
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Timeline de Execução',
+                            color: '#E8E8E8'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: '#B0B0B0' },
+                            grid: { color: 'rgba(176, 176, 176, 0.1)' }
+                        },
+                        x: {
+                            ticks: { color: '#B0B0B0' },
+                            grid: { color: 'rgba(176, 176, 176, 0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Chart de performance
+        const ctx4 = document.getElementById('performanceChart');
+        if (ctx4) {
+            this.charts.performance = new Chart(ctx4, {
+                type: 'radar',
+                data: {
+                    labels: ['Eficiência', 'Tempo', 'Distância', 'Economia', 'Qualidade'],
+                    datasets: [{
+                        label: 'Performance da Rota',
+                        data: [0, 0, 0, 0, 0],
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        pointBackgroundColor: 'rgba(102, 126, 234, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(102, 126, 234, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Análise de Performance',
+                            color: '#E8E8E8'
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(176, 176, 176, 0.1)' },
+                            grid: { color: 'rgba(176, 176, 176, 0.1)' },
+                            pointLabels: { color: '#B0B0B0' },
+                            ticks: { color: '#B0B0B0', backdropColor: 'transparent' }
+                        }
+                    }
+                }
+            });
+        }
+    }
+    
+    updateChartsWithData(result) {
+        if (this.currentMode === 'daily' && result.route) {
+            this.updateDailyCharts(result);
+        } else if (this.currentMode === 'weekly' && result.weekly_schedule) {
+            this.updateWeeklyCharts(result);
+        }
+    }
+    
+    updateDailyCharts(result) {
+        const route = result.route;
+        const summary = result.summary;
+        
+        // Atualizar chart de municípios
+        const municipalities = summary.municipalities;
+        const municipalityCounts = municipalities.map(m => 1); // Cada município aparece uma vez
+        
+        this.charts.municipalities.data.labels = municipalities;
+        this.charts.municipalities.data.datasets[0].data = municipalityCounts;
+        this.charts.municipalities.update();
+        
+        // Atualizar chart de tipos de coleta
+        const surveyTypes = summary.survey_types;
+        const mrsCount = surveyTypes.filter(t => t.includes('MRS')).length;
+        const mapCount = surveyTypes.filter(t => t.includes('MAP')).length;
+        const bothCount = surveyTypes.filter(t => t === 'ambos').length;
+        
+        this.charts.surveyTypes.data.datasets[0].data = [mrsCount, mapCount, bothCount];
+        this.charts.surveyTypes.update();
+        
+        // Atualizar chart de performance
+        const efficiency = route.efficiency;
+        const timeScore = Math.max(0, 100 - (route.total_duration_hours * 10));
+        const distanceScore = Math.max(0, 100 - (route.total_distance_km * 2));
+        
+        this.charts.performance.data.datasets[0].data = [
+            efficiency, timeScore, distanceScore, 85, 90
+        ];
+        this.charts.performance.update();
+    }
+    
+    renderMap() {
+        const mapContainer = document.getElementById('routeMap');
+        
+        if (!this.currentRoute || !mapContainer) return;
+        
+        // Limpar mapa anterior
+        mapContainer.innerHTML = '';
+        
+        try {
+            // Tentar usar Google Maps
+            if (typeof google !== 'undefined' && google.maps) {
+                this.renderGoogleMap(mapContainer);
+            } else {
+                this.renderLeafletMap(mapContainer);
+            }
+        } catch (error) {
+            console.error('Erro ao renderizar mapa:', error);
+            this.renderLeafletMap(mapContainer);
+        }
+    }
+    
+    renderGoogleMap(container) {
+        const map = new google.maps.Map(container, {
+            zoom: 10,
+            center: { lat: -26.9076, lng: -48.6619 }, // Itajaí
+            styles: [
+                { elementType: 'geometry', stylers: [{ color: '#212121' }] },
+                { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+                { elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
+                { elementType: 'labels.text.stroke', stylers: [{ color: '#212121' }] }
+            ]
+        });
+        
+        // Adicionar marcadores para cada ponto da rota
+        if (this.currentRoute.route && this.currentRoute.route.points) {
+            this.currentRoute.route.points.forEach((point, index) => {
+                new google.maps.Marker({
+                    position: { lat: point.lat, lng: point.lng },
+                    map: map,
+                    title: `${index + 1}. ${point.municipality}`,
+                    label: (index + 1).toString()
+                });
+            });
+        }
+    }
+    
+    renderLeafletMap(container) {
+        const map = L.map(container).setView([-26.9076, -48.6619], 10);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // Adicionar marcadores
+        if (this.currentRoute.route && this.currentRoute.route.points) {
+            this.currentRoute.route.points.forEach((point, index) => {
+                L.marker([point.lat, point.lng])
+                    .addTo(map)
+                    .bindPopup(`${index + 1}. ${point.municipality}`);
+            });
+        }
+    }
+    
+    showLoading() {
+        document.getElementById('loadingOverlay').style.display = 'flex';
+    }
+    
+    hideLoading() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+    
+    showExportButtons() {
+        document.getElementById('exportPdfBtn').style.display = 'inline-flex';
+        document.getElementById('exportExcelBtn').style.display = 'inline-flex';
+        document.getElementById('exportCsvBtn').style.display = 'inline-flex';
+    }
+    
+    clearExportButtons() {
+        document.getElementById('exportPdfBtn').style.display = 'none';
+        document.getElementById('exportExcelBtn').style.display = 'none';
+        document.getElementById('exportCsvBtn').style.display = 'none';
+    }
+    
+    updateStatus(message) {
+        document.getElementById('optimizationStatus').innerHTML = `
+            <small class="text-muted">
+                <i class="fas fa-info-circle"></i> ${message}
+            </small>
+        `;
+    }
+    
+    showError(message) {
+        // Implementar notificação de erro
+        console.error(message);
+    }
+    
+    // Métodos de exportação (implementação simplificada)
+    async exportPDF() {
+        alert('Exportação PDF será implementada em breve');
+    }
+    
+    async exportExcel() {
+        alert('Exportação Excel será implementada em breve');
+    }
+    
+    async exportCSV() {
+        if (!this.currentRoute) return;
+        
+        try {
+            const response = await fetch('/api/pnsb-optimization/export/csv', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ route: this.currentRoute })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const blob = new Blob([data.csv_content], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = data.filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        } catch (error) {
+            this.showError('Erro ao exportar CSV: ' + error.message);
+        }
+    }
+}
+
+// Inicializar quando a página carregar
+document.addEventListener('DOMContentLoaded', () => {
+    new ProfessionalPNSBOptimizer();
+});
+</script>
+{% endblock %}

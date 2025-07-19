@@ -191,8 +191,8 @@ class AlertasPrazosCriticos:
                 and_(
                     Visita.municipio == entidade.municipio,
                     or_(
-                        Visita.informante.ilike(f"%{entidade.nome}%"),
-                        Visita.observacoes.ilike(f"%{entidade.nome}%")
+                        Visita.local.ilike(f"%{entidade.nome_entidade}%"),
+                        Visita.observacoes.ilike(f"%{entidade.nome_entidade}%")
                     )
                 )
             ).first()
@@ -206,9 +206,9 @@ class AlertasPrazosCriticos:
                         tipo=TipoAlerta.ENTIDADE_SEM_VISITA,
                         nivel=nivel,
                         titulo=f"🏢 {entidade.municipio}: Entidade P{entidade.prioridade} sem visita",
-                        descricao=f"Entidade '{entidade.nome}' (P{entidade.prioridade}) não possui visita agendada",
+                        descricao=f"Entidade '{entidade.nome_entidade}' (P{entidade.prioridade}) não possui visita agendada",
                         municipio=entidade.municipio,
-                        entidade=entidade.nome,
+                        entidade=entidade.nome_entidade,
                         dias_restantes=dias_restantes,
                         data_limite=self.DEADLINE_VISITAS,
                         acao_recomendada="Agendar visita para esta entidade",
@@ -246,9 +246,9 @@ class AlertasPrazosCriticos:
                     tipo=TipoAlerta.QUESTIONARIO_PENDENTE,
                     nivel=nivel,
                     titulo=f"📋 {visita.municipio}: Questionário há {dias_desde_visita} dias",
-                    descricao=f"Questionário de '{visita.informante}' pendente há {dias_desde_visita} dias",
+                    descricao=f"Questionário de '{visita.local}' pendente há {dias_desde_visita} dias",
                     municipio=visita.municipio,
-                    entidade=visita.informante,
+                    entidade=visita.local,
                     dias_restantes=dias_restantes,
                     data_limite=self.DEADLINE_QUESTIONARIOS,
                     acao_recomendada="Fazer follow-up urgente com informante",

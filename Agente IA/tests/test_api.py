@@ -31,7 +31,7 @@ class TestVisitasAPI:
             'data': '2024-12-25',
             'hora_inicio': '09:00',
             'hora_fim': '10:00',
-            'informante': 'João Silva',
+            'local': 'João Silva',
             'tipo_pesquisa': 'MRS',
             'tipo_informante': 'prefeitura',
             'observacoes': 'Teste'
@@ -52,7 +52,7 @@ class TestVisitasAPI:
             'municipio': 'Município Inexistente',
             'data': '2024-12-25',
             'hora_inicio': '09:00',
-            'informante': 'João Silva',
+            'local': 'João Silva',
             'tipo_pesquisa': 'TIPO_INVALIDO'
         }
         
@@ -95,7 +95,7 @@ class TestVisitasAPI:
             'data': '2024-12-26',
             'hora_inicio': '10:00',
             'hora_fim': '11:00',
-            'informante': 'Maria Silva',
+            'local': 'Maria Silva',
             'tipo_pesquisa': 'MAP',
             'observacoes': 'Atualizado'
         }

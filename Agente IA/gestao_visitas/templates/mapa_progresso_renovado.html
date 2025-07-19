@@ -1,0 +1,993 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard PNSB 2024 - Mapa de Progresso Executivo{% endblock %}
+
+{% block head %}
+<!-- Bibliotecas Externas -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- Estilos Customizados -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mapa_progresso.css') }}">
+
+<!-- Configurações de Segurança -->
+<script>
+    window.GOOGLE_MAPS_AVAILABLE = {{ 'true' if google_maps_api_key else 'false' }};
+    window.CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+</script>
+
+{% if google_maps_api_key %}
+<script>
+    (function() {
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&libraries=geometry&loading=async&callback=initGoogleMaps';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    })();
+    
+    window.initGoogleMaps = function() {
+        console.log('✅ Google Maps API carregado');
+        if (window.mapaProgressoPNSB) {
+            window.mapaProgressoPNSB.onGoogleMapsReady();
+        }
+    };
+    
+    // Alias para compatibilidade com código existente
+    function criarAliasMapaProgresso() {
+        if (window.mapaProgressoPNSB) {
+            window.mapaProgresso = window.mapaProgressoPNSB;
+            console.log('✅ Alias mapaProgresso criado com sucesso');
+        } else {
+            // Tentar novamente em 100ms
+            setTimeout(criarAliasMapaProgresso, 100);
+        }
+    }
+    
+    // Criar o alias imediatamente e também quando o DOM estiver carregado
+    criarAliasMapaProgresso();
+    document.addEventListener('DOMContentLoaded', criarAliasMapaProgresso);
+</script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- CORREÇÃO DE CSS -->
+<style>
+    .dashboard-container, .main-content, .tab-content { 
+        display: block !important; 
+        visibility: visible !important; 
+        opacity: 1 !important; 
+    }
+    /* Removido: .loading-overlay, #loading-indicator { display: none !important; } */
+    /* O loading agora será controlado via JavaScript */
+    body { 
+        overflow: auto !important; 
+    }
+</style>
+
+<div class="dashboard-container" style="display: block !important; visibility: visible !important;">
+    <!-- Header Principal -->
+    <header class="header-dashboard">
+        <div class="header-content">
+            <div>
+                <h1 class="header-title">Dashboard PNSB 2024</h1>
+                <p class="header-subtitle">Sistema de Monitoramento Executivo - Santa Catarina</p>
+            </div>
+            <div class="header-actions">
+                <button id="btn-atualizar" class="control-button">
+                    <span>🔄</span> Atualizar
+                </button>
+                <button id="btn-exportar" class="control-button">
+                    <span>📊</span> Exportar
+                </button>
+                <button id="btn-tela-cheia" class="control-button">
+                    <span>⛶</span> Tela Cheia
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navegação por Abas -->
+    <div class="container-fluid">
+        <nav class="tab-navigation">
+            <button class="tab-button active" data-tab="dashboard-executivo">
+                <span>📊</span> Dashboard Executivo
+            </button>
+            <button class="tab-button" data-tab="mapa-campo">
+                <span>🗺️</span> Mapa de Campo
+            </button>
+            <button class="tab-button" data-tab="analytics">
+                <span>📈</span> Analytics
+            </button>
+            <button class="tab-button" data-tab="workflow">
+                <span>⚙️</span> Workflow
+            </button>
+            <button class="tab-button" data-tab="alertas">
+                <span>⚠️</span> Alertas
+            </button>
+            <button class="tab-button" data-tab="relatorios">
+                <span>📋</span> Relatórios
+            </button>
+        </nav>
+
+        <!-- 1. DASHBOARD EXECUTIVO PNSB 2024 -->
+        <div id="dashboard-executivo" class="tab-content active" style="display: block !important; visibility: visible !important;">
+            <!-- KPIs Estratégicos IBGE -->
+            <section class="mb-3">
+                <h2 class="section-title">KPIs Estratégicos IBGE</h2>
+                <div id="kpis-estrategicos" class="kpis-estrategicos">
+                    <!-- Preenchido dinamicamente via JavaScript -->
+                </div>
+            </section>
+
+            <!-- Status dos 11 Municípios -->
+            <section class="mb-3">
+                <h2 class="section-title">Status dos 11 Municípios de Santa Catarina</h2>
+                <div id="municipios-grid" class="municipios-grid">
+                    <!-- Preenchido dinamicamente via JavaScript -->
+                </div>
+            </section>
+
+            <!-- Timeline Operacional PNSB -->
+            <section class="mb-3">
+                <div id="timeline-operacional">
+                    <!-- Preenchido dinamicamente via JavaScript -->
+                </div>
+            </section>
+
+            <!-- Painel de Controle Diário -->
+            <section class="mb-3">
+                <h2 class="section-title">Controle Operacional</h2>
+                <div id="painel-diario" class="painel-diario">
+                    <!-- Preenchido dinamicamente via JavaScript -->
+                </div>
+            </section>
+        </div>
+
+        <!-- 2. MAPA INTERATIVO DE CAMPO -->
+        <div id="mapa-campo" class="tab-content">
+            <section class="mb-3">
+                <div class="mapa-container">
+                    <div class="mapa-header">
+                        <h3 class="mapa-title">Mapa Interativo de Campo - Santa Catarina</h3>
+                        <div class="mapa-controls">
+                            <button class="control-button active" data-layer="p1">P1</button>
+                            <button class="control-button" data-layer="p2">P2</button>
+                            <button class="control-button" data-layer="p3">P3</button>
+                            <button class="control-button" data-layer="rotas">Rotas</button>
+                            <button class="control-button" data-layer="transito">Trânsito</button>
+                        </div>
+                    </div>
+                    <div id="mapa-leaflet"></div>
+                </div>
+            </section>
+
+            <!-- Legenda do Mapa -->
+            <section class="mb-3">
+                <div class="mapa-legenda">
+                    <h4>Legenda</h4>
+                    <div class="legenda-items">
+                        <div class="legenda-item">
+                            <div class="legenda-cor" style="background: #2E86AB;"></div>
+                            <span>P1 - Entidades Obrigatórias</span>
+                        </div>
+                        <div class="legenda-item">
+                            <div class="legenda-cor" style="background: #F18F01;"></div>
+                            <span>P2 - Entidades Importantes</span>
+                        </div>
+                        <div class="legenda-item">
+                            <div class="legenda-cor" style="background: #A23B72;"></div>
+                            <span>P3 - Entidades Opcionais</span>
+                        </div>
+                        <div class="legenda-item">
+                            <div class="legenda-cor" style="background: #28a745;"></div>
+                            <span>Concluído</span>
+                        </div>
+                        <div class="legenda-item">
+                            <div class="legenda-cor" style="background: #ffc107;"></div>
+                            <span>Em Andamento</span>
+                        </div>
+                        <div class="legenda-item">
+                            <div class="legenda-cor" style="background: #dc3545;"></div>
+                            <span>Pendente</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 3. ANALYTICS E INTELIGÊNCIA DE DADOS -->
+        <div id="analytics" class="tab-content">
+            <section class="mb-3">
+                <h2 class="section-title">Analytics e Inteligência de Dados</h2>
+                
+                <!-- Análise de Performance -->
+                <div class="analytics-grid">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4 class="chart-title">Progresso por Município</h4>
+                            <p class="chart-subtitle">Percentual de conclusão MRS e MAP</p>
+                        </div>
+                        <canvas id="chart-progresso-municipios" class="chart-canvas"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4 class="chart-title">Distribuição de Status</h4>
+                            <p class="chart-subtitle">Status atual das entidades</p>
+                        </div>
+                        <canvas id="chart-distribuicao-status" class="chart-canvas"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4 class="chart-title">Timeline de Visitas</h4>
+                            <p class="chart-subtitle">Visitas realizadas ao longo do tempo</p>
+                        </div>
+                        <canvas id="chart-timeline-visitas" class="chart-canvas"></canvas>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h4 class="chart-title">Score de Qualidade</h4>
+                            <p class="chart-subtitle">Qualidade dos dados coletados</p>
+                        </div>
+                        <canvas id="chart-qualidade-dados" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Predições e Insights -->
+                <div class="predicoes-container">
+                    <h3>Predições e Insights IA</h3>
+                    <div id="predicoes-ia">
+                        <!-- Preenchido dinamicamente -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 4. GESTÃO DE WORKFLOW DE CAMPO -->
+        <div id="workflow" class="tab-content">
+            <section class="mb-3">
+                <h2 class="section-title">Gestão de Workflow de Campo</h2>
+                
+                <!-- Pipeline de Visitas -->
+                <div class="workflow-pipeline">
+                    <h3>Pipeline de Visitas</h3>
+                    <div id="pipeline-visitas">
+                        <!-- Status workflow com 25 estados -->
+                    </div>
+                </div>
+
+                <!-- Checklist por Etapa -->
+                <div class="workflow-checklist">
+                    <h3>Checklist de Qualidade</h3>
+                    <div id="checklist-etapas">
+                        <!-- 3 fases: antes/durante/após -->
+                    </div>
+                </div>
+
+                <!-- Estatísticas de Workflow -->
+                <div class="workflow-stats">
+                    <h3>Estatísticas de Eficiência</h3>
+                    <div id="workflow-estatisticas">
+                        <!-- Métricas de eficiência -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <!-- 6. SISTEMA DE ALERTAS OPERACIONAIS -->
+        <div id="alertas" class="tab-content">
+            <section class="mb-3">
+                <h2 class="section-title">Sistema de Alertas Operacionais</h2>
+                
+                <!-- Alertas Ativos -->
+                <div class="alertas-container">
+                    <div id="alertas-sistema">
+                        <!-- Alertas gerados dinamicamente -->
+                    </div>
+                </div>
+
+                <!-- Configuração de Alertas -->
+                <div class="config-alertas">
+                    <h3>Configuração de Alertas</h3>
+                    <div id="config-alertas-form">
+                        <!-- Formulário de configuração -->
+                    </div>
+                </div>
+
+                <!-- Histórico de Alertas -->
+                <div class="historico-alertas">
+                    <h3>Histórico de Alertas</h3>
+                    <div id="historico-alertas-lista">
+                        <!-- Lista de alertas passados -->
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 7. RELATÓRIOS EXECUTIVOS AUTOMÁTICOS -->
+        <div id="relatorios" class="tab-content">
+            <section class="mb-3">
+                <h2 class="section-title">Relatórios Executivos Automáticos</h2>
+                
+                <!-- Relatório Semanal -->
+                <div class="relatorio-semanal">
+                    <h3>Relatório Semanal Automático</h3>
+                    <div id="relatorio-semanal-content">
+                        <!-- Relatório gerado automaticamente -->
+                    </div>
+                    <button class="btn btn-primary" data-acao="gerar_relatorio_semanal">
+                        Gerar Relatório Semanal
+                    </button>
+                </div>
+
+                <!-- Relatório para IBGE -->
+                <div class="relatorio-ibge">
+                    <h3>Relatório Executivo IBGE</h3>
+                    <div class="relatorio-tipos">
+                        <button class="btn btn-outline-primary" data-acao="relatorio_ibge_executive">
+                            Executive Summary
+                        </button>
+                        <button class="btn btn-outline-primary" data-acao="relatorio_ibge_detailed">
+                            Detailed Report
+                        </button>
+                        <button class="btn btn-outline-primary" data-acao="relatorio_ibge_technical">
+                            Technical Report
+                        </button>
+                    </div>
+                    <div id="relatorio-ibge-content">
+                        <!-- Relatório para IBGE -->
+                    </div>
+                </div>
+
+                <!-- Dashboard Móvel para Campo -->
+                <div class="dashboard-mobile">
+                    <h3>Dashboard Móvel para Campo</h3>
+                    <div id="dashboard-mobile-preview">
+                        <!-- Preview do dashboard móvel -->
+                    </div>
+                    <button class="btn btn-success" data-acao="abrir_dashboard_mobile">
+                        Abrir Dashboard Móvel
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Carregando dados...</p>
+        </div>
+    </div>
+
+    <!-- Modais -->
+    <div id="modal-container">
+        <!-- Modais serão inseridos dinamicamente -->
+    </div>
+</div>
+
+<!-- Scripts JavaScript -->
+<script src="{{ url_for('static', filename='js/mapa_progresso_charts.js') }}?v=20250714i"></script>
+<script src="{{ url_for('static', filename='js/mapa_progresso_workflow.js') }}?v=20250714i"></script>
+<script src="{{ url_for('static', filename='js/mapa_progresso.js') }}?v=20250714i"></script>
+
+<!-- Script de inicialização adicional -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Inicializando Dashboard PNSB 2024...');
+    
+    // Configurações específicas do projeto
+    if (window.mapaProgressoPNSB) {
+        // Configurar callbacks específicos
+        window.mapaProgressoPNSB.onDataLoaded = function(dados) {
+            console.log('📊 Dados carregados:', dados);
+        };
+        
+        window.mapaProgressoPNSB.onError = function(erro) {
+            console.error('❌ Erro no dashboard:', erro);
+        };
+    }
+    
+    // Configurar atalhos de teclado
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            switch(e.key) {
+                case 'r':
+                    e.preventDefault();
+                    if (window.mapaProgressoPNSB) {
+                        window.mapaProgressoPNSB.atualizarDados();
+                    }
+                    break;
+                case 'e':
+                    e.preventDefault();
+                    if (window.mapaProgressoPNSB) {
+                        window.mapaProgressoPNSB.exportarDados();
+                    }
+                    break;
+            }
+        }
+    });
+    
+    // Configurar responsividade
+    window.addEventListener('resize', function() {
+        if (window.mapaProgressoPNSB && window.mapaProgressoPNSB.mapa) {
+            setTimeout(() => {
+                window.mapaProgressoPNSB.mapa.invalidateSize();
+            }, 100);
+        }
+    });
+});
+</script>
+
+<!-- Estilos inline para loading -->
+<style>
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(245, 247, 250, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    text-align: center;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #E1E8ED;
+    border-top: 4px solid #2E86AB;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.legenda-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.legenda-cor {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+.mapa-legenda {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+}
+
+/* Responsividade adicional */
+@media (max-width: 1200px) {
+    .analytics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+    .municipios-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .header-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .header-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .tab-navigation {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .tab-navigation::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .legenda-items {
+        justify-content: center;
+    }
+}
+
+/* Estilos para Questionários por Entidade */
+.questionarios-section {
+    margin-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1rem;
+}
+
+.questionarios-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.questionarios-header h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.questionarios-content {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.entidade-questionario-card {
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.entidade-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.entidade-nome {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.entidade-tipo, .entidade-prioridade {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.questionarios-status {
+    margin-bottom: 0.75rem;
+}
+
+.questionario-item {
+    margin-bottom: 0.75rem;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.questionario-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.questionario-label {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.questionario-status {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.questionario-status.status-nao_iniciado {
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid var(--border-color, #4A4F66);
+}
+
+.questionario-status.status-respondido {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid var(--warning-color, #F59E0B);
+}
+
+.questionario-status.status-validado_concluido {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid var(--success-color, #10B981);
+}
+
+.questionario-status.status-nao_aplicavel {
+    background: #e2e3e5;
+    color: #383d41;
+    border: 1px solid var(--border-color-light, #5A5F76);
+}
+
+.questionario-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.questionario-actions .btn {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.questionario-actions .btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.questionario-actions .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.entidade-footer {
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 0.5rem;
+}
+
+/* Badges personalizados */
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.badge-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .questionario-actions {
+        flex-direction: column;
+    }
+    
+    .questionario-actions .btn {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+    
+    .entidade-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .entidade-tipo, .entidade-prioridade {
+        margin-left: 0;
+        margin-top: 0.25rem;
+    }
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.questionarios-content {
+    animation: fadeIn 0.3s ease;
+}
+
+.entidade-questionario-card {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Estilos para Relatórios */
+.relatorio-semanal-container, .relatorio-ibge-container {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-top: 1rem;
+    box-shadow: var(--shadow);
+}
+
+.relatorio-header {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.relatorio-header h4 {
+    margin: 0;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.relatorio-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    text-align: center;
+}
+
+.stat-card h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.resumo-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.resumo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.resumo-label {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.resumo-value {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.municipios-tabela {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.municipios-tabela table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.municipios-tabela th,
+.municipios-tabela td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.municipios-tabela th {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+}
+
+.tecnicos-info {
+    display: grid;
+    gap: 1rem;
+}
+
+.tecnico-item {
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.relatorio-footer {
+    text-align: center;
+    padding-top: 1rem;
+    border-top: 1px solid #dee2e6;
+    color: #6c757d;
+}
+
+/* Dashboard Móvel */
+.mobile-preview {
+    background: #2c3e50;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.mobile-header h6 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.mobile-content {
+    display: grid;
+    gap: 1rem;
+}
+
+.mobile-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+}
+
+.mobile-label {
+    font-weight: 500;
+}
+
+.mobile-value {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #3498db;
+}
+
+.mobile-actions {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Alertas */
+.alertas-container {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.alerta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.alerta.critico {
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+}
+
+.alerta.importante {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+}
+
+.alerta.info {
+    background: #d1ecf1;
+    border-left: 4px solid #17a2b8;
+}
+
+.alerta-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.alerta-content {
+    flex: 1;
+}
+
+.alerta-titulo {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.alerta-descricao {
+    margin: 0;
+    color: #6c757d;
+}
+
+.alerta-acao {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.alerta-acao:hover {
+    background: #0056b3;
+}
+
+/* Responsive para relatórios */
+@media (max-width: 768px) {
+    .relatorio-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .resumo-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .resumo-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .mobile-preview {
+        padding: 1rem;
+    }
+}
+</style>
+{% endblock %}

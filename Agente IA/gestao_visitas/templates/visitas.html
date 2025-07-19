@@ -32,13 +32,21 @@
         <select class="select-custom" id="filtro-status">
             <option value="">Todos os Status</option>
             <option value="agendada">Agendada</option>
+            <option value="em preparação">Em Preparação</option>
             <option value="em andamento">Em Andamento</option>
+            <option value="em execução">Em Execução</option>
+            <option value="em follow-up">Em Follow-up</option>
+            <option value="verificação whatsapp">Verificação WhatsApp</option>
             <option value="realizada">Realizada</option>
             <option value="questionários concluídos">Questionários Concluídos</option>
             <option value="questionários validados">Questionários Validados</option>
             <option value="finalizada">Finalizada</option>
             <option value="remarcada">Remarcada</option>
             <option value="não realizada">Não Realizada</option>
+            <option value="cancelada">Cancelada</option>
+            <option value="aguardando">Aguardando</option>
+            <option value="pendente">Pendente</option>
+            <option value="confirmada">Confirmada</option>
         </select>
     </div>
     <div class="col-md-3">
@@ -340,6 +348,28 @@
     font-size: 0.9rem;
     padding: 0.2rem 0.6rem;
   }
+  
+  /* Melhorar contraste dos badges */
+  .badge {
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  /* Garantir legibilidade mínima */
+  .badge.bg-info {
+    background-color: #0891b2 !important;
+    color: #fff !important;
+  }
+  
+  .badge.bg-secondary {
+    background-color: #495057 !important;
+    color: #fff !important;
+  }
+  
+  .badge.bg-warning {
+    background-color: #f59e0b !important;
+    color: #000 !important;
+  }
 }
 .visita-card {
   background: linear-gradient(120deg, #23263B 60%, #181A20 100%);
@@ -463,22 +493,24 @@
 console.log('JS carregado!');
 function statusBadge(status) {
   const map = {
-    'agendada': 'primary',
-    'em preparação': 'info',
-    'em execução': 'info',
-    'resultados visita': 'secondary',
-    'realizada': 'success',
-    'remarcada': 'warning',
-    'cancelada': 'danger',
-    'não realizada': 'danger',
-    'em follow-up': 'info',
-    'finalizada': 'success',
-    'antes da visita': 'primary',
-    'durante a visita': 'info',
-    'após a visita': 'success'
+    'agendada': { bg: '#0d6efd', text: '#fff' },          // Azul escuro
+    'em preparação': { bg: '#17a2b8', text: '#fff' },     // Ciano escuro
+    'em execução': { bg: '#20c997', text: '#000' },       // Verde claro
+    'resultados visita': { bg: '#6c757d', text: '#fff' }, // Cinza escuro
+    'realizada': { bg: '#198754', text: '#fff' },         // Verde escuro
+    'remarcada': { bg: '#fd7e14', text: '#fff' },         // Laranja escuro
+    'cancelada': { bg: '#dc3545', text: '#fff' },         // Vermelho
+    'não realizada': { bg: '#dc3545', text: '#fff' },     // Vermelho
+    'em follow-up': { bg: '#0dcaf0', text: '#000' },      // Ciano claro
+    'finalizada': { bg: '#198754', text: '#fff' },        // Verde escuro
+    'antes da visita': { bg: '#0d6efd', text: '#fff' },   // Azul escuro
+    'durante a visita': { bg: '#17a2b8', text: '#fff' },  // Ciano escuro
+    'após a visita': { bg: '#198754', text: '#fff' },     // Verde escuro
+    'verificação whatsapp': { bg: '#25d366', text: '#fff' } // Verde WhatsApp
   };
-  const cor = map[(status || '').toLowerCase()] || 'dark';
-  return `<span class="badge bg-${cor}" style="color:#fff;">${status}</span>`;
+  
+  const cores = map[(status || '').toLowerCase()] || { bg: '#212529', text: '#fff' };
+  return `<span class="badge" style="background-color: ${cores.bg}; color: ${cores.text}; font-weight: 600;">${status}</span>`;
 }
 
 // Usar o novo sistema de toast do base.html
@@ -543,19 +575,24 @@ function etapasTimeline(etapas, atual) {
   </div>`;
 }
 
-// Lista de status possíveis
+// Lista de status possíveis (sincronizado com modelo Python)
 const STATUS_VISITA_COMPLETO = [
   'agendada',
   'em preparação',
-  'em execução',
-  'resultados visita',
-  'realizada',
-  'verificação whatsapp',
+  'em andamento',
+  'em execução', 
   'em follow-up',
+  'verificação whatsapp',
+  'realizada',
+  'questionários concluídos',
+  'questionários validados',
+  'finalizada',
   'remarcada',
-  'cancelada',
   'não realizada',
-  'finalizada'
+  'cancelada',
+  'aguardando',
+  'pendente',
+  'confirmada'
 ];
 
 // Funções para Verificação por WhatsApp
@@ -1314,7 +1351,7 @@ function renderVisitas(visitas) {
             <span class="visita-card-info"><i class="bi bi-clock me-1"></i> ${v.hora_inicio || '--:--'}</span>
           </div>
           <div class="mb-3 d-flex align-items-center gap-2 visita-card-info-text">
-            <i class="bi bi-geo-alt"></i> <span class="fw-semibold">${v.local || '-'} <span class="badge bg-secondary ms-2">${v.tipo_informante || 'prefeitura'}</span></span>
+            <i class="bi bi-geo-alt"></i> <span class="fw-semibold">${v.local || '-'} <span class="badge ms-2" style="background-color: #495057; color: #fff; font-weight: 600;">${v.tipo_informante || 'prefeitura'}</span></span>
           </div>
           <div class="mb-3 d-flex align-items-center gap-2 visita-card-info-text">
             <i class="bi bi-file-earmark-text"></i> <span class="fw-semibold">${v.tipo_pesquisa || 'MRS'}</span>

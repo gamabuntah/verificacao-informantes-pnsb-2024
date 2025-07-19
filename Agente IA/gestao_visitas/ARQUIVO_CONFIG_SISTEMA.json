@@ -1,0 +1,95 @@
+{
+  "sistema_mapa_progresso": {
+    "versao": "2.0_renovado",
+    "data_ultima_atualizacao": "2025-07-15",
+    
+    "arquivos_ativos": {
+      "template_principal": {
+        "caminho": "gestao_visitas/templates/mapa_progresso_renovado.html",
+        "tamanho_esperado_kb": 21,
+        "status": "ATIVO",
+        "descricao": "Template principal em uso pelas rotas"
+      },
+      "javascript_principal": {
+        "caminho": "gestao_visitas/static/js/mapa_progresso.js", 
+        "funcoes_principais": ["MapaProgressoPNSB", "calcularEficienciaDinamica", "renderizarKPIs"],
+        "status": "ATIVO",
+        "descricao": "JavaScript principal com classe MapaProgressoPNSB"
+      },
+      "javascript_charts": {
+        "caminho": "gestao_visitas/static/js/mapa_progresso_charts.js",
+        "funcoes_principais": ["ChartsAnalytics", "criarChartProgressoMunicipios"],
+        "status": "ATIVO", 
+        "descricao": "Gráficos e analytics com Chart.js"
+      },
+      "javascript_workflow": {
+        "caminho": "gestao_visitas/static/js/mapa_progresso_workflow.js",
+        "status": "ATIVO",
+        "descricao": "Funcionalidades de workflow"
+      },
+      "css_principal": {
+        "caminho": "gestao_visitas/static/css/mapa_progresso.css",
+        "status": "ATIVO",
+        "descricao": "Estilos do dashboard"
+      }
+    },
+    
+    "arquivos_inativos": {
+      "template_antigo": {
+        "caminho": "gestao_visitas/templates/mapa_progresso.html",
+        "tamanho_kb": 715,
+        "status": "INATIVO - NAO EDITAR",
+        "motivo": "Versão antiga não utilizada pelas rotas"
+      },
+      "arquivos_backup": {
+        "padrao": "gestao_visitas/templates/mapa_progresso_backup_*.html",
+        "status": "INATIVO - NAO EDITAR",
+        "motivo": "Arquivos de backup histórico"
+      },
+      "arquivos_otimizados": {
+        "padrao": "gestao_visitas/static/optimized/**/*",
+        "status": "AUTO-GERADO - NAO EDITAR DIRETAMENTE",
+        "motivo": "Versões otimizadas geradas automaticamente"
+      }
+    },
+    
+    "rotas_ativas": [
+      "/mapa-progresso",
+      "/dashboard-executivo", 
+      "/mapa-progresso-novo"
+    ],
+    
+    "verificacoes_pre_edicao": [
+      "Consultar este arquivo JSON",
+      "Executar verificar_arquivos_corretos.py",
+      "Confirmar template = mapa_progresso_renovado.html (~21KB)",
+      "Confirmar JS em /static/js/ (não /optimized/)"
+    ],
+    
+    "pos_edicao": [
+      "Executar sincronizar_arquivos.py se necessário",
+      "Reiniciar Flask se arquivos JS foram alterados",
+      "Testar no navegador: http://localhost:5000/mapa-progresso"
+    ],
+    
+    "indicadores_arquivo_correto": {
+      "template": {
+        "nome_arquivo": "mapa_progresso_renovado.html",
+        "tamanho_aproximado": "21KB",
+        "conteudo_identificador": "Dashboard PNSB 2024 - Mapa de Progresso Executivo"
+      },
+      "javascript": {
+        "localizacao": "/static/js/ (NÃO /static/optimized/)",
+        "funcao_identificadora": "calcularEficienciaDinamica",
+        "classe_identificadora": "MapaProgressoPNSB"
+      }
+    },
+    
+    "alertas_importantes": [
+      "⚠️ NUNCA editar mapa_progresso.html (715KB) - é o arquivo ANTIGO",
+      "⚠️ SEMPRE editar mapa_progresso_renovado.html (21KB) - é o arquivo ATIVO", 
+      "⚠️ Editar apenas arquivos em /static/js/, nunca em /static/optimized/",
+      "⚠️ Consultar SEMPRE este arquivo antes de qualquer modificação"
+    ]
+  }
+}

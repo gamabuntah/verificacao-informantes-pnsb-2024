@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico PNSB 2024</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #ddd;
+        }
+        .success {
+            background-color: #d4edda;
+            border-left-color: #28a745;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-left-color: #dc3545;
+            color: #721c24;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left-color: #ffc107;
+            color: #856404;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-left-color: #17a2b8;
+            color: #0c5460;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .loading {
+            display: none;
+            color: #666;
+        }
+        .json-output {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        h1 { color: #333; }
+        h2 { color: #666; margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnóstico PNSB 2024</h1>
+        <p>Esta página irá testar todas as conexões e identificar problemas.</p>
+        
+        <h2>📊 Testes Automáticos</h2>
+        <div id="auto-tests">
+            <div class="loading" id="loading">🔄 Executando testes...</div>
+        </div>
+        
+        <h2>🎯 Testes Manuais</h2>
+        <div>
+            <button onclick="testarAPI()">Testar API /api/visitas</button>
+            <button onclick="testarPaginaPrincipal()">Testar Página Principal</button>
+            <button onclick="testarTodasRotas()">Testar Todas as Rotas</button>
+            <button onclick="limparCache()">Limpar Cache Local</button>
+        </div>
+        
+        <h2>📋 Resultados</h2>
+        <div id="results"></div>
+        
+        <h2>📄 Dados da API</h2>
+        <div id="api-data" class="json-output"></div>
+    </div>
+
+    <script>
+        let resultContainer = document.getElementById('results');
+        let apiDataContainer = document.getElementById('api-data');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            resultContainer.appendChild(div);
+            resultContainer.scrollTop = resultContainer.scrollHeight;
+        }
+        
+        function clearResults() {
+            resultContainer.innerHTML = '';
+            apiDataContainer.innerHTML = '';
+        }
+        
+        async function testarConexaoBasica() {
+            log('🔌 Testando conexão básica com servidor...', 'info');
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/', {
+                    method: 'GET',
+                    timeout: 5000
+                });
+                
+                if (response.ok) {
+                    log('✅ Servidor Flask respondendo na porta 5000', 'success');
+                    return true;
+                } else {
+                    log(`❌ Servidor retornou erro: ${response.status}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`❌ Erro de conexão: ${error.message}`, 'error');
+                log('💡 Verifique se o Flask está rodando: python3 app.py', 'warning');
+                return false;
+            }
+        }
+        
+        async function testarAPI() {
+            log('📡 Testando API /api/visitas...', 'info');
+            
+            try {
+                const startTime = Date.now();
+                const response = await fetch('http://127.0.0.1:5000/api/visitas', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+                
+                log(`⏱️ Tempo de resposta: ${duration}ms`, duration > 1000 ? 'warning' : 'info');
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ API funcionando! ${data.data.length} visitas encontradas`, 'success');
+                    
+                    // Mostrar dados
+                    apiDataContainer.textContent = JSON.stringify(data, null, 2);
+                    
+                    // Mostrar resumo das visitas
+                    if (data.data.length > 0) {
+                        log('📋 Primeiras visitas:', 'info');
+                        data.data.slice(0, 3).forEach((visita, i) => {
+                            log(`   ${i+1}. ${visita.municipio} - ${visita.data} - ${visita.status}`, 'info');
+                        });
+                    }
+                    
+                    return true;
+                } else {
+                    log(`❌ API retornou erro ${response.status}`, 'error');
+                    const errorText = await response.text();
+                    log(`📄 Erro: ${errorText.substring(0, 200)}...`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`❌ Erro na API: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        async function testarPaginaPrincipal() {
+            log('🏠 Testando página principal...', 'info');
+            
+            try {
+                const response = await fetch('http://127.0.0.1:5000/');
+                
+                if (response.ok) {
+                    const html = await response.text();
+                    log(`✅ Página principal carregada (${html.length} caracteres)`, 'success');
+                    
+                    // Verificar se contém elementos esperados
+                    if (html.includes('PNSB')) {
+                        log('✅ Página contém conteúdo PNSB', 'success');
+                    } else {
+                        log('⚠️ Página pode não estar carregando corretamente', 'warning');
+                    }
+                    
+                    return true;
+                } else {
+                    log(`❌ Erro na página principal: ${response.status}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                log(`❌ Erro ao carregar página: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        async function testarTodasRotas() {
+            log('🧪 Testando todas as rotas importantes...', 'info');
+            
+            const rotas = [
+                { url: '/api/visitas', nome: 'API Visitas' },
+                { url: '/api/visitas/dashboard-inteligente', nome: 'Dashboard Inteligente' },
+                { url: '/api/visitas/progresso-mapa', nome: 'Progresso Mapa' },
+                { url: '/visitas', nome: 'Página Visitas' },
+                { url: '/mapa-progresso', nome: 'Mapa Progresso' }
+            ];
+            
+            for (const rota of rotas) {
+                try {
+                    const response = await fetch(`http://127.0.0.1:5000${rota.url}`);
+                    
+                    if (response.ok) {
+                        log(`✅ ${rota.nome}: OK (${response.status})`, 'success');
+                    } else {
+                        log(`❌ ${rota.nome}: Erro ${response.status}`, 'error');
+                    }
+                } catch (error) {
+                    log(`❌ ${rota.nome}: ${error.message}`, 'error');
+                }
+                
+                // Pequena pausa entre testes
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+        }
+        
+        function limparCache() {
+            log('🧹 Limpando cache local...', 'info');
+            
+            try {
+                // Limpar localStorage
+                localStorage.clear();
+                log('✅ LocalStorage limpo', 'success');
+                
+                // Limpar sessionStorage
+                sessionStorage.clear();
+                log('✅ SessionStorage limpo', 'success');
+                
+                // Sugerir hard refresh
+                log('💡 Agora pressione Ctrl+Shift+R para recarregar completamente', 'warning');
+                
+            } catch (error) {
+                log(`❌ Erro ao limpar cache: ${error.message}`, 'error');
+            }
+        }
+        
+        async function executarTestesAutomaticos() {
+            const loadingEl = document.getElementById('loading');
+            loadingEl.style.display = 'block';
+            
+            clearResults();
+            
+            log('🚀 Iniciando diagnóstico automático...', 'info');
+            
+            // Teste 1: Conexão básica
+            const conexaoOK = await testarConexaoBasica();
+            
+            if (conexaoOK) {
+                // Teste 2: API
+                await testarAPI();
+                
+                // Teste 3: Página principal
+                await testarPaginaPrincipal();
+            }
+            
+            log('✅ Diagnóstico automático concluído', 'success');
+            loadingEl.style.display = 'none';
+        }
+        
+        // Executar testes automaticamente quando a página carregar
+        window.addEventListener('load', () => {
+            setTimeout(executarTestesAutomaticos, 500);
+        });
+        
+        // Informações do navegador
+        log(`🌐 Navegador: ${navigator.userAgent}`, 'info');
+        log(`📍 URL atual: ${window.location.href}`, 'info');
+    </script>
+</body>
+</html>

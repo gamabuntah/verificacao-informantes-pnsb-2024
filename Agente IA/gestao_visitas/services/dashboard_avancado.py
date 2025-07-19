@@ -223,7 +223,7 @@ class DashboardAvancado:
                 'municipio': proxima_visita.municipio if proxima_visita else None,
                 'data': proxima_visita.data.strftime('%d/%m/%Y') if proxima_visita else None,
                 'hora': proxima_visita.hora_inicio.strftime('%H:%M') if proxima_visita else None,
-                'informante': proxima_visita.informante if proxima_visita else None
+                'local': proxima_visita.local if proxima_visita else None
             } if proxima_visita else None,
             'sistema_saude': sistema_saude,
             'atividade_recente': atividade_recente,

@@ -14,7 +14,7 @@ class TestVisitaModel:
             data=date(2024, 12, 25),
             hora_inicio=time(9, 0),
             hora_fim=time(10, 0),
-            informante="João Silva",
+            local="João Silva",
             tipo_pesquisa="MRS",
             status="agendada"
         )
@@ -33,7 +33,7 @@ class TestVisitaModel:
         
         assert isinstance(visita_dict, dict)
         assert visita_dict['municipio'] == "Itajaí"
-        assert visita_dict['informante'] == "João Silva"
+        assert visita_dict['local'] == "João Silva"
         assert 'data' in visita_dict
     
     def test_atualizar_status_visita(self, sample_visita, db_session):

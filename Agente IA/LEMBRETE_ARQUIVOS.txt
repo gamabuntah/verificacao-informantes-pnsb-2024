@@ -1,0 +1,31 @@
+🚨🚨🚨 LEMBRETE CRÍTICO - SEMPRE LER ANTES DE EDITAR 🚨🚨🚨
+
+                    ⚡ ARQUIVOS CORRETOS ⚡
+
+📁 TEMPLATE: mapa_progresso_renovado.html (21KB) ✅
+📁 JS PRINCIPAL: /static/js/mapa_progresso.js ✅
+📁 JS CHARTS: /static/js/mapa_progresso_charts.js ✅
+📁 JS WORKFLOW: /static/js/mapa_progresso_workflow.js ✅
+📁 CSS: /static/css/mapa_progresso.css ✅
+
+                    ❌ ARQUIVOS INCORRETOS ❌
+
+❌ mapa_progresso.html (715KB) - VERSÃO ANTIGA
+❌ /static/optimized/ - AUTO-GERADO  
+❌ *backup*.html - BACKUPS
+
+🔍 VERIFICAÇÃO RÁPIDA:
+- Template deve ter ~21KB (não 715KB)
+- JavaScript deve estar em /static/js/ (não /optimized/)
+- Sempre conferir este arquivo antes de editar
+
+📋 COMANDOS:
+python3 verificar_arquivos_corretos.py
+python3 sincronizar_arquivos.py
+
+🎯 EM CASO DE DÚVIDA:
+1. Consultar ARQUIVO_CONFIG_SISTEMA.json
+2. Executar verificar_arquivos_corretos.py
+3. Confirmar tamanho do HTML (21KB = correto)
+
+🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste Final - Status dos 11 Municípios</title>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            font-family: monospace; 
+            background: #000; 
+            color: #0f0; 
+            padding: 20px; 
+            line-height: 1.6;
+        }
+        .step { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #333; 
+            background: #111; 
+            border-radius: 5px;
+        }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .warning { color: #ff0; }
+        .info { color: #0ff; }
+        pre { 
+            background: #222; 
+            padding: 10px; 
+            overflow: auto; 
+            border-radius: 3px;
+            white-space: pre-wrap;
+        }
+        .test-container {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        .municipio-item {
+            background: rgba(45, 49, 66, 0.6);
+            border-left: 3px solid #3B82F6;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            color: #F1F5F9;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Teste Final - Status dos 11 Municípios - Santa Catarina</h1>
+    <div id="results"></div>
+
+    <script>
+        async function testeCompleto() {
+            const results = document.getElementById('results');
+            
+            function addStep(title, content, type = 'info') {
+                const div = document.createElement('div');
+                div.className = `step ${type}`;
+                div.innerHTML = `<h3>${title}</h3>${content}`;
+                results.appendChild(div);
+            }
+            
+            try {
+                // Passo 1: Verificar se o container existe
+                addStep('1. Verificação do Container', 
+                    `<div id="municipiosStatus" class="test-container">
+                        <p class="info">Container criado para teste</p>
+                    </div>`
+                );
+                
+                // Passo 2: Testar API diretamente
+                addStep('2. Teste da API', 'Carregando dados da API...');
+                
+                const response = await fetch('/api/visitas/progresso-mapa');
+                const data = await response.json();
+                
+                addStep('2. Resposta da API', 
+                    `<div class="success">✅ API funcionando</div>
+                    <div>Status HTTP: ${response.status}</div>
+                    <div>Possui campo 'data': ${!!data.data}</div>
+                    <div>É array: ${Array.isArray(data.data)}</div>
+                    <div>Total municípios: ${data.data ? data.data.length : 0}</div>
+                    <pre>${JSON.stringify(data, null, 2).substring(0, 1000)}...</pre>`
+                );
+                
+                // Passo 3: Simular processo do dashboard
+                if (data.data && data.data.length > 0) {
+                    addStep('3. Processamento dos Dados', 'Simulando processamento do DashboardPNSB...');
+                    
+                    // Simular municipiosCoordenadas
+                    const municipiosCoordenadas = {
+                        'Balneário Camboriú': {lat: -26.9777, lng: -48.6286, prioridade: 1},
+                        'Balneário Piçarras': {lat: -26.7722, lng: -48.6719, prioridade: 2},
+                        'Bombinhas': {lat: -27.1386, lng: -48.4975, prioridade: 2},
+                        'Camboriú': {lat: -27.0239, lng: -48.6519, prioridade: 1},
+                        'Itajaí': {lat: -26.9000, lng: -48.6650, prioridade: 1},
+                        'Itapema': {lat: -27.0908, lng: -48.6147, prioridade: 2},
+                        'Luiz Alves': {lat: -26.7167, lng: -48.9333, prioridade: 3},
+                        'Navegantes': {lat: -26.8961, lng: -48.6558, prioridade: 2},
+                        'Penha': {lat: -26.7711, lng: -48.6511, prioridade: 2},
+                        'Porto Belo': {lat: -27.1583, lng: -48.5522, prioridade: 3},
+                        'Ilhota': {lat: -26.8969, lng: -48.8258, prioridade: 3}
+                    };
+                    
+                    // Processar dados como o dashboard faria
+                    const municipiosData = {};
+                    data.data.forEach(municipioData => {
+                        const municipio = municipioData.municipio;
+                        
+                        if (municipiosCoordenadas[municipio]) {
+                            municipiosData[municipio] = {
+                                visitas_total: municipioData.questionarios?.entidades_obrigatorias || 0,
+                                visitas_concluidas: (municipioData.questionarios?.mrs_concluidos || 0) + (municipioData.questionarios?.map_concluidos || 0),
+                                p1_total: municipioData.questionarios?.prioridades?.p1?.total_entidades || 0,
+                                p1_concluidas: municipioData.questionarios?.prioridades?.p1?.mrs_concluidos || 0,
+                                status: municipioData.status || 'Não iniciado',
+                                cor_status: municipioData.cor_status || '#6B7280',
+                                coords: municipioData.coords || [municipiosCoordenadas[municipio].lat, municipiosCoordenadas[municipio].lng]
+                            };
+                        }
+                    });
+                    
+                    addStep('3. Dados Processados', 
+                        `<div class="success">✅ ${Object.keys(municipiosData).length} municípios processados</div>
+                        <pre>${JSON.stringify(municipiosData, null, 2)}</pre>`
+                    );
+                    
+                    // Passo 4: Gerar HTML como a função atualizarStatusMunicipios
+                    const container = document.getElementById('municipiosStatus');
+                    if (container) {
+                        addStep('4. Geração do HTML', 'Gerando lista de municípios...');
+                        
+                        const statusItems = Object.entries(municipiosData)
+                            .sort(([a], [b]) => a.localeCompare(b))
+                            .map(([municipio, dados]) => {
+                                const progressoTotal = dados.p1_total > 0 
+                                    ? Math.round((dados.p1_concluidas / dados.p1_total) * 100)
+                                    : 0;
+                                    
+                                const statusColor = {
+                                    'P1 Completo': '#10B981',
+                                    'Em andamento': '#D97706', 
+                                    'Agendado': '#3B82F6',
+                                    'Não iniciado': '#6B7280',
+                                    'sem_visita': '#6B7280',
+                                    'agendada': '#3B82F6',
+                                    'agendado': '#3B82F6',
+                                    'em_andamento': '#D97706',
+                                    'em_followup': '#ffc107',
+                                    'finalizada': '#10B981'
+                                }[dados.status] || dados.cor_status || '#6B7280';
+                                
+                                return `
+                                    <div class="municipio-item" style="border-left-color: ${statusColor};">
+                                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div>
+                                                <div style="font-weight: 500; margin-bottom: 5px;">
+                                                    ${municipio}
+                                                </div>
+                                                <div style="color: #94A3B8; font-size: 11px;">
+                                                    P${municipiosCoordenadas[municipio].prioridade} • ${dados.status}
+                                                </div>
+                                            </div>
+                                            <div style="text-align: right;">
+                                                <div style="color: ${statusColor}; font-weight: 600;">
+                                                    ${progressoTotal}%
+                                                </div>
+                                                <div style="color: #64748B; font-size: 10px;">
+                                                    ${dados.p1_concluidas}/${dados.p1_total} P1
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                        
+                        if (statusItems.length > 0) {
+                            container.innerHTML = statusItems.join('');
+                            addStep('4. Resultado Final', 
+                                `<div class="success">✅ ${statusItems.length} municípios renderizados com sucesso!</div>
+                                <div>Veja o resultado acima no container.</div>`
+                            );
+                        } else {
+                            container.innerHTML = '<p class="error">❌ Nenhum município foi processado</p>';
+                            addStep('4. Resultado Final', 
+                                `<div class="error">❌ Nenhum município foi renderizado</div>`
+                            );
+                        }
+                    }
+                    
+                } else {
+                    addStep('3. Erro de Dados', 
+                        `<div class="error">❌ API não retornou dados válidos</div>
+                        <div>Estrutura recebida:</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>`
+                    );
+                }
+                
+            } catch (error) {
+                addStep('❌ Erro Geral', 
+                    `<div class="error">Erro: ${error.message}</div>
+                    <pre>${error.stack}</pre>`
+                );
+            }
+        }
+        
+        // Executar teste quando DOM carregar
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', testeCompleto);
+        } else {
+            testeCompleto();
+        }
+    </script>
+</body>
+</html>

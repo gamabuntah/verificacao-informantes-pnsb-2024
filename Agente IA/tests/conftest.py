@@ -51,7 +51,7 @@ def sample_visita(db_session):
         data=date(2024, 12, 25),
         hora_inicio=time(9, 0),
         hora_fim=time(10, 0),
-        informante="João Silva",
+        local="João Silva",
         tipo_pesquisa="MRS",
         tipo_informante="prefeitura",
         status="agendada",

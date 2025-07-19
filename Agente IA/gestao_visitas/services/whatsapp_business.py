@@ -159,7 +159,7 @@ class WhatsAppBusinessAPI:
                 'hora_visita': visita.hora_inicio.strftime('%H:%M') if visita.hora_inicio else '09:00',
                 'pesquisador': 'Equipe IBGE',
                 'tipo_pesquisa': visita.tipo_pesquisa,
-                'informante': visita.informante or 'Responsável'
+                'informante': visita.local or 'Responsável'
             }
             
             if dados_personalizacao:
@@ -197,7 +197,7 @@ class WhatsAppBusinessAPI:
             
             dados_template = {
                 'municipio': visita.municipio,
-                'informante': visita.informante or 'Responsável',
+                'informante': visita.local or 'Responsável',
                 'data_visita': visita.data.strftime('%d/%m/%Y'),
                 'tipo_pesquisa': visita.tipo_pesquisa,
                 'link_questionario': self._gerar_link_questionario(visita)
@@ -625,7 +625,7 @@ Por favor, confirme se a nova data está adequada.''',
         
         # Extrair dados da visita
         variaveis = {
-            'nome_informante': visita_data.get('informante', 'Prezado(a)'),
+            'nome_informante': visita_data.get('local', 'Prezado(a)'),
             'nome_pesquisador': visita_data.get('pesquisador_responsavel', 'Pesquisador IBGE'),
             'municipio': visita_data.get('municipio', ''),
             'tipo_pesquisa': self._formatar_tipo_pesquisa(visita_data.get('tipo_pesquisa', '')),
@@ -653,7 +653,7 @@ Por favor, confirme se a nova data está adequada.''',
         """Envia lembrete automático 24h antes da visita"""
         
         variaveis = {
-            'nome_informante': visita_data.get('informante', 'Prezado(a)'),
+            'nome_informante': visita_data.get('local', 'Prezado(a)'),
             'data_visita': self._formatar_data(visita_data.get('data', '')),
             'horario_visita': visita_data.get('hora_inicio', ''),
             'local_visita': visita_data.get('local', 'Local confirmado'),

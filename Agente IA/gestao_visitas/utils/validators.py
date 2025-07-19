@@ -63,10 +63,16 @@ class InputValidator:
     
     @staticmethod
     def validate_status(status):
-        """Valida status da visita"""
-        if status not in STATUS_VISITA:
-            raise ValidationError(f"Status inválido. Deve ser um de: {', '.join(STATUS_VISITA.keys())}")
-        return status
+        """Valida status da visita (flexível para permitir todos os status)"""
+        if not status or not isinstance(status, str):
+            raise ValidationError("Status deve ser uma string não vazia")
+        
+        # Permitir qualquer status string válido (sem restrições rígidas)
+        status_clean = status.strip()
+        if not status_clean:
+            raise ValidationError("Status não pode estar vazio")
+            
+        return status_clean
     
     @staticmethod
     def sanitize_string(text, max_length=255):

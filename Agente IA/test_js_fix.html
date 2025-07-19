@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Fix Test</title>
+</head>
+<body>
+    <h2>Testing JavaScript Function Fixes</h2>
+    
+    <div style="margin: 20px 0;">
+        <h3>1. Test toggleNotificationsPanel:</h3>
+        <button onclick="toggleNotificationsPanel()">Toggle Notifications</button>
+        <div id="notifications-panel" style="background: #f0f0f0; padding: 10px; margin: 10px 0;">
+            Notifications Panel (will be hidden/shown)
+        </div>
+        <div id="alerts-floating-btn" style="background: #007bff; color: white; padding: 5px; display: inline-block;">
+            🔔 Floating Button
+        </div>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>2. Test other functions:</h3>
+        <button onclick="markAllAsRead()">Mark All as Read</button>
+        <button onclick="configureAlerts()">Configure Alerts</button>
+        <button onclick="abrirPerfil()">Abrir Perfil</button>
+        <button onclick="alterarTema()">Alterar Tema</button>
+        <button onclick="abrirAjuda()">Abrir Ajuda</button>
+    </div>
+
+    <div style="margin: 20px 0;">
+        <h3>Console Output:</h3>
+        <div id="console-output" style="background: #333; color: #0f0; padding: 10px; font-family: monospace; height: 200px; overflow-y: auto;">
+        </div>
+    </div>
+
+    <script>
+        // Override console.log to display in our test page
+        const originalLog = console.log;
+        const consoleOutput = document.getElementById('console-output');
+        
+        console.log = function(...args) {
+            originalLog.apply(console, arguments);
+            consoleOutput.innerHTML += args.join(' ') + '<br>';
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        };
+
+        // Copy the fixed functions from mapa_progresso.html
+        function toggleNotificationsPanel() {
+            const panel = document.getElementById('notifications-panel');
+            const floatingBtn = document.getElementById('alerts-floating-btn');
+            
+            if (panel) {
+                const isVisible = panel.style.display !== 'none';
+                panel.style.display = isVisible ? 'none' : 'block';
+                
+                if (floatingBtn) {
+                    floatingBtn.style.display = isVisible ? 'block' : 'none';
+                }
+                
+                console.log('✅ toggleNotificationsPanel executed successfully');
+            }
+        }
+
+        function markAllAsRead() {
+            console.log('✅ markAllAsRead executed successfully');
+            showToast('Todas as notificações foram marcadas como lidas', 'success');
+        }
+
+        function configureAlerts() {
+            console.log('✅ configureAlerts executed successfully');
+        }
+
+        function showToast(message, type = 'info') {
+            console.log(`Toast ${type}: ${message}`);
+        }
+
+        function abrirPerfil() {
+            console.log('📁 Abrir perfil do usuário');
+            showToast('Funcionalidade de perfil será implementada em breve', 'info');
+        }
+
+        function alterarTema() {
+            const body = document.body;
+            const isDark = body.classList.contains('dark-theme');
+            
+            if (isDark) {
+                body.classList.remove('dark-theme');
+                body.classList.add('light-theme');
+                showToast('Tema claro ativado', 'success');
+            } else {
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
+                showToast('Tema escuro ativado', 'success');
+            }
+        }
+
+        function abrirAjuda() {
+            console.log('❓ Abrir ajuda');
+            showToast('Documentação e ajuda serão implementadas em breve', 'info');
+        }
+
+        console.log('🎯 All JavaScript functions loaded successfully!');
+        console.log('Click the buttons above to test each function.');
+    </script>
+</body>
+</html>

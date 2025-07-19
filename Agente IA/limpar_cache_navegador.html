@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limpar Cache - PNSB 2024</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .instructions {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .button-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        button {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+        button:hover {
+            background: #1976D2;
+        }
+        .status {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: monospace;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Forçar Atualização do Sistema PNSB</h1>
+        
+        <div class="instructions">
+            <h3>📋 Instruções para Limpar Cache:</h3>
+            <p><strong>Chrome/Edge:</strong> Pressione <code>Ctrl + Shift + R</code> ou <code>Ctrl + F5</code></p>
+            <p><strong>Firefox:</strong> Pressione <code>Ctrl + Shift + R</code></p>
+            <p><strong>Safari:</strong> Pressione <code>Cmd + Option + R</code></p>
+        </div>
+
+        <div class="button-container">
+            <button onclick="testarAPI()">🔍 Testar API</button>
+            <button onclick="limparTudo()">🧹 Limpar Tudo</button>
+            <button onclick="abrirSistema()">🚀 Abrir Sistema</button>
+        </div>
+
+        <div id="status" class="status">
+            Aguardando ação...
+        </div>
+    </div>
+
+    <script>
+        function log(msg, type = 'info') {
+            const status = document.getElementById('status');
+            const timestamp = new Date().toLocaleTimeString();
+            status.innerHTML += `<div class="${type}">[${timestamp}] ${msg}</div>`;
+            status.scrollTop = status.scrollHeight;
+        }
+
+        async function testarAPI() {
+            log('🔍 Testando API...');
+            
+            try {
+                // Testar com timestamp para evitar cache
+                const timestamp = new Date().getTime();
+                const response = await fetch(`http://127.0.0.1:5000/api/visitas?_t=${timestamp}`, {
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`✅ API funcionando! ${data.data.length} visitas encontradas`, 'success');
+                    
+                    // Mostrar primeiras 3 visitas
+                    if (data.data.length > 0) {
+                        log('📊 Primeiras visitas:');
+                        data.data.slice(0, 3).forEach((v, i) => {
+                            log(`   ${i+1}. ${v.municipio} - ${v.data} - ${v.status}`);
+                        });
+                    }
+                } else {
+                    log(`❌ Erro na API: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`❌ Erro ao conectar: ${error.message}`, 'error');
+                log('💡 Verifique se o Flask está rodando em http://127.0.0.1:5000');
+            }
+        }
+
+        function limparTudo() {
+            log('🧹 Limpando cache do navegador...');
+            
+            // Limpar localStorage
+            localStorage.clear();
+            log('✅ LocalStorage limpo');
+            
+            // Limpar sessionStorage
+            sessionStorage.clear();
+            log('✅ SessionStorage limpo');
+            
+            // Limpar cookies (limitado por segurança)
+            document.cookie.split(";").forEach(function(c) { 
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+            });
+            log('✅ Cookies limpos');
+            
+            // Desregistrar service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                        log('✅ Service Worker desregistrado');
+                    }
+                });
+            }
+            
+            // Limpar cache da API
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => {
+                        caches.delete(name);
+                        log(`✅ Cache ${name} deletado`);
+                    });
+                });
+            }
+            
+            log('🎉 Limpeza concluída! Recarregue a página com Ctrl+F5', 'success');
+        }
+
+        function abrirSistema() {
+            log('🚀 Abrindo sistema em nova aba...');
+            
+            // Abrir com timestamp para forçar reload
+            const timestamp = new Date().getTime();
+            const urls = [
+                `http://127.0.0.1:5000?_t=${timestamp}`,
+                `http://127.0.0.1:5000/visitas?_t=${timestamp}`,
+                `http://127.0.0.1:5000/mapa-progresso?_t=${timestamp}`
+            ];
+            
+            urls.forEach((url, i) => {
+                setTimeout(() => {
+                    window.open(url, `_blank_${i}`);
+                    log(`✅ Aberto: ${url.split('?')[0]}`);
+                }, i * 500);
+            });
+        }
+
+        // Testar API ao carregar
+        window.onload = () => {
+            log('🔧 Página de manutenção carregada');
+            setTimeout(testarAPI, 1000);
+        };
+    </script>
+</body>
+</html>

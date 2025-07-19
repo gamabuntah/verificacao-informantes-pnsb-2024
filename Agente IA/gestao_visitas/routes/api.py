@@ -40,6 +40,296 @@ def get_visitas():
     except Exception as e:
         return APIResponse.error(f"Erro ao buscar visitas: {str(e)}")
 
+# === ROTAS DE QUESTIONÁRIOS ===
+
+@api_bp.route('/visitas/<int:visita_id>/questionarios', methods=['GET'])
+def get_questionarios_visita(visita_id):
+    """Retorna questionários e entidades vinculadas a uma visita"""
+    try:
+        visita = Visita.query.get(visita_id)
+        if not visita:
+            return APIResponse.not_found("Visita")
+        
+        from ..models.questionarios_obrigatorios import EntidadeIdentificada
+        entidades = EntidadeIdentificada.query.filter_by(visita_id=visita_id).all()
+        
+        status_questionarios = visita.obter_status_questionarios()
+        
+        return APIResponse.success({
+            'visita_id': visita_id,
+            'status_visita': visita.status,
+            'status_questionarios': status_questionarios,
+            'entidades': [e.to_dict() for e in entidades],
+            'resumo': {
+                'total_entidades': len(entidades),
+                'mrs_obrigatorios': sum(1 for e in entidades if e.mrs_obrigatorio),
+                'map_obrigatorios': sum(1 for e in entidades if e.map_obrigatorio),
+                'mrs_respondidos': sum(1 for e in entidades if e.mrs_obrigatorio and e.status_mrs == 'respondido'),
+                'map_respondidos': sum(1 for e in entidades if e.map_obrigatorio and e.status_map == 'respondido'),
+                'mrs_validados': sum(1 for e in entidades if e.mrs_obrigatorio and e.status_mrs == 'validado_concluido'),
+                'map_validados': sum(1 for e in entidades if e.map_obrigatorio and e.status_map == 'validado_concluido')
+            }
+        })
+        
+    except Exception as e:
+        return APIResponse.error(f"Erro ao buscar questionários: {str(e)}")
+
+@api_bp.route('/visitas/<int:visita_id>/questionarios/status', methods=['PUT'])
+@validate_json_input(required_fields=['entidade_id', 'tipo', 'status'])
+def atualizar_status_questionario_visita(visita_id):
+    """Atualiza status específico de questionário de uma visita"""
+    try:
+        data = request.validated_data
+        entidade_id = data.get('entidade_id')
+        tipo_questionario = data.get('tipo')  # 'mrs' ou 'map'
+        novo_status = data.get('status')  # 'respondido' ou 'validado_concluido'
+        
+        # Validar parâmetros
+        if tipo_questionario not in ['mrs', 'map']:
+            return APIResponse.validation_error("Tipo deve ser 'mrs' ou 'map'")
+        
+        if novo_status not in ['nao_iniciado', 'respondido', 'validado_concluido', 'nao_aplicavel']:
+            return APIResponse.validation_error("Status inválido")
+        
+        from ..models.questionarios_obrigatorios import EntidadeIdentificada
+        entidade = EntidadeIdentificada.query.filter_by(
+            id=entidade_id,
+            visita_id=visita_id
+        ).first()
+        
+        if not entidade:
+            return APIResponse.not_found("Entidade")
+        
+        # Atualizar status específico
+        if tipo_questionario == 'mrs':
+            if not entidade.mrs_obrigatorio:
+                return APIResponse.validation_error("MRS não é obrigatório para esta entidade")
+            entidade.status_mrs = novo_status
+        elif tipo_questionario == 'map':
+            if not entidade.map_obrigatorio:
+                return APIResponse.validation_error("MAP não é obrigatório para esta entidade")
+            entidade.status_map = novo_status
+        
+        entidade.atualizado_em = datetime.utcnow()
+        db.session.commit()
+        
+        # Obter visita e recalcular status inteligente
+        visita = Visita.query.get(visita_id)
+        novo_status_visita = visita.calcular_status_inteligente()
+        
+        return APIResponse.success({
+            'entidade_atualizada': entidade.to_dict(),
+            'status_visita': novo_status_visita,
+            'questionarios_status': visita.obter_status_questionarios(),
+            'message': f'Status {tipo_questionario.upper()} atualizado para {novo_status}'
+        })
+        
+    except ValidationError as e:
+        db.session.rollback()
+        return APIResponse.validation_error(str(e))
+    except Exception as e:
+        db.session.rollback()
+        return APIResponse.error(f"Erro ao atualizar status: {str(e)}")
+
+@api_bp.route('/visitas/<int:visita_id>/questionarios/sincronizar', methods=['POST'])
+def sincronizar_questionarios_visita(visita_id):
+    """Força sincronização dos questionários com o status da visita"""
+    try:
+        visita = Visita.query.get(visita_id)
+        if not visita:
+            return APIResponse.not_found("Visita")
+        
+        # Forçar sincronização
+        visita._sincronizar_questionarios()
+        
+        # Retornar status atualizado
+        status_questionarios = visita.obter_status_questionarios()
+        
+        return APIResponse.success({
+            'visita_id': visita_id,
+            'status_visita': visita.status,
+            'questionarios_sincronizados': status_questionarios,
+            'message': 'Questionários sincronizados com sucesso'
+        })
+        
+    except Exception as e:
+        return APIResponse.error(f"Erro ao sincronizar questionários: {str(e)}")
+
+@api_bp.route('/visitas/<int:visita_id>/entidades', methods=['POST'])
+@validate_json_input(required_fields=['nome_entidade', 'tipo_entidade'])
+def adicionar_entidade_visita(visita_id):
+    """Adiciona nova entidade a uma visita existente"""
+    try:
+        data = request.validated_data
+        
+        visita = Visita.query.get(visita_id)
+        if not visita:
+            return APIResponse.not_found("Visita")
+        
+        from ..models.questionarios_obrigatorios import EntidadeIdentificada
+        
+        # Criar nova entidade
+        entidade = EntidadeIdentificada(
+            municipio=visita.municipio,
+            tipo_entidade=data.get('tipo_entidade'),
+            nome_entidade=data.get('nome_entidade'),
+            cnpj=data.get('cnpj', ''),
+            endereco=data.get('endereco', ''),
+            telefone=data.get('telefone', ''),
+            email=data.get('email', ''),
+            responsavel=data.get('responsavel', ''),
+            mrs_obrigatorio=data.get('mrs_obrigatorio', False),
+            map_obrigatorio=data.get('map_obrigatorio', False),
+            status_mrs='nao_iniciado',
+            status_map='nao_iniciado',
+            fonte_identificacao='adicionada_manualmente',
+            visita_id=visita_id,
+            prioridade=data.get('prioridade', 2),
+            categoria_prioridade=data.get('categoria_prioridade', 'p2'),
+            observacoes=data.get('observacoes', f'Entidade adicionada manualmente à visita {visita_id}')
+        )
+        
+        entidade.definir_prioridade_automatica()
+        db.session.add(entidade)
+        
+        # Sincronizar com status da visita
+        entidade.sincronizar_com_visita()
+        
+        db.session.commit()
+        
+        return APIResponse.success({
+            'entidade_criada': entidade.to_dict(),
+            'questionarios_status': visita.obter_status_questionarios(),
+            'message': 'Entidade adicionada com sucesso'
+        }, status_code=201)
+        
+    except ValidationError as e:
+        db.session.rollback()
+        return APIResponse.validation_error(str(e))
+    except Exception as e:
+        db.session.rollback()
+        return APIResponse.error(f"Erro ao adicionar entidade: {str(e)}")
+
+@api_bp.route('/visitas/progresso-mapa', methods=['GET'])
+def get_progresso_mapa():
+    """Retorna dados consolidados para o mapa de progresso"""
+    try:
+        from ..models.questionarios_obrigatorios import EntidadeIdentificada, ProgressoQuestionarios
+        from ..config import MUNICIPIOS
+        
+        municipios_data = []
+        
+        for municipio in MUNICIPIOS:
+            # Buscar visitas do município
+            visitas = Visita.query.filter_by(municipio=municipio).all()
+            
+            # Buscar entidades identificadas do município
+            entidades = EntidadeIdentificada.query.filter_by(municipio=municipio).all()
+            
+            # CORREÇÃO: Sincronizar status dos questionários com visitas
+            for entidade in entidades:
+                try:
+                    entidade.sincronizar_com_visita()
+                except Exception as e:
+                    print(f"Erro ao sincronizar entidade {entidade.id}: {e}")
+            
+            # Commit das alterações
+            db.session.commit()
+            
+            # Calcular estatísticas de questionários reais
+            total_mrs_obrigatorios = sum(1 for e in entidades if e.mrs_obrigatorio)
+            total_map_obrigatorios = sum(1 for e in entidades if e.map_obrigatorio)
+            
+            mrs_respondidos = sum(1 for e in entidades if e.mrs_obrigatorio and e.status_mrs == 'respondido')
+            map_respondidos = sum(1 for e in entidades if e.map_obrigatorio and e.status_map == 'respondido')
+            
+            mrs_validados = sum(1 for e in entidades if e.mrs_obrigatorio and e.status_mrs == 'validado_concluido')
+            map_validados = sum(1 for e in entidades if e.map_obrigatorio and e.status_map == 'validado_concluido')
+            
+            # Fallback: Se não há dados sincronizados, usar status das visitas
+            if mrs_validados == 0 and map_validados == 0 and visitas:
+                visitas_finalizadas = len([v for v in visitas if v.status in ['finalizada', 'questionários validados']])
+                total_visitas = len(visitas)
+                
+                if total_visitas > 0:
+                    percentual_base = (visitas_finalizadas / total_visitas) * 100
+                    mrs_validados = int((percentual_base / 100) * total_mrs_obrigatorios)
+                    map_validados = int((percentual_base / 100) * total_map_obrigatorios)
+                    mrs_respondidos = mrs_validados
+                    map_respondidos = map_validados
+            
+            # Calcular percentuais
+            percentual_mrs = (mrs_validados / total_mrs_obrigatorios * 100) if total_mrs_obrigatorios > 0 else 0
+            percentual_map = (map_validados / total_map_obrigatorios * 100) if total_map_obrigatorios > 0 else 0
+            percentual_geral = ((mrs_validados + map_validados) / (total_mrs_obrigatorios + total_map_obrigatorios) * 100) if (total_mrs_obrigatorios + total_map_obrigatorios) > 0 else 0
+            
+            # Determinar status do município
+            if percentual_geral >= 90:
+                status = 'concluido'
+            elif percentual_geral >= 30:
+                status = 'andamento'
+            else:
+                status = 'pendente'
+            
+            # Dados do resumo
+            visitas_concluidas = len([v for v in visitas if v.status in ['finalizada', 'questionários validados']])
+            total_visitas = len(visitas)
+            
+            municipio_data = {
+                'municipio': municipio,
+                'status': status,
+                'total_entidades': len(entidades),
+                'questionarios': {
+                    'total_mrs_obrigatorios': total_mrs_obrigatorios,
+                    'total_map_obrigatorios': total_map_obrigatorios,
+                    'mrs_respondidos': mrs_respondidos,
+                    'map_respondidos': map_respondidos,
+                    'mrs_validados': mrs_validados,
+                    'map_validados': map_validados,
+                    'mrs_concluidos': mrs_respondidos,  # Alias para compatibilidade
+                    'map_concluidos': map_respondidos,  # Alias para compatibilidade
+                    'percentual_mrs': round(percentual_mrs, 1),
+                    'percentual_map': round(percentual_map, 1),
+                    'percentual_geral': round(percentual_geral, 1)
+                },
+                'resumo': {
+                    'total_visitas': total_visitas,
+                    'visitas_concluidas': visitas_concluidas,
+                    'percentual_conclusao': round(percentual_geral, 1),
+                    'finalizadas': visitas_concluidas
+                },
+                'coords': [municipio, 0, 0],  # Placeholder
+                'ultima_atividade': datetime.now().strftime('%d/%m/%Y %H:%M')
+            }
+            
+            municipios_data.append(municipio_data)
+        
+        # Estatísticas gerais
+        total_mrs_sistema = sum(m['questionarios']['total_mrs_obrigatorios'] for m in municipios_data)
+        total_map_sistema = sum(m['questionarios']['total_map_obrigatorios'] for m in municipios_data)
+        total_mrs_validados = sum(m['questionarios']['mrs_validados'] for m in municipios_data)
+        total_map_validados = sum(m['questionarios']['map_validados'] for m in municipios_data)
+        
+        estatisticas_gerais = {
+            'municipios_total': len(MUNICIPIOS),
+            'municipios_concluidos': len([m for m in municipios_data if m['status'] == 'concluido']),
+            'questionarios_mrs_total': total_mrs_sistema,
+            'questionarios_map_total': total_map_sistema,
+            'questionarios_mrs_validados': total_mrs_validados,
+            'questionarios_map_validados': total_map_validados,
+            'progresso_geral': round(((total_mrs_validados + total_map_validados) / (total_mrs_sistema + total_map_sistema) * 100) if (total_mrs_sistema + total_map_sistema) > 0 else 0, 1)
+        }
+        
+        return APIResponse.success({
+            'municipios': municipios_data,
+            'estatisticas': estatisticas_gerais,
+            'ultima_atualizacao': datetime.now().isoformat(),
+            'data': municipios_data  # Alias para compatibilidade
+        })
+        
+    except Exception as e:
+        return APIResponse.error(f"Erro ao buscar progresso do mapa: {str(e)}")
+
 @api_bp.route('/visitas', methods=['POST'])
 @validate_json_input(required_fields=['municipio', 'data', 'hora_inicio', 'informante', 'tipo_pesquisa'])
 def criar_visita():
@@ -124,7 +414,7 @@ def atualizar_visita(visita_id):
         visita.data = validated_data['data']
         visita.hora_inicio = validated_data['hora_inicio']
         visita.hora_fim = validated_data['hora_fim']
-        visita.informante = validated_data['informante']
+        visita.local = validated_data.get('local', validated_data.get('informante', 'Local não especificado'))
         visita.tipo_pesquisa = validated_data['tipo_pesquisa']
         visita.tipo_informante = validated_data['tipo_informante']
         visita.observacoes = validated_data['observacoes']
@@ -146,55 +436,154 @@ def atualizar_visita(visita_id):
 
 @api_bp.route('/visitas/<int:visita_id>', methods=['DELETE'])
 def excluir_visita(visita_id):
-    """Exclui uma visita"""
+    """Exclui uma visita específica"""
     try:
+        # Verificar se a visita existe
         visita = Visita.query.get(visita_id)
         if not visita:
-            return APIResponse.not_found("Visita")
+            return APIResponse.not_found("Visita", data={'visita_id': visita_id})
         
+        # Verificar se pode ser excluída
         if not visita.pode_ser_excluida():
             return APIResponse.error(
                 "Esta visita não pode ser excluída no status atual",
                 error_type="business_rule_violation",
-                status_code=400
+                status_code=400,
+                data={
+                    'visita_id': visita_id,
+                    'status_atual': visita.status
+                }
             )
         
-        if Visita.excluir_visita(visita_id):
-            return APIResponse.success(message="Visita excluída com sucesso")
+        # Tentar excluir
+        success = Visita.excluir_visita(visita_id)
+        if success:
+            return APIResponse.success(
+                message="Visita excluída com sucesso",
+                data={'visita_id': visita_id}
+            )
         else:
-            return APIResponse.error("Erro ao excluir visita")
+            return APIResponse.error(
+                "Erro interno ao excluir visita",
+                error_type="delete_failed", 
+                data={'visita_id': visita_id}
+            )
             
     except Exception as e:
         db.session.rollback()
+        print(f"❌ Erro ao excluir visita {visita_id}: {str(e)}")
         return APIResponse.error(f"Erro ao excluir visita: {str(e)}")
 
+@api_bp.route('/test-delete', methods=['GET'])
+def test_delete_endpoint():
+    """Endpoint de teste para verificar se blueprint está funcionando"""
+    return APIResponse.success(message="CÓDIGO ATUALIZADO - v2.0 - DELETE funcionando!", data={
+        'blueprint': 'api_bp',
+        'url_prefix': '/api',
+        'delete_route': '/api/visitas/<int:visita_id>',
+        'timestamp': datetime.now().isoformat(),
+        'version': '2.0-UPDATED'
+    })
+
+@api_bp.route('/test-status', methods=['POST'])
+def test_status_endpoint():
+    """Endpoint de teste para verificar POST status"""
+    try:
+        data = request.get_json()
+        return jsonify({
+            'success': True,
+            'message': 'POST status está funcionando!',
+            'received_data': data
+        })
+    except Exception as e:
+        return jsonify({'error': f'Erro no teste: {str(e)}'}), 500
+
 @api_bp.route('/visitas/<int:visita_id>/status', methods=['POST'])
-@validate_json_input(required_fields=['status'])
 def atualizar_status_visita(visita_id):
     """Atualiza status de uma visita"""
     try:
+        # Validação básica
+        data = request.get_json()
+        if not data or 'status' not in data:
+            return jsonify({'error': 'Campo status é obrigatório'}), 400
+        
+        novo_status = data['status']
+        if not novo_status:
+            return jsonify({'error': 'Status não pode estar vazio'}), 400
+        
+        # Buscar visita
         visita = Visita.query.get(visita_id)
         if not visita:
-            return APIResponse.not_found("Visita")
+            return jsonify({'error': 'Visita não encontrada'}), 404
         
-        novo_status = request.validated_data['status']
+        # Atualizar status
+        visita.status = novo_status.strip()
+        visita.data_atualizacao = datetime.now()
         
-        visita.atualizar_status(novo_status)
         db.session.commit()
         
-        return APIResponse.success(
-            data={
-                'status': visita.status,
-                'data_atualizacao': visita.data_atualizacao.strftime('%d/%m/%Y %H:%M')
-            },
-            message="Status atualizado com sucesso"
-        )
+        # SINCRONIZAR E RECALCULAR TODAS AS MÉTRICAS
+        entidades_sincronizadas = 0
+        metricas_atualizadas = False
         
-    except ValueError as e:
-        return APIResponse.validation_error(str(e))
+        try:
+            # 1. Sincronizar questionários com status da visita
+            from gestao_visitas.models.questionarios_obrigatorios import EntidadeIdentificada, ProgressoQuestionarios
+            entidades_sincronizadas = EntidadeIdentificada.sincronizar_entidades_por_visita(visita_id)
+            
+            # 2. Sempre recalcular progresso do município (independente de entidades)
+            ProgressoQuestionarios.calcular_progresso_municipio(visita.municipio)
+            
+            # 3. Atualizar caches relacionados
+            try:
+                from gestao_visitas.services.redis_cache import redis_cache
+                # Limpar cache específico do município
+                redis_cache.clear_pattern(f"dashboard:*{visita.municipio}*")
+                redis_cache.clear_pattern(f"progresso:*{visita.municipio}*")
+                redis_cache.clear_pattern("mapa_progresso:*")
+                print(f"🗑️ Cache limpo para dashboards do município {visita.municipio}")
+            except Exception as cache_error:
+                print(f"⚠️ Erro ao limpar cache: {str(cache_error)}")
+            
+            metricas_atualizadas = True
+            print(f"📊 Métricas atualizadas para município {visita.municipio} após mudança de status para '{novo_status}'")
+            
+        except Exception as sync_error:
+            print(f"⚠️ Erro na sincronização de métricas: {str(sync_error)}")
+            # Continue mesmo se a sincronização falhar
+        
+        return jsonify({
+            'success': True,
+            'message': 'Status atualizado com sucesso',
+            'data': {
+                'visita_id': visita_id,
+                'status': visita.status,
+                'municipio': visita.municipio,
+                'data_atualizacao': visita.data_atualizacao.strftime('%d/%m/%Y %H:%M'),
+                'entidades_sincronizadas': entidades_sincronizadas,
+                'metricas_atualizadas': metricas_atualizadas
+            }
+        })
+        
     except Exception as e:
         db.session.rollback()
-        return APIResponse.error(f"Erro ao atualizar status: {str(e)}")
+        import traceback
+        error_msg = str(e)
+        tb = traceback.format_exc()
+        print(f"❌ Erro ao atualizar status da visita {visita_id}: {error_msg}")
+        print(f"❌ Traceback completo:\n{tb}")
+        
+        # Log to file
+        import logging
+        logger = logging.getLogger('pnsb_errors')
+        logger.error(f"Status update error for visit {visita_id}: {error_msg}\n{tb}")
+        
+        # Return more detailed error in development
+        return jsonify({
+            'error': 'Erro ao atualizar status',
+            'details': error_msg,
+            'visita_id': visita_id
+        }), 500
 
 # === ROTAS DE CHECKLIST ===
 
@@ -1748,3 +2137,57 @@ def compartilhar_relatorio():
         
     except Exception as e:
         return APIResponse.error(f"Erro ao gerar link de compartilhamento: {str(e)}")
+
+# === TESTE DE MÉTRICAS ===
+
+@api_bp.route('/test/metricas/<municipio>', methods=['GET'])
+def test_metricas_municipio(municipio):
+    """Endpoint de teste para verificar métricas de um município"""
+    try:
+        from gestao_visitas.models.questionarios_obrigatorios import ProgressoQuestionarios
+        
+        # Obter progresso atual
+        progresso = ProgressoQuestionarios.query.filter_by(municipio=municipio).first()
+        
+        # Obter visitas do município
+        visitas = Visita.query.filter_by(municipio=municipio).all()
+        
+        # Estatísticas básicas
+        stats = {
+            'municipio': municipio,
+            'total_visitas': len(visitas),
+            'status_counts': {},
+            'progresso_questionarios': None,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Contar por status
+        for visita in visitas:
+            status = visita.status
+            stats['status_counts'][status] = stats['status_counts'].get(status, 0) + 1
+        
+        # Adicionar dados de progresso se existir
+        if progresso:
+            stats['progresso_questionarios'] = {
+                'total_mrs_obrigatorios': progresso.total_mrs_obrigatorios,
+                'total_map_obrigatorios': progresso.total_map_obrigatorios,
+                'mrs_concluidos': progresso.mrs_concluidos,
+                'map_concluidos': progresso.map_concluidos,
+                'percentual_mrs': progresso.percentual_mrs,
+                'percentual_map': progresso.percentual_map,
+                'percentual_geral': progresso.percentual_geral,
+                'atualizado_em': progresso.atualizado_em.isoformat() if progresso.atualizado_em else None
+            }
+        
+        return jsonify({
+            'success': True,
+            'data': stats
+        })
+        
+    except Exception as e:
+        import traceback
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'traceback': traceback.format_exc().split('\n')[-3:-1]
+        }), 500

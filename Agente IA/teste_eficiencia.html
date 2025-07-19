@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Eficiência Dinâmica</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .result { padding: 20px; border: 1px solid #ddd; margin: 10px 0; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; }
+        button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🔢 Teste de Eficiência Dinâmica PNSB 2024</h1>
+    
+    <div class="result info">
+        <h3>Status do Sistema</h3>
+        <p id="status">Carregando...</p>
+    </div>
+    
+    <div class="result">
+        <h3>Teste de Função</h3>
+        <button onclick="testarEficiencia()">Testar Cálculo de Eficiência</button>
+        <div id="resultado-eficiencia"></div>
+    </div>
+    
+    <div class="result">
+        <h3>Teste de KPIs</h3>
+        <button onclick="testarKPIs()">Testar KPIs Completos</button>
+        <div id="resultado-kpis"></div>
+    </div>
+    
+    <div class="result">
+        <h3>Log de Console</h3>
+        <div id="console-log" style="background: #f8f9fa; padding: 10px; border: 1px solid #dee2e6; max-height: 300px; overflow-y: auto;"></div>
+    </div>
+
+    <script>
+        // Interceptar console.log para mostrar na página
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        function addToConsoleLog(message, type = 'log') {
+            const consoleDiv = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'error' ? 'red' : type === 'warn' ? 'orange' : 'black';
+            consoleDiv.innerHTML += `<div style="color: ${color}; margin: 2px 0;">[${timestamp}] ${message}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsoleLog(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsoleLog(args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToConsoleLog(args.join(' '), 'warn');
+        };
+        
+        // Dados de teste simulados
+        window.dadosProgresso = {
+            data: [
+                {
+                    municipio: "Balneário Camboriú",
+                    status: "em_followup",
+                    questionarios: { percentual_mrs: 75, percentual_map: 60 },
+                    alertas: []
+                },
+                {
+                    municipio: "Itajaí", 
+                    status: "finalizado",
+                    questionarios: { percentual_mrs: 90, percentual_map: 85 },
+                    alertas: []
+                },
+                {
+                    municipio: "Bombinhas",
+                    status: "sem_visita", 
+                    questionarios: { percentual_mrs: 0, percentual_map: 0 },
+                    alertas: ["P1 Crítica: 0% concluída"]
+                }
+            ]
+        };
+        
+        window.dadosVisitas = [
+            { data: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), status: 'realizada' },
+            { data: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), status: 'realizada' },
+            { data: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), status: 'finalizada' }
+        ];
+        
+        window.dadosEntidades = [
+            { nome_entidade: "Prefeitura BC", endereco: "Rua X", telefone: "123456", latitude: -26.975, longitude: -48.633 },
+            { nome_entidade: "Prefeitura Itajaí", endereco: "Rua Y", telefone: "654321", latitude: -26.907, longitude: -48.661 }
+        ];
+        
+        // Verificar se a função está disponível
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusDiv = document.getElementById('status');
+            
+            // Verificar se o JavaScript principal foi carregado
+            if (typeof window.MapaProgressoPNSB !== 'undefined') {
+                statusDiv.innerHTML = '✅ Classe MapaProgressoPNSB carregada com sucesso!';
+                statusDiv.parentElement.className = 'result success';
+            } else {
+                statusDiv.innerHTML = '❌ Classe MapaProgressoPNSB não encontrada. Tentando carregar...';
+                statusDiv.parentElement.className = 'result error';
+                
+                // Tentar carregar manualmente
+                const script = document.createElement('script');
+                script.src = '/static/js/mapa_progresso.js';
+                script.onload = function() {
+                    statusDiv.innerHTML = '✅ JavaScript carregado manualmente!';
+                    statusDiv.parentElement.className = 'result success';
+                };
+                script.onerror = function() {
+                    statusDiv.innerHTML = '❌ Erro ao carregar JavaScript!';
+                    statusDiv.parentElement.className = 'result error';
+                };
+                document.head.appendChild(script);
+            }
+        });
+        
+        function testarEficiencia() {
+            const resultDiv = document.getElementById('resultado-eficiencia');
+            
+            try {
+                // Criar uma instância da classe
+                const mapa = new MapaProgressoPNSB();
+                
+                // Simular alguns dados
+                mapa.dados.municipios = [
+                    { status: 'finalizado', progressoMRS: 90, progressoMAP: 85, alertas: [] },
+                    { status: 'em_followup', progressoMRS: 70, progressoMAP: 60, alertas: [] },
+                    { status: 'sem_visita', progressoMRS: 0, progressoMAP: 0, alertas: ['Crítica'] }
+                ];
+                
+                // Testar a função
+                const eficiencia = mapa.calcularEficienciaDinamica();
+                
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ Teste Bem-sucedido!</h4>
+                        <p><strong>Eficiência Calculada:</strong> ${eficiencia}%</p>
+                        <p><strong>Tempo de Execução:</strong> ${new Date().toLocaleTimeString()}</p>
+                    </div>
+                `;
+                
+                console.log('🎉 Teste de eficiência concluído:', eficiencia + '%');
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Erro no Teste</h4>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                        <p><strong>Stack:</strong> ${error.stack}</p>
+                    </div>
+                `;
+                
+                console.error('❌ Erro no teste:', error);
+            }
+        }
+        
+        function testarKPIs() {
+            const resultDiv = document.getElementById('resultado-kpis');
+            
+            try {
+                // Criar uma instância da classe
+                const mapa = new MapaProgressoPNSB();
+                
+                // Simular dados completos
+                mapa.dados = {
+                    municipios: [
+                        { status: 'finalizado', progressoMRS: 90, progressoMAP: 85, alertas: [] },
+                        { status: 'em_followup', progressoMRS: 70, progressoMAP: 60, alertas: [] },
+                        { status: 'sem_visita', progressoMRS: 0, progressoMAP: 0, alertas: ['Crítica'] }
+                    ],
+                    entidades: [
+                        { nome: "Ent1", endereco: "End1", telefone: "123", latitude: -26.975, longitude: -48.633 },
+                        { nome: "Ent2", endereco: "End2", telefone: "456", latitude: -26.907, longitude: -48.661 }
+                    ],
+                    visitas: [
+                        { data: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), status: 'realizada' },
+                        { data: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), status: 'realizada' }
+                    ]
+                };
+                
+                // Testar o cálculo completo dos KPIs
+                const kpis = mapa.calcularKPIs();
+                
+                resultDiv.innerHTML = `
+                    <div class="success">
+                        <h4>✅ KPIs Calculados com Sucesso!</h4>
+                        <ul>
+                            <li><strong>Dias Restantes:</strong> ${kpis.diasRestantes}</li>
+                            <li><strong>Municípios Concluídos:</strong> ${kpis.municipiosConcluidos}</li>
+                            <li><strong>Cobertura Municípios:</strong> ${kpis.coberturaMunicipios}%</li>
+                            <li><strong>Compliance P1:</strong> ${kpis.complianceP1}%</li>
+                            <li><strong>Score Qualidade:</strong> ${kpis.scoreQualidade}</li>
+                            <li><strong>Progresso Tempo:</strong> ${kpis.progressoTempo}%</li>
+                            <li><strong>🔥 Eficiência Pesquisadores:</strong> ${kpis.eficienciaPesquisadores}%</li>
+                        </ul>
+                    </div>
+                `;
+                
+                console.log('🎉 KPIs calculados:', kpis);
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Erro no Teste KPIs</h4>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                        <p><strong>Stack:</strong> ${error.stack}</p>
+                    </div>
+                `;
+                
+                console.error('❌ Erro no teste KPIs:', error);
+            }
+        }
+        
+        // Teste automático ao carregar
+        setTimeout(function() {
+            console.log('🚀 Iniciando teste automático...');
+            testarEficiencia();
+        }, 1000);
+    </script>
+</body>
+</html>

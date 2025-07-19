@@ -1,0 +1,706 @@
+{% extends 'base.html' %}
+
+{% block title %}🚗 Otimizador de Rotas PNSB 2024{% endblock %}
+
+{% block head %}
+<style>
+    .route-optimizer {
+        background: linear-gradient(135deg, #0F1419 0%, #1A1D29 100%);
+        min-height: 100vh;
+        color: #E8E8E8;
+    }
+    
+    .optimizer-header {
+        background: rgba(95, 92, 255, 0.1);
+        border-bottom: 2px solid #5F5CFF;
+        padding: 2rem 0;
+    }
+    
+    .control-panel {
+        background: rgba(30, 34, 45, 0.95);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(95, 92, 255, 0.2);
+    }
+    
+    .optimization-type {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .type-card {
+        flex: 1;
+        background: rgba(95, 92, 255, 0.1);
+        border: 2px solid transparent;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .type-card:hover {
+        border-color: #5F5CFF;
+        background: rgba(95, 92, 255, 0.2);
+    }
+    
+    .type-card.active {
+        border-color: #5F5CFF;
+        background: rgba(95, 92, 255, 0.3);
+    }
+    
+    .type-card h4 {
+        color: #5F5CFF;
+        margin-bottom: 0.5rem;
+    }
+    
+    .results-container {
+        background: rgba(30, 34, 45, 0.95);
+        border-radius: 16px;
+        padding: 2rem;
+        border: 1px solid rgba(110, 231, 183, 0.2);
+    }
+    
+    .route-card {
+        background: rgba(110, 231, 183, 0.1);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border-left: 4px solid #6EE7B7;
+    }
+    
+    .route-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+        background: rgba(95, 92, 255, 0.1);
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #5F5CFF;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: #B0B0B0;
+        font-size: 0.9rem;
+    }
+    
+    .route-schedule {
+        background: rgba(24, 26, 32, 0.8);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+    }
+    
+    .schedule-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        background: rgba(95, 92, 255, 0.05);
+        border-radius: 8px;
+        border-left: 3px solid #6EE7B7;
+    }
+    
+    .schedule-sequence {
+        background: #5F5CFF;
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin-right: 1rem;
+    }
+    
+    .schedule-info {
+        flex: 1;
+    }
+    
+    .schedule-time {
+        color: #6EE7B7;
+        font-weight: bold;
+        font-family: monospace;
+    }
+    
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 2rem;
+    }
+    
+    .btn-optimize {
+        background: linear-gradient(135deg, #5F5CFF 0%, #6EE7B7 100%);
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 1rem;
+    }
+    
+    .btn-optimize:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(95, 92, 255, 0.3);
+    }
+    
+    .btn-optimize:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+    
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+    
+    .alert-success {
+        background: rgba(110, 231, 183, 0.1);
+        border: 1px solid #6EE7B7;
+        color: #6EE7B7;
+    }
+    
+    .alert-error {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid #EF4444;
+        color: #EF4444;
+    }
+    
+    .municipality-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .municipality-chip {
+        background: rgba(95, 92, 255, 0.1);
+        border: 1px solid rgba(95, 92, 255, 0.3);
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .municipality-chip:hover {
+        border-color: #5F5CFF;
+        background: rgba(95, 92, 255, 0.2);
+    }
+    
+    .municipality-chip.active {
+        background: #5F5CFF;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="route-optimizer">
+    <!-- Header -->
+    <div class="optimizer-header">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-3">🚗 Otimizador de Rotas PNSB 2024</h1>
+            <p class="lead mb-0">Sistema inteligente para otimização de rotas de campo</p>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <div class="row">
+            <!-- Painel de Controle -->
+            <div class="col-lg-4">
+                <div class="control-panel">
+                    <h3 class="h4 mb-3">⚙️ Configurações</h3>
+                    
+                    <!-- Tipos de Otimização -->
+                    <div class="optimization-type">
+                        <div class="type-card active" data-type="daily">
+                            <h4>📅 Rota Diária</h4>
+                            <p>Otimizar visitas para hoje</p>
+                        </div>
+                        <div class="type-card" data-type="weekly">
+                            <h4>📋 Cronograma Semanal</h4>
+                            <p>Planejar semana completa</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Filtros -->
+                    <div class="mb-3">
+                        <label class="form-label">📍 Município (opcional)</label>
+                        <select class="form-select bg-dark text-light" id="municipalityFilter">
+                            <option value="">Todos os municípios</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3" id="dailyOptions">
+                        <label class="form-label">⏰ Horário de Início</label>
+                        <input type="time" class="form-control bg-dark text-light" id="startTime" value="08:00">
+                    </div>
+                    
+                    <div class="mb-3" id="weeklyOptions" style="display: none;">
+                        <label class="form-label">📅 Data de Início</label>
+                        <input type="date" class="form-control bg-dark text-light" id="startDate">
+                        
+                        <label class="form-label mt-2">📊 Dias de Trabalho</label>
+                        <select class="form-select bg-dark text-light" id="workingDays">
+                            <option value="5">5 dias</option>
+                            <option value="4">4 dias</option>
+                            <option value="3">3 dias</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Botão de Otimização -->
+                    <button class="btn-optimize" id="optimizeBtn">
+                        <i class="fas fa-magic"></i> Otimizar Rotas
+                    </button>
+                    
+                    <!-- Status -->
+                    <div class="mt-3" id="statusDisplay">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle"></i> 
+                            Aguardando configuração...
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resultados -->
+            <div class="col-lg-8">
+                <div class="results-container">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="h4 mb-0">📊 Resultados da Otimização</h3>
+                        <div class="btn-group">
+                            <button class="btn btn-outline-primary btn-sm" id="exportBtn" style="display: none;">
+                                <i class="fas fa-download"></i> Exportar CSV
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" id="refreshBtn">
+                                <i class="fas fa-sync"></i> Atualizar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Loading -->
+                    <div class="loading-spinner" id="loadingSpinner">
+                        <i class="fas fa-spinner fa-spin fa-3x mb-3"></i>
+                        <p>Otimizando rotas...</p>
+                    </div>
+                    
+                    <!-- Alertas -->
+                    <div id="alertContainer"></div>
+                    
+                    <!-- Estatísticas -->
+                    <div class="route-stats" id="routeStats" style="display: none;">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalVisits">0</div>
+                            <div class="stat-label">Visitas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalDistance">0</div>
+                            <div class="stat-label">Km Total</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalDuration">0</div>
+                            <div class="stat-label">Horas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="efficiency">0%</div>
+                            <div class="stat-label">Eficiência</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cronograma -->
+                    <div class="route-schedule" id="routeSchedule" style="display: none;">
+                        <h5 class="mb-3">📋 Cronograma de Visitas</h5>
+                        <div id="scheduleList"></div>
+                    </div>
+                    
+                    <!-- Placeholder -->
+                    <div class="text-center py-5" id="placeholder">
+                        <i class="fas fa-route fa-4x mb-3" style="color: #5F5CFF; opacity: 0.5;"></i>
+                        <h4 class="text-muted">Nenhuma rota otimizada</h4>
+                        <p class="text-muted">Configure os parâmetros e clique em "Otimizar Rotas" para começar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+class PNSBRouteOptimizer {
+    constructor() {
+        this.currentType = 'daily';
+        this.currentRoute = null;
+        this.municipalities = [];
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupEventListeners();
+        this.loadMunicipalities();
+        this.setDefaultDate();
+    }
+    
+    setupEventListeners() {
+        // Tipos de otimização
+        document.querySelectorAll('.type-card').forEach(card => {
+            card.addEventListener('click', () => this.switchType(card.dataset.type));
+        });
+        
+        // Botão de otimização
+        document.getElementById('optimizeBtn').addEventListener('click', () => this.optimize());
+        
+        // Botão de exportação
+        document.getElementById('exportBtn').addEventListener('click', () => this.exportRoute());
+        
+        // Botão de atualização
+        document.getElementById('refreshBtn').addEventListener('click', () => this.refresh());
+    }
+    
+    switchType(type) {
+        this.currentType = type;
+        
+        // Atualizar visual
+        document.querySelectorAll('.type-card').forEach(card => {
+            card.classList.toggle('active', card.dataset.type === type);
+        });
+        
+        // Mostrar/ocultar opções
+        document.getElementById('dailyOptions').style.display = type === 'daily' ? 'block' : 'none';
+        document.getElementById('weeklyOptions').style.display = type === 'weekly' ? 'block' : 'none';
+        
+        // Atualizar placeholder
+        this.updateStatus('Configuração alterada para: ' + (type === 'daily' ? 'Rota Diária' : 'Cronograma Semanal'));
+    }
+    
+    async loadMunicipalities() {
+        try {
+            const response = await fetch('/api/pnsb-optimization/municipalities');
+            const data = await response.json();
+            
+            if (data.success) {
+                this.municipalities = data.municipalities;
+                this.populateMunicipalityFilter();
+            }
+        } catch (error) {
+            console.error('Erro ao carregar municípios:', error);
+        }
+    }
+    
+    populateMunicipalityFilter() {
+        const select = document.getElementById('municipalityFilter');
+        select.innerHTML = '<option value="">Todos os municípios</option>';
+        
+        this.municipalities.forEach(municipality => {
+            const option = document.createElement('option');
+            option.value = municipality.name;
+            option.textContent = `${municipality.name} (${municipality.scheduled_visits} visitas)`;
+            select.appendChild(option);
+        });
+    }
+    
+    setDefaultDate() {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        document.getElementById('startDate').value = tomorrow.toISOString().split('T')[0];
+    }
+    
+    async optimize() {
+        const btn = document.getElementById('optimizeBtn');
+        btn.disabled = true;
+        
+        this.showLoading();
+        this.clearResults();
+        
+        try {
+            let result;
+            
+            if (this.currentType === 'daily') {
+                result = await this.optimizeDaily();
+            } else {
+                result = await this.optimizeWeekly();
+            }
+            
+            this.displayResults(result);
+            
+        } catch (error) {
+            this.showError('Erro na otimização: ' + error.message);
+        } finally {
+            btn.disabled = false;
+            this.hideLoading();
+        }
+    }
+    
+    async optimizeDaily() {
+        const municipalityFilter = document.getElementById('municipalityFilter').value;
+        const startTime = document.getElementById('startTime').value;
+        
+        const requestData = {
+            start_time: startTime
+        };
+        
+        if (municipalityFilter) {
+            requestData.municipality_filter = municipalityFilter;
+        }
+        
+        const response = await fetch('/api/pnsb-optimization/optimize/daily', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(requestData)
+        });
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Erro na otimização diária');
+        }
+        
+        return data;
+    }
+    
+    async optimizeWeekly() {
+        const startDate = document.getElementById('startDate').value;
+        const workingDays = parseInt(document.getElementById('workingDays').value);
+        const municipalityFilter = document.getElementById('municipalityFilter').value;
+        
+        const requestData = {
+            start_date: startDate,
+            working_days: workingDays
+        };
+        
+        if (municipalityFilter) {
+            requestData.municipality_filter = municipalityFilter;
+        }
+        
+        const response = await fetch('/api/pnsb-optimization/optimize/weekly', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(requestData)
+        });
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Erro na otimização semanal');
+        }
+        
+        return data;
+    }
+    
+    displayResults(result) {
+        this.currentRoute = result;
+        
+        if (this.currentType === 'daily') {
+            this.displayDailyResults(result);
+        } else {
+            this.displayWeeklyResults(result);
+        }
+        
+        document.getElementById('placeholder').style.display = 'none';
+        document.getElementById('routeStats').style.display = 'grid';
+        document.getElementById('routeSchedule').style.display = 'block';
+        document.getElementById('exportBtn').style.display = 'inline-block';
+        
+        this.showSuccess('Otimização concluída com sucesso!');
+    }
+    
+    displayDailyResults(result) {
+        const route = result.route;
+        const summary = result.summary;
+        
+        // Estatísticas
+        document.getElementById('totalVisits').textContent = route.points.length;
+        document.getElementById('totalDistance').textContent = route.total_distance_km.toFixed(1);
+        document.getElementById('totalDuration').textContent = route.total_duration_hours.toFixed(1);
+        document.getElementById('efficiency').textContent = route.efficiency.toFixed(0) + '%';
+        
+        // Cronograma
+        const scheduleList = document.getElementById('scheduleList');
+        scheduleList.innerHTML = '';
+        
+        summary.schedule.forEach(item => {
+            const scheduleItem = document.createElement('div');
+            scheduleItem.className = 'schedule-item';
+            scheduleItem.innerHTML = `
+                <div class="schedule-sequence">${item.sequence}</div>
+                <div class="schedule-info">
+                    <div class="fw-bold">${item.municipality}</div>
+                    <div class="small text-muted">${item.entity}</div>
+                    <div class="small">
+                        <span class="badge bg-primary">${item.survey_type}</span>
+                        <span class="badge bg-secondary">Prioridade ${item.priority}</span>
+                    </div>
+                </div>
+                <div class="schedule-time">
+                    ${item.arrival_time} - ${item.departure_time}
+                </div>
+            `;
+            scheduleList.appendChild(scheduleItem);
+        });
+        
+        this.updateStatus(`Rota otimizada: ${route.points.length} visitas, ${route.total_distance_km.toFixed(1)}km`);
+    }
+    
+    displayWeeklyResults(result) {
+        const schedule = result.weekly_schedule;
+        
+        // Estatísticas gerais
+        document.getElementById('totalVisits').textContent = result.total_points;
+        document.getElementById('totalDistance').textContent = 
+            schedule.reduce((sum, day) => sum + day.total_distance_km, 0).toFixed(1);
+        document.getElementById('totalDuration').textContent = 
+            schedule.reduce((sum, day) => sum + day.total_duration_hours, 0).toFixed(1);
+        document.getElementById('efficiency').textContent = result.avg_efficiency.toFixed(0) + '%';
+        
+        // Cronograma semanal
+        const scheduleList = document.getElementById('scheduleList');
+        scheduleList.innerHTML = '';
+        
+        schedule.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'mb-3';
+            dayHeader.innerHTML = `
+                <h6 class="text-primary mb-2">
+                    📅 ${day.weekday}, ${day.date} 
+                    <span class="badge bg-secondary">${day.points.length} visitas</span>
+                </h6>
+            `;
+            scheduleList.appendChild(dayHeader);
+            
+            day.summary.schedule.forEach(item => {
+                const scheduleItem = document.createElement('div');
+                scheduleItem.className = 'schedule-item';
+                scheduleItem.innerHTML = `
+                    <div class="schedule-sequence">${item.sequence}</div>
+                    <div class="schedule-info">
+                        <div class="fw-bold">${item.municipality}</div>
+                        <div class="small text-muted">${item.entity}</div>
+                    </div>
+                    <div class="schedule-time">
+                        ${item.arrival_time} - ${item.departure_time}
+                    </div>
+                `;
+                scheduleList.appendChild(scheduleItem);
+            });
+        });
+        
+        this.updateStatus(`Cronograma semanal: ${result.total_days} dias, ${result.total_points} visitas`);
+    }
+    
+    async exportRoute() {
+        if (!this.currentRoute) {
+            this.showError('Nenhuma rota para exportar');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/pnsb-optimization/export/csv', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({route: this.currentRoute.route || this.currentRoute})
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Download do arquivo
+                const blob = new Blob([data.csv_content], {type: 'text/csv'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = data.filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                this.showSuccess('Arquivo CSV exportado com sucesso!');
+            } else {
+                this.showError('Erro ao exportar: ' + data.error);
+            }
+        } catch (error) {
+            this.showError('Erro na exportação: ' + error.message);
+        }
+    }
+    
+    refresh() {
+        this.clearResults();
+        this.loadMunicipalities();
+        this.updateStatus('Dados atualizados');
+    }
+    
+    clearResults() {
+        document.getElementById('routeStats').style.display = 'none';
+        document.getElementById('routeSchedule').style.display = 'none';
+        document.getElementById('exportBtn').style.display = 'none';
+        document.getElementById('placeholder').style.display = 'block';
+        document.getElementById('alertContainer').innerHTML = '';
+    }
+    
+    showLoading() {
+        document.getElementById('loadingSpinner').style.display = 'block';
+        document.getElementById('placeholder').style.display = 'none';
+    }
+    
+    hideLoading() {
+        document.getElementById('loadingSpinner').style.display = 'none';
+    }
+    
+    showSuccess(message) {
+        this.showAlert(message, 'success');
+    }
+    
+    showError(message) {
+        this.showAlert(message, 'error');
+    }
+    
+    showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+        alert.innerHTML = `
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i>
+            ${message}
+        `;
+        alertContainer.appendChild(alert);
+        
+        setTimeout(() => alert.remove(), 5000);
+    }
+    
+    updateStatus(message) {
+        document.getElementById('statusDisplay').innerHTML = `
+            <small class="text-muted">
+                <i class="fas fa-info-circle"></i> ${message}
+            </small>
+        `;
+    }
+}
+
+// Inicializar quando a página carregar
+document.addEventListener('DOMContentLoaded', () => {
+    new PNSBRouteOptimizer();
+});
+</script>
+{% endblock %}

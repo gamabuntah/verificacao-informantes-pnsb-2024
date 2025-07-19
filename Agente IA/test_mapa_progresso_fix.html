@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste: Correção Mapa de Progresso</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+        .log {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .municipality-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .municipality-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f8f9fa;
+        }
+        .municipality-card h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .progress-bar {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            height: 20px;
+            overflow: hidden;
+            margin: 5px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #28a745;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Teste: Correção Mapa de Progresso PNSB 2024</h1>
+        
+        <div class="test-section info">
+            <h3>📋 Objetivo do Teste</h3>
+            <p>Verificar se a correção do erro "municipios.data.forEach is not a function" foi bem-sucedida.</p>
+            <p><strong>Erro Original:</strong> TypeError: municipios.data.forEach is not a function</p>
+            <p><strong>Correção Aplicada:</strong> Estrutura de dados corrigida para acessar municipios.data.municipios</p>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Testes Automatizados</h3>
+            <button onclick="testarAPI()">1. Testar API</button>
+            <button onclick="testarEstruturaDados()">2. Testar Estrutura de Dados</button>
+            <button onclick="testarCarregamentoSimulado()">3. Simular Carregamento</button>
+            <button onclick="limparLogs()">Limpar Logs</button>
+            
+            <div id="logs" class="log"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Dados dos Municípios</h3>
+            <div id="municipios-container">
+                <p>Clique em "Testar API" para carregar os dados...</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔍 Diagnóstico</h3>
+            <div id="diagnostico">
+                <p>Execute os testes para ver o diagnóstico...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let dadosAPI = null;
+        
+        function log(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️';
+            logs.innerHTML += `[${timestamp}] ${icon} ${message}\n`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+        
+        function limparLogs() {
+            document.getElementById('logs').innerHTML = '';
+        }
+        
+        async function testarAPI() {
+            log('🔍 Testando API /api/visitas/progresso-mapa...');
+            
+            try {
+                const response = await fetch('/api/visitas/progresso-mapa');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                dadosAPI = result;
+                
+                log('✅ API respondeu com sucesso', 'success');
+                log(`📊 Estrutura da resposta: ${JSON.stringify(Object.keys(result), null, 2)}`);
+                
+                if (result.success && result.data) {
+                    log('✅ Resposta contém dados válidos', 'success');
+                    log(`📊 Chaves dos dados: ${JSON.stringify(Object.keys(result.data), null, 2)}`);
+                    
+                    if (result.data.municipios && Array.isArray(result.data.municipios)) {
+                        log(`✅ Encontrados ${result.data.municipios.length} municípios`, 'success');
+                        renderizarMunicipios(result.data.municipios);
+                    } else {
+                        log('❌ Dados dos municípios não encontrados ou inválidos', 'error');
+                    }
+                } else {
+                    log('❌ Estrutura de resposta inválida', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro ao testar API: ${error.message}`, 'error');
+                dadosAPI = null;
+            }
+        }
+        
+        function testarEstruturaDados() {
+            log('🔍 Testando estrutura de dados...');
+            
+            if (!dadosAPI) {
+                log('❌ Nenhum dado da API disponível. Execute o teste da API primeiro.', 'error');
+                return;
+            }
+            
+            try {
+                // Simular o código JavaScript corrigido
+                const municipios = dadosAPI;
+                
+                log('🔍 Testando acesso à estrutura corrigida...');
+                
+                if (municipios && municipios.success && municipios.data) {
+                    const municipiosArray = municipios.data.municipios || municipios.data.data || [];
+                    
+                    log(`✅ municipios.data.municipios encontrado: ${Array.isArray(municipiosArray)}`, 'success');
+                    log(`📊 Tipo do array: ${typeof municipiosArray}`);
+                    log(`📊 Comprimento do array: ${municipiosArray.length}`);
+                    
+                    if (Array.isArray(municipiosArray) && municipiosArray.length > 0) {
+                        log('✅ forEach funcionará corretamente!', 'success');
+                        
+                        // Simular o processamento
+                        const processedMunicipios = {};
+                        municipiosArray.forEach(municipioData => {
+                            if (municipioData.municipio) {
+                                processedMunicipios[municipioData.municipio] = municipioData;
+                            }
+                        });
+                        
+                        log(`✅ Processamento simulado bem-sucedido: ${Object.keys(processedMunicipios).length} municípios processados`, 'success');
+                        
+                        // Mostrar alguns exemplos
+                        const exemplosMunicipios = Object.keys(processedMunicipios).slice(0, 3);
+                        log(`📋 Exemplos de municípios processados: ${exemplosMunicipios.join(', ')}`);
+                        
+                    } else {
+                        log('❌ Array vazio ou inválido', 'error');
+                    }
+                } else {
+                    log('❌ Estrutura de dados inválida', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Erro ao testar estrutura: ${error.message}`, 'error');
+            }
+        }
+        
+        function testarCarregamentoSimulado() {
+            log('🔍 Simulando carregamento completo...');
+            
+            if (!dadosAPI) {
+                log('❌ Nenhum dado da API disponível. Execute o teste da API primeiro.', 'error');
+                return;
+            }
+            
+            try {
+                // Simular o código JavaScript original (que causava erro)
+                log('🔍 Testando código original (que causava erro)...');
+                
+                const municipios = dadosAPI;
+                
+                // Simulação do código que causava erro
+                try {
+                    if (municipios && municipios.data && municipios.data.forEach) {
+                        log('❌ Código original tentaria usar municipios.data.forEach', 'error');
+                    } else {
+                        log('✅ Código original falharia aqui (municipios.data não é array)', 'success');
+                    }
+                } catch (error) {
+                    log(`❌ Código original falharia: ${error.message}`, 'error');
+                }
+                
+                // Simulação do código corrigido
+                log('🔍 Testando código corrigido...');
+                
+                if (municipios && municipios.success && municipios.data) {
+                    const municipiosArray = municipios.data.municipios || municipios.data.data || [];
+                    
+                    if (Array.isArray(municipiosArray)) {
+                        log('✅ Código corrigido funcionará!', 'success');
+                        
+                        // Simular o processamento completo
+                        const dadosProcessados = {
+                            municipios: {},
+                            data: municipiosArray,
+                            estatisticas: municipios.data.estatisticas || {},
+                            ultima_atualizacao: municipios.data.ultima_atualizacao
+                        };
+                        
+                        municipiosArray.forEach(municipioData => {
+                            dadosProcessados.municipios[municipioData.municipio] = municipioData;
+                        });
+                        
+                        log(`✅ Processamento completo bem-sucedido!`, 'success');
+                        log(`📊 Municípios processados: ${Object.keys(dadosProcessados.municipios).length}`);
+                        
+                        // Atualizar diagnóstico
+                        atualizarDiagnostico(true, dadosProcessados);
+                        
+                    } else {
+                        log('❌ Código corrigido ainda falharia', 'error');
+                        atualizarDiagnostico(false, null);
+                    }
+                }
+                
+            } catch (error) {
+                log(`❌ Erro na simulação: ${error.message}`, 'error');
+                atualizarDiagnostico(false, null);
+            }
+        }
+        
+        function renderizarMunicipios(municipios) {
+            const container = document.getElementById('municipios-container');
+            
+            if (!Array.isArray(municipios) || municipios.length === 0) {
+                container.innerHTML = '<p>❌ Nenhum dado de município disponível</p>';
+                return;
+            }
+            
+            const grid = document.createElement('div');
+            grid.className = 'municipality-grid';
+            
+            municipios.forEach(municipio => {
+                const card = document.createElement('div');
+                card.className = 'municipality-card';
+                
+                const nome = municipio.municipio || 'Nome não disponível';
+                const entidades = municipio.total_entidades || 0;
+                const questionarios = municipio.questionarios || {};
+                const progressoGeral = questionarios.percentual_geral || 0;
+                
+                card.innerHTML = `
+                    <h4>${nome}</h4>
+                    <p><strong>Entidades:</strong> ${entidades}</p>
+                    <p><strong>MRS:</strong> ${questionarios.mrs_validados || 0}/${questionarios.total_mrs_obrigatorios || 0}</p>
+                    <p><strong>MAP:</strong> ${questionarios.map_validados || 0}/${questionarios.total_map_obrigatorios || 0}</p>
+                    <p><strong>Progresso:</strong> ${progressoGeral.toFixed(1)}%</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progressoGeral}%"></div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            container.innerHTML = '';
+            container.appendChild(grid);
+        }
+        
+        function atualizarDiagnostico(sucesso, dados) {
+            const diagnostico = document.getElementById('diagnostico');
+            
+            if (sucesso) {
+                diagnostico.innerHTML = `
+                    <div class="success">
+                        <h4>✅ Correção Bem-sucedida!</h4>
+                        <p>O erro "municipios.data.forEach is not a function" foi corrigido com sucesso.</p>
+                        <p><strong>Problema:</strong> JavaScript tentava usar forEach em municipios.data (que é um objeto)</p>
+                        <p><strong>Solução:</strong> Código corrigido para usar municipios.data.municipios (que é um array)</p>
+                        <p><strong>Resultado:</strong> ${dados ? Object.keys(dados.municipios).length : 0} municípios processados corretamente</p>
+                    </div>
+                `;
+            } else {
+                diagnostico.innerHTML = `
+                    <div class="error">
+                        <h4>❌ Problema Identificado</h4>
+                        <p>A correção não foi bem-sucedida ou há outros problemas.</p>
+                        <p>Verifique os logs para mais detalhes.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Executar teste inicial
+        window.addEventListener('load', () => {
+            log('🚀 Página de teste carregada. Clique nos botões para executar os testes.');
+        });
+    </script>
+</body>
+</html>

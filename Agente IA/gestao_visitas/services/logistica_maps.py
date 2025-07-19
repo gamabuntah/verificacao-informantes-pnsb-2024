@@ -89,7 +89,7 @@ class LogisticaMaps:
                     'visita_id': visita.get('id'),
                     'municipio': visita['municipio'],
                     'endereco': visita.get('endereco', ''),
-                    'informante': visita.get('informante', ''),
+                    'local': visita.get('local', ''),
                     'coordenadas': coordenadas,
                     'horario_preferido': visita.get('horario_preferido'),
                     'duracao_estimada': visita.get('duracao_estimada', 60),
@@ -388,7 +388,7 @@ class LogisticaMaps:
             {
                 'id': v.id,
                 'municipio': v.municipio,
-                'informante': v.informante,
+                'local': v.local,
                 'horario_preferido': v.hora_inicio,
                 'duracao_estimada': 60,  # padrão
                 'endereco': v.endereco if hasattr(v, 'endereco') else '',
@@ -469,7 +469,7 @@ class LogisticaMaps:
             visita_cronograma = {
                 'ordem': i + 1,
                 'municipio': visita['municipio'],
-                'informante': visita['informante'],
+                'local': visita['local'],
                 'horario_chegada': horario_atual.strftime('%H:%M'),
                 'duracao_visita': visita.get('duracao_estimada', 60),
                 'horario_saida': (horario_atual + timedelta(minutes=visita.get('duracao_estimada', 60))).strftime('%H:%M'),

@@ -294,7 +294,7 @@ class SistemaNotificacoes:
                     'visita_id': visita.id,
                     'municipio': visita.municipio,
                     'dias_atraso': dias_atraso,
-                    'informante': visita.informante
+                    'local': visita.local
                 },
                 'acoes_sugeridas': [
                     {'acao': 'reagendar', 'texto': 'Reagendar visita'},
@@ -536,7 +536,7 @@ class SistemaNotificacoes:
                 'dados_contexto': {
                     'visita_id': visita.id,
                     'municipio': visita.municipio,
-                    'informante': visita.informante,
+                    'local': visita.local,
                     'tipo_pesquisa': visita.tipo_pesquisa
                 },
                 'acoes_sugeridas': [

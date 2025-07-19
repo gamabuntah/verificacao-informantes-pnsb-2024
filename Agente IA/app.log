@@ -1,4 +1,4 @@
-⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
+'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
 INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
 INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
 INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
@@ -7,70 +7,541 @@ INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com s
 INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
 INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
 INFO:googlemaps.client:API queries_quota: 60
+INFO:gestao_visitas.services.auto_scheduler:AutoSchedulerService inicializado com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Scheduler automático iniciado com sucesso
+INFO:gestao_visitas.routes.auto_scheduler_api:AutoSchedulerService inicializado e iniciado
+INFO:gestao_visitas.services.strategy_assistant:StrategyAssistantService inicializado com sucesso
+INFO:gestao_visitas.routes.strategy_assistant_api:StrategyAssistantService inicializado
+INFO:gestao_visitas.services.critical_alerts_service:CriticalAlertsService inicializado com sucesso
+INFO:gestao_visitas.routes.critical_alerts_api:CriticalAlertsService inicializado
+INFO:gestao_visitas.services.timeline_service:TimelineService inicializado com sucesso
+INFO:gestao_visitas.routes.timeline_api:TimelineService inicializado
+INFO:gestao_visitas.services.google_maps_service:GoogleMapsService inicializado com sucesso
+INFO:gestao_visitas.routes.google_maps_api:GoogleMapsService inicializado
 'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
 'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
+🔍 Debug: Procurando .env em: /mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/.env
+🔍 Debug: Arquivo .env existe: True
+✅ Arquivo .env carregado com sucesso
+🔍 Debug: Teste de leitura da API Key: 'AIzaSyBQagNrn5WHO-jXfkkNvzUMMR6UsWFBxLg' (length: 39)
 === INICIANDO APP.PY CORRETO ===
+🔍 Debug: Configurando GOOGLE_MAPS_API_KEY = 'AIzaSyBQagNrn5WHO-jXfkkNvzUMMR6UsWFBxLg' (length: 39)
+✅ Compressão Flask-Compress ativada
+✅ CORS Flask-CORS ativado
+✅ CSRF Protection ativado
+✅ Migração de horários de funcionamento executada
 ✅ Arquivo .env carregado com sucesso
 ✅ Serviços PNSB inicializados com sucesso
 ✅ Google Maps API configurado com sucesso
-💾 Backup automático criado: 20250703_004758
+💾 Backup automático criado: 20250715_173016
 🔒 Sistema de backup automático iniciado
    📁 Diretório: gestao_visitas/backups_automaticos
    ⏰ Intervalo: 300 segundos
 🔒 Sistema de backup automático ativado - suas visitas estão protegidas!
+💰 Chat IA desabilitado para economizar custos. Defina CHAT_IA_HABILITADO=true para habilitar.
+✅ Todos os blueprints registrados com sucesso
+🔗 Registrando blueprints principais...
+✅ Blueprints principais registrados
+✅ CSRF exemption applied to API blueprint
+🚀 Iniciando servidor Flask em http://0.0.0.0:5000
+📱 Acesse o sistema no seu navegador: http://0.0.0.0:5000
+🛑 Para parar o servidor: Pressione CTRL+C
+============================================================
  * Serving Flask app 'app'
  * Debug mode: on
 INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:8080
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.30.57.206:5000
 INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:werkzeug: * Restarting with stat
-'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
-⚠️ Google Maps API não disponível: geocode() got an unexpected keyword argument 'timeout'
-INFO:gestao_visitas.services.redis_cache:🎭 Redis não disponível (Error 111 connecting to localhost:6379. Connection...), usando simulador automático
-INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
-INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
-INFO:gestao_visitas.services.redis_simulator:🎭 Usando Redis Simulator em vez de redis://localhost:6379/0
-INFO:gestao_visitas.services.redis_simulator:🚀 Redis Simulator iniciado com sucesso
-INFO:gestao_visitas.services.redis_simulator:🔌 Redis Simulator Client conectado (simulando localhost:6379/db0)
-INFO:gestao_visitas.services.redis_cache:🚀 Redis Simulator ativado com sucesso - performance total!
-INFO:googlemaps.client:API queries_quota: 60
-'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
-'FLASK_ENV' is deprecated and will not be used in Flask 2.3. Use 'FLASK_DEBUG' instead.
-WARNING:werkzeug: * Debugger is active!
-INFO:werkzeug: * Debugger PIN: 216-667-060
-INFO:werkzeug:127.0.0.1 - - [03/Jul/2025 00:50:24] "[35m[1mGET / HTTP/1.1[0m" 500 -
-Traceback (most recent call last):
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2552, in __call__
-    return self.wsgi_app(environ, start_response)
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2532, in wsgi_app
-    response = self.handle_exception(e)
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2529, in wsgi_app
-    response = self.full_dispatch_request()
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 1825, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 1823, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 1799, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
-  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/app.py", line 140, in index
-    return render_template('dashboard.html')
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/templating.py", line 147, in render_template
-    return _render(app, template, context)
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/templating.py", line 130, in _render
-    rv = template.render(context)
-  File "/home/ggmob/.local/lib/python3.10/site-packages/jinja2/environment.py", line 1301, in render
-    self.environment.handle_exception()
-  File "/home/ggmob/.local/lib/python3.10/site-packages/jinja2/environment.py", line 936, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/templates/dashboard.html", line 1, in top-level template code
-    {% extends "base.html" %}
-  File "/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/gestao_visitas/templates/base.html", line 208, in top-level template code
-    <a href="{{ url_for('material_apoio') }}" class="nav-link-custom {% if 'material-apoio' in request.path %}active{% endif %}">
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2034, in url_for
-    return self.handle_url_build_error(error, endpoint, values)
-  File "/home/ggmob/.local/lib/python3.10/site-packages/flask/app.py", line 2023, in url_for
-    rv = url_adapter.build(  # type: ignore[union-attr]
-  File "/home/ggmob/.local/lib/python3.10/site-packages/werkzeug/routing/map.py", line 917, in build
-    raise BuildError(endpoint, values, method, self)
-werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'material_apoio'. Did you mean 'material_apoio.busca_unificada' instead?
-🛑 Sistema de backup automático parado
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Detecção de Conflitos executada com sucesso
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 19:06:43] "HEAD /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 19:06:55] "GET /static/js/mapa_progresso.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 19:07:04] "GET /static/js/mapa_progresso.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 19:07:23] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 19:08:47] "[33mGET /teste_eficiencia.html HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 19:09:07] "GET /teste-mapa-progresso HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Relatório Executivo Diário
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao gerar relatório executivo: 'RelatorioService' object has no attribute 'gerar_relatorio_executivo'
+ERROR:gestao_visitas.services.auto_scheduler:Erro ao executar tarefa Relatório Executivo Diário
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 20:35:17] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 20:41:07] "GET /static/js/mapa_progresso.js HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [15/Jul/2025 20:41:24] "GET /static/js/mapa_progresso.js HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Nenhuma notificação de follow-up necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Detecção de Conflitos executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250715_223505
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Nenhuma notificação de follow-up necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Detecção de Conflitos executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250716_043555
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Nenhuma notificação de follow-up necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Detecção de Conflitos executada com sucesso
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:32] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:33] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:33] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:33] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:33] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:33] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:33] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:33] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:33] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/js/mapa_progresso.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/js/mapa_progresso_charts.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/js/mapa_progresso_workflow.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/css/mapa_progresso.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:34] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:35] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:36] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/js/mapa_progresso.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/js/mapa_progresso_workflow.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/js/mapa_progresso_charts.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/css/mapa_progresso.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:39] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/js/mapa_progresso_workflow.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/js/mapa_progresso.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/js/mapa_progresso_charts.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/css/mapa_progresso.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:40] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:41] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:41] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:41] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:41] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:41] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:41] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:41] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:01:42] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:30] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:32] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:32] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:32] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:32] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:32] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:33] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:33] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:18:34] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:10] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:10] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:10] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:10] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:10] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:10] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:10] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:10] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:13] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/js/mapa_progresso_charts.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/js/mapa_progresso.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/js/mapa_progresso_workflow.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/css/mapa_progresso.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:21] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:26:22] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Backup Automático de Dados
+INFO:gestao_visitas.services.auto_scheduler:Backup automático simples criado em: gestao_visitas/backups/auto_backup_20250716_103630
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Backup Automático de Dados executada com sucesso
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:22] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:23] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:23] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:23] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:23] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:23] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:23] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:23] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:24] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:25] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:26] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:27] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/mapa_progresso.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/mapa_progresso_charts.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/mapa_progresso_workflow.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/css/mapa_progresso.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/mapa_progresso_workflow.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/mapa_progresso_charts.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/mapa_progresso.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/css/mapa_progresso.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:28] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/js/mapa_progresso_charts.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/js/mapa_progresso.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/js/mapa_progresso_workflow.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/css/mapa_progresso.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:29] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/js/mapa_progresso.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/js/mapa_progresso_workflow.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/js/pwa.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/js/mapa_progresso_charts.js?v=20250714i HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/css/mapa_progresso.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/css/design-system.css HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/js/health-check.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/js/components.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:32] "GET /static/js/breadcrumbs-init.js?v=2.0 HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:33] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:33] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:33] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:33] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:33] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:33] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:33] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:34] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 10:38:34] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Detecção de Conflitos executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Notificações de Follow-up
+INFO:gestao_visitas.services.auto_scheduler:Nenhuma notificação de follow-up necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Notificações de Follow-up executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+💾 Backup automático criado: 20250715_173552
+💾 Backup automático criado: 20250715_174125
+💾 Backup automático criado: 20250715_174658
+💾 Backup automático criado: 20250715_175234
+💾 Backup automático criado: 20250715_175806
+💾 Backup automático criado: 20250715_180339
+💾 Backup automático criado: 20250715_180915
+💾 Backup automático criado: 20250715_181448
+💾 Backup automático criado: 20250715_182020
+💾 Backup automático criado: 20250715_182558
+💾 Backup automático criado: 20250715_183135
+💾 Backup automático criado: 20250715_183708
+💾 Backup automático criado: 20250715_184245
+💾 Backup automático criado: 20250715_184818
+💾 Backup automático criado: 20250715_185351
+💾 Backup automático criado: 20250715_185927
+💾 Backup automático criado: 20250715_190500
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+💾 Backup automático criado: 20250715_191032
+💾 Backup automático criado: 20250715_191605
+💾 Backup automático criado: 20250715_192141
+💾 Backup automático criado: 20250715_192714
+💾 Backup automático criado: 20250715_193246
+💾 Backup automático criado: 20250715_193823
+💾 Backup automático criado: 20250715_194355
+💾 Backup automático criado: 20250715_194928
+💾 Backup automático criado: 20250715_195505
+💾 Backup automático criado: 20250715_200039
+💾 Backup automático criado: 20250715_200612
+💾 Backup automático criado: 20250715_201148
+💾 Backup automático criado: 20250715_201720
+💾 Backup automático criado: 20250715_202253
+💾 Backup automático criado: 20250715_202825
+💾 Backup automático criado: 20250715_203402
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+💾 Backup automático criado: 20250715_203934
+💾 Backup automático criado: 20250715_204507
+💾 Backup automático criado: 20250715_205038
+💾 Backup automático criado: 20250715_205605
+💾 Backup automático criado: 20250715_210136
+💾 Backup automático criado: 20250715_210707
+💾 Backup automático criado: 20250715_211239
+💾 Backup automático criado: 20250715_211807
+💾 Backup automático criado: 20250715_212335
+💾 Backup automático criado: 20250715_212907
+💾 Backup automático criado: 20250715_213435
+💾 Backup automático criado: 20250715_214004
+💾 Backup automático criado: 20250715_214535
+💾 Backup automático criado: 20250715_215103
+💾 Backup automático criado: 20250715_215632
+💾 Backup automático criado: 20250715_220205
+💾 Backup automático criado: 20250715_220734
+💾 Backup automático criado: 20250715_221302
+💾 Backup automático criado: 20250715_221835
+💾 Backup automático criado: 20250715_222403
+💾 Backup automático criado: 20250715_222935
+💾 Backup automático criado: 20250715_223508
+💾 Backup automático criado: 20250715_224036
+💾 Backup automático criado: 20250715_224607
+💾 Backup automático criado: 20250715_225133
+💾 Backup automático criado: 20250715_225704
+💾 Backup automático criado: 20250716_030700
+💾 Backup automático criado: 20250716_031244
+💾 Backup automático criado: 20250716_031811
+💾 Backup automático criado: 20250716_032339
+💾 Backup automático criado: 20250716_032906
+💾 Backup automático criado: 20250716_033433
+💾 Backup automático criado: 20250716_034002
+💾 Backup automático criado: 20250716_034529
+💾 Backup automático criado: 20250716_035056
+💾 Backup automático criado: 20250716_035625
+💾 Backup automático criado: 20250716_040152
+💾 Backup automático criado: 20250716_043528
+💾 Backup automático criado: 20250716_081320
+💾 Backup automático criado: 20250716_081846
+💾 Backup automático criado: 20250716_082413
+💾 Backup automático criado: 20250716_082942
+💾 Backup automático criado: 20250716_083509
+💾 Backup automático criado: 20250716_084036
+💾 Backup automático criado: 20250716_084605
+💾 Backup automático criado: 20250716_092220
+💾 Backup automático criado: 20250716_092746
+💾 Backup automático criado: 20250716_093315
+💾 Backup automático criado: 20250716_093842
+💾 Backup automático criado: 20250716_094409
+💾 Backup automático criado: 20250716_094938
+💾 Backup automático criado: 20250716_095505
+💾 Backup automático criado: 20250716_100032
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250716_100601
+💾 Backup automático criado: 20250716_101128
+💾 Backup automático criado: 20250716_101656
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250716_102227
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250716_102759
+💾 Backup automático criado: 20250716_103332
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- FIM GET /api/visitas ---
+--- INICIANDO GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+Qtd visitas encontradas: 15
+--- INICIANDO GET /api/visitas ---
+--- FIM GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- FIM GET /api/visitas ---
+🚀 Dashboard Executivo PNSB 2024 - API Key length: 39
+--- INICIANDO GET /api/visitas ---
+Qtd visitas encontradas: 15
+--- FIM GET /api/visitas ---
+💾 Backup automático criado: 20250716_103904
+💾 Backup automático criado: 20250716_104440
+💾 Backup automático criado: 20250716_105007
+💾 Backup automático criado: 20250716_105533
+💾 Backup automático criado: 20250716_110107
+💾 Backup automático criado: 20250716_110639
+💾 Backup automático criado: 20250716_111212
+💾 Backup automático criado: 20250716_111748
+💾 Backup automático criado: 20250716_112320
+💾 Backup automático criado: 20250716_112853
+💾 Backup automático criado: 20250716_113426
+💾 Backup automático criado: 20250716_114006
+💾 Backup automático criado: 20250716_114538
+💾 Backup automático criado: 20250716_115114
+💾 Backup automático criado: 20250716_115647
+💾 Backup automático criado: 20250716_120219
+💾 Backup automático criado: 20250716_120752
+💾 Backup automático criado: 20250716_121328
+💾 Backup automático criado: 20250716_121901
+💾 Backup automático criado: 20250716_122433
+💾 Backup automático criado: 20250716_123010
+💾 Backup automático criado: 20250716_123546
+💾 Backup automático criado: 20250716_124123
+💾 Backup automático criado: 20250716_124655
+💾 Backup automático criado: 20250716_125228
+💾 Backup automático criado: 20250716_125800
+💾 Backup automático criado: 20250716_130336
+💾 Backup automático criado: 20250716_130909
+💾 Backup automático criado: 20250716_131442
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Detecção de Conflitos
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Detecção de Conflitos executada com sucesso
+INFO:gestao_visitas.services.auto_scheduler:Executando tarefa: Verificação Automática de Status
+INFO:gestao_visitas.services.auto_scheduler:Verificação de status concluída: nenhuma atualização necessária
+INFO:gestao_visitas.services.auto_scheduler:Tarefa Verificação Automática de Status executada com sucesso
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:55] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:56] "GET /api/questionarios/progresso-questionarios HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:56] "GET /api/questionarios/entidades-identificadas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:56] "GET /api/checklist HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:56] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:56] "GET /api/visitas HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:56] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:56] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:172.30.48.1 - - [16/Jul/2025 14:46:57] "GET /api/visitas/progresso-mapa HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:06] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:06] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:06] "[33mGET /api/dashboard/relatorios/executivo HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:06] "GET /api/dashboard/municipios/detalhado HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:38] "GET /mapa-progresso HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:38] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:38] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:38] "[33mGET /api/dashboard/relatorios/executivo HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:39] "GET /api/dashboard/municipios/detalhado HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:39] "GET /api/dashboard/estatisticas/diarias HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:39] "[33mGET /api/dashboard/relatorios/semanal HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:39] "[33mGET /api/dashboard/relatorios/ibge HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:39] "GET /api/dashboard/timeline/operacional HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:39] "GET /api/dashboard/alertas/automaticos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:39] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 14:57:39] "GET /api/dashboard/municipios/detalhado HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 15:07:44] "[33mGET /api/dashboard/relatorios/executivo HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 15:07:44] "[33mGET /api/dashboard/relatorios/semanal HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 15:07:44] "[33mGET /api/dashboard/relatorios/ibge HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 15:07:45] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 15:08:30] "[33mGET /api/dashboard/relatorios/executivo HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 15:08:30] "[33mGET /api/dashboard/relatorios/semanal HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 15:08:30] "[33mGET /api/dashboard/relatorios/ibge HTTP/1.1[0m" 404 -
+INFO:werkzeug:127.0.0.1 - - [16/Jul/2025 15:08:30] "GET /api/dashboard/kpis/estrategicos HTTP/1.1" 200 -

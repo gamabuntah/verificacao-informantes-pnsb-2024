@@ -160,6 +160,320 @@ class GeocodificacaoService:
             self.logger.warning(f"❌ Falha ao geocodificar {entidade.nome_entidade}: {resultado['erro']}")
             return False
     
+    def validar_endereco_avancado(self, endereco: str, municipio: str = None) -> Dict:
+        """
+        Validação avançada de endereço para PNSB 2024
+        
+        Args:
+            endereco: Endereço a ser validado
+            municipio: Município para contexto (opcional)
+            
+        Returns:
+            Dict com validação completa e sugestões
+        """
+        if not self.gmaps:
+            return {
+                'status': 'erro',
+                'erro': 'Google Maps API não disponível',
+                'valido': False,
+                'confianca': 0,
+                'sugestoes': []
+            }
+        
+        if not endereco or endereco.strip() == '':
+            return {
+                'status': 'erro',
+                'erro': 'Endereço vazio',
+                'valido': False,
+                'confianca': 0,
+                'sugestoes': ['Forneça um endereço válido']
+            }
+        
+        try:
+            # Geocodificar primeiro
+            resultado_geo = self.geocodificar_endereco(endereco, municipio)
+            
+            if resultado_geo['status'] != 'sucesso':
+                return {
+                    'status': 'erro',
+                    'erro': resultado_geo['erro'],
+                    'valido': False,
+                    'confianca': 0,
+                    'sugestoes': self._gerar_sugestoes_endereco(endereco, municipio)
+                }
+            
+            # Analisar componentes do endereço
+            componentes = resultado_geo.get('componentes', [])
+            validacao_componentes = self._validar_componentes_endereco(componentes, municipio)
+            
+            # Calcular score de confiança
+            confianca_score = self._calcular_confianca_endereco(
+                resultado_geo['confianca'], 
+                validacao_componentes,
+                resultado_geo.get('tipos', [])
+            )
+            
+            # Gerar sugestões de melhoria
+            sugestoes = self._gerar_sugestoes_melhoria(
+                endereco, 
+                resultado_geo, 
+                validacao_componentes
+            )
+            
+            # Verificar se está em Santa Catarina
+            validacao_sc = self._validar_santa_catarina(componentes)
+            
+            return {
+                'status': 'sucesso',
+                'valido': confianca_score >= 70,
+                'confianca': confianca_score,
+                'endereco_original': endereco,
+                'endereco_formatado': resultado_geo['endereco_formatado'],
+                'latitude': resultado_geo['latitude'],
+                'longitude': resultado_geo['longitude'],
+                'place_id': resultado_geo['place_id'],
+                'plus_code': resultado_geo['plus_code'],
+                'tipo_localizacao': resultado_geo['confianca'],
+                'componentes_validados': validacao_componentes,
+                'em_santa_catarina': validacao_sc['valido'],
+                'municipio_detectado': validacao_sc['municipio'],
+                'sugestoes': sugestoes,
+                'alertas': self._gerar_alertas_endereco(validacao_componentes, validacao_sc)
+            }
+            
+        except Exception as e:
+            self.logger.error(f"❌ Erro na validação avançada: {str(e)}")
+            return {
+                'status': 'erro',
+                'erro': f'Erro na validação: {str(e)}',
+                'valido': False,
+                'confianca': 0,
+                'sugestoes': ['Erro interno na validação']
+            }
+    
+    def _validar_componentes_endereco(self, componentes: List[Dict], municipio_esperado: str = None) -> Dict:
+        """Valida componentes individuais do endereço"""
+        validacao = {
+            'numero': {'presente': False, 'valor': None},
+            'rua': {'presente': False, 'valor': None},
+            'bairro': {'presente': False, 'valor': None},
+            'cidade': {'presente': False, 'valor': None},
+            'estado': {'presente': False, 'valor': None},
+            'cep': {'presente': False, 'valor': None},
+            'pais': {'presente': False, 'valor': None}
+        }
+        
+        for componente in componentes:
+            tipos = componente.get('types', [])
+            nome_longo = componente.get('long_name', '')
+            nome_curto = componente.get('short_name', '')
+            
+            if 'street_number' in tipos:
+                validacao['numero']['presente'] = True
+                validacao['numero']['valor'] = nome_longo
+            elif 'route' in tipos:
+                validacao['rua']['presente'] = True
+                validacao['rua']['valor'] = nome_longo
+            elif 'sublocality' in tipos or 'neighborhood' in tipos:
+                validacao['bairro']['presente'] = True
+                validacao['bairro']['valor'] = nome_longo
+            elif 'administrative_area_level_2' in tipos:
+                validacao['cidade']['presente'] = True
+                validacao['cidade']['valor'] = nome_longo
+            elif 'administrative_area_level_1' in tipos:
+                validacao['estado']['presente'] = True
+                validacao['estado']['valor'] = nome_longo
+            elif 'postal_code' in tipos:
+                validacao['cep']['presente'] = True
+                validacao['cep']['valor'] = nome_longo
+            elif 'country' in tipos:
+                validacao['pais']['presente'] = True
+                validacao['pais']['valor'] = nome_longo
+        
+        # Validar se município esperado confere
+        if municipio_esperado and validacao['cidade']['presente']:
+            cidade_detectada = validacao['cidade']['valor']
+            validacao['municipio_correto'] = (
+                municipio_esperado.lower() in cidade_detectada.lower() or
+                cidade_detectada.lower() in municipio_esperado.lower()
+            )
+        else:
+            validacao['municipio_correto'] = True
+        
+        return validacao
+    
+    def _calcular_confianca_endereco(self, tipo_localizacao: str, componentes: Dict, tipos: List[str]) -> int:
+        """Calcula score de confiança do endereço (0-100)"""
+        score = 0
+        
+        # Score baseado no tipo de localização do Google
+        if tipo_localizacao == 'ROOFTOP':
+            score += 40
+        elif tipo_localizacao == 'RANGE_INTERPOLATED':
+            score += 30
+        elif tipo_localizacao == 'GEOMETRIC_CENTER':
+            score += 20
+        else:
+            score += 10
+        
+        # Score baseado nos componentes presentes
+        if componentes['numero']['presente']:
+            score += 15
+        if componentes['rua']['presente']:
+            score += 15
+        if componentes['bairro']['presente']:
+            score += 10
+        if componentes['cidade']['presente']:
+            score += 10
+        if componentes['cep']['presente']:
+            score += 10
+        
+        # Penalizar se município não confere
+        if not componentes.get('municipio_correto', True):
+            score -= 20
+        
+        # Bonus para tipos específicos
+        if any(t in tipos for t in ['premise', 'establishment', 'point_of_interest']):
+            score += 10
+        
+        return min(100, max(0, score))
+    
+    def _validar_santa_catarina(self, componentes: List[Dict]) -> Dict:
+        """Valida se o endereço está em Santa Catarina"""
+        municipios_sc = [
+            'Balneário Camboriú', 'Balneário Piçarras', 'Bombinhas', 'Camboriú',
+            'Itajaí', 'Itapema', 'Luiz Alves', 'Navegantes', 'Penha', 'Porto Belo', 'Ilhota'
+        ]
+        
+        for componente in componentes:
+            tipos = componente.get('types', [])
+            nome_longo = componente.get('long_name', '')
+            nome_curto = componente.get('short_name', '')
+            
+            # Verificar estado
+            if 'administrative_area_level_1' in tipos:
+                if 'Santa Catarina' in nome_longo or 'SC' in nome_curto:
+                    # Verificar município
+                    municipio_detectado = None
+                    for comp in componentes:
+                        if 'administrative_area_level_2' in comp.get('types', []):
+                            municipio_detectado = comp.get('long_name', '')
+                            break
+                    
+                    # Verificar se é um dos municípios PNSB
+                    municipio_pnsb = any(
+                        mun.lower() in (municipio_detectado or '').lower() 
+                        for mun in municipios_sc
+                    )
+                    
+                    return {
+                        'valido': True,
+                        'municipio': municipio_detectado,
+                        'municipio_pnsb': municipio_pnsb,
+                        'municipios_pnsb_disponiveis': municipios_sc
+                    }
+        
+        return {
+            'valido': False,
+            'municipio': None,
+            'municipio_pnsb': False,
+            'municipios_pnsb_disponiveis': municipios_sc
+        }
+    
+    def _gerar_sugestoes_endereco(self, endereco: str, municipio: str = None) -> List[str]:
+        """Gera sugestões para endereços que falharam na geocodificação"""
+        sugestoes = []
+        
+        # Sugestões básicas
+        if len(endereco) < 10:
+            sugestoes.append("Endereço muito curto - forneça mais detalhes")
+        
+        if not any(char.isdigit() for char in endereco):
+            sugestoes.append("Inclua o número do endereço")
+        
+        if municipio and municipio not in endereco:
+            sugestoes.append(f"Inclua o município: {municipio}")
+        
+        if "SC" not in endereco and "Santa Catarina" not in endereco:
+            sugestoes.append("Inclua o estado: SC ou Santa Catarina")
+        
+        # Sugestões específicas para PNSB
+        sugestoes.extend([
+            "Verifique se o nome da rua está correto",
+            "Confirme se o número do endereço existe",
+            "Considere usar um ponto de referência próximo",
+            "Verifique se o endereço é de uma das 11 cidades do PNSB"
+        ])
+        
+        return sugestoes
+    
+    def _gerar_sugestoes_melhoria(self, endereco: str, resultado_geo: Dict, componentes: Dict) -> List[str]:
+        """Gera sugestões de melhoria para endereços válidos"""
+        sugestoes = []
+        
+        # Sugestões baseadas em componentes ausentes
+        if not componentes['numero']['presente']:
+            sugestoes.append("Considere incluir o número do endereço para maior precisão")
+        
+        if not componentes['bairro']['presente']:
+            sugestoes.append("Incluir o bairro pode melhorar a precisão")
+        
+        if not componentes['cep']['presente']:
+            sugestoes.append("Incluir o CEP aumenta a confiabilidade")
+        
+        # Sugestões baseadas no tipo de localização
+        tipo_loc = resultado_geo.get('confianca', '')
+        if tipo_loc == 'APPROXIMATE':
+            sugestoes.append("Localização aproximada - verifique se o endereço está completo")
+        elif tipo_loc == 'GEOMETRIC_CENTER':
+            sugestoes.append("Localização no centro geométrico - confirme o endereço exato")
+        
+        return sugestoes
+    
+    def _gerar_alertas_endereco(self, componentes: Dict, validacao_sc: Dict) -> List[Dict]:
+        """Gera alertas importantes sobre o endereço"""
+        alertas = []
+        
+        # Alerta se não está em SC
+        if not validacao_sc['valido']:
+            alertas.append({
+                'tipo': 'warning',
+                'icone': '⚠️',
+                'titulo': 'Endereço fora de Santa Catarina',
+                'descricao': 'O endereço não parece estar em Santa Catarina'
+            })
+        
+        # Alerta se não é município PNSB
+        if validacao_sc['valido'] and not validacao_sc['municipio_pnsb']:
+            alertas.append({
+                'tipo': 'info',
+                'icone': 'ℹ️',
+                'titulo': 'Município não está no PNSB',
+                'descricao': f"O município {validacao_sc['municipio']} não está na lista dos 11 municípios do PNSB"
+            })
+        
+        # Alerta se município não confere
+        if not componentes.get('municipio_correto', True):
+            alertas.append({
+                'tipo': 'warning',
+                'icone': '⚠️',
+                'titulo': 'Município não confere',
+                'descricao': 'O município detectado não confere com o esperado'
+            })
+        
+        # Alerta se endereço incompleto
+        componentes_essenciais = ['rua', 'cidade', 'estado']
+        ausentes = [c for c in componentes_essenciais if not componentes[c]['presente']]
+        if ausentes:
+            alertas.append({
+                'tipo': 'warning',
+                'icone': '⚠️',
+                'titulo': 'Endereço incompleto',
+                'descricao': f"Componentes ausentes: {', '.join(ausentes)}"
+            })
+        
+        return alertas
+    
     def geocodificar_entidade_prioritaria_uf(self, entidade: EntidadePrioritariaUF, forcar_atualizacao: bool = False) -> bool:
         """
         Geocodifica uma EntidadePrioritariaUF específica

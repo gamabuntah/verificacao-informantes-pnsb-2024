@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard Preditivo PNSB 2024{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard_preditivo.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div id="dashboard-preditivo" class="dashboard-preditivo-container">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>🔮 Dashboard Preditivo PNSB 2024</h1>
+            <p class="header-subtitle">Análise Preditiva com IA - Controle Total do Progresso</p>
+        </div>
+        <div class="header-actions">
+            <button id="btn-atualizar" class="btn btn-primary">
+                <i class="fas fa-sync-alt"></i> Atualizar
+            </button>
+            <button id="btn-exportar" class="btn btn-secondary">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+            <button id="btn-config" class="btn btn-outline-primary">
+                <i class="fas fa-cog"></i> Configurações
+            </button>
+        </div>
+    </header>
+
+    <!-- Score de Saúde Principal -->
+    <section class="score-saude-section">
+        <div id="score-saude-projeto" class="score-saude-card">
+            <!-- Preenchido dinamicamente -->
+        </div>
+    </section>
+
+    <!-- Dashboard Grid -->
+    <div class="dashboard-grid">
+        <!-- Análise de Prazos -->
+        <section class="dashboard-card prazos-card">
+            <div id="analise-prazos">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Alertas Críticos -->
+        <section class="dashboard-card alertas-card">
+            <div id="alertas-criticos">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Projeções de Progresso -->
+        <section class="dashboard-card projecoes-card">
+            <div id="projecoes-progresso">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Análise de Velocidade -->
+        <section class="dashboard-card velocidade-card">
+            <div id="analise-velocidade">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Riscos Identificados -->
+        <section class="dashboard-card riscos-card">
+            <div id="riscos-identificados">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Análise por Município -->
+        <section class="dashboard-card municipios-card">
+            <div id="analise-municipios">
+                <!-- Preenchido dinamicamente -->
+            </div>
+            <div class="chart-container">
+                <canvas id="chart-municipios-progresso"></canvas>
+            </div>
+        </section>
+
+        <!-- Recomendações da IA -->
+        <section class="dashboard-card recomendacoes-card">
+            <div id="recomendacoes-ia">
+                <!-- Preenchido dinamicamente -->
+            </div>
+        </section>
+
+        <!-- Previsão de Conclusão -->
+        <section class="dashboard-card previsao-card">
+            <div id="previsao-conclusao">
+                <h3>Previsão de Conclusão</h3>
+                <div class="previsao-content">
+                    <!-- Preenchido dinamicamente -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Seção de Cenários -->
+    <section class="cenarios-section">
+        <h2>Análise de Cenários</h2>
+        <div class="cenarios-grid">
+            <div class="cenario-card otimista">
+                <h4>Cenário Otimista</h4>
+                <div class="cenario-content">
+                    <!-- Preenchido dinamicamente -->
+                </div>
+            </div>
+            <div class="cenario-card realista">
+                <h4>Cenário Realista</h4>
+                <div class="cenario-content">
+                    <!-- Preenchido dinamicamente -->
+                </div>
+            </div>
+            <div class="cenario-card pessimista">
+                <h4>Cenário Pessimista</h4>
+                <div class="cenario-content">
+                    <!-- Preenchido dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ações Recomendadas -->
+    <section class="acoes-section">
+        <h2>Ações Recomendadas</h2>
+        <div class="acoes-grid">
+            <div class="acao-card urgente">
+                <h4>🚨 Urgente (Esta Semana)</h4>
+                <ul id="acoes-urgentes">
+                    <!-- Preenchido dinamicamente -->
+                </ul>
+            </div>
+            <div class="acao-card alta">
+                <h4>⚡ Alta Prioridade (2-4 Semanas)</h4>
+                <ul id="acoes-alta">
+                    <!-- Preenchido dinamicamente -->
+                </ul>
+            </div>
+            <div class="acao-card media">
+                <h4>💡 Média Prioridade (1-2 Meses)</h4>
+                <ul id="acoes-media">
+                    <!-- Preenchido dinamicamente -->
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Processando análise preditiva...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Configurações -->
+<div id="modal-config" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Configurações do Dashboard Preditivo</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="config-group">
+                <h4>Atualização Automática</h4>
+                <label>
+                    <input type="checkbox" id="auto-update" checked>
+                    Atualizar automaticamente a cada 5 minutos
+                </label>
+            </div>
+            <div class="config-group">
+                <h4>Alertas</h4>
+                <label>
+                    <input type="checkbox" id="notificacoes" checked>
+                    Mostrar notificações de alertas críticos
+                </label>
+            </div>
+            <div class="config-group">
+                <h4>Níveis de Alerta</h4>
+                <label>
+                    Velocidade mínima (% por dia):
+                    <input type="number" id="velocidade-min" value="1.0" step="0.1" min="0.1" max="5.0">
+                </label>
+                <label>
+                    Dias de alerta para prazos:
+                    <input type="number" id="dias-alerta" value="30" min="1" max="180">
+                </label>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="salvarConfiguracoes()">Salvar</button>
+            <button class="btn btn-secondary" onclick="fecharModal()">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard_preditivo.js') }}"></script>
+
+<script>
+// Funções auxiliares para o modal
+function abrirModal() {
+    document.getElementById('modal-config').style.display = 'block';
+}
+
+function fecharModal() {
+    document.getElementById('modal-config').style.display = 'none';
+}
+
+function salvarConfiguracoes() {
+    // Implementar salvamento das configurações
+    const config = {
+        auto_update: document.getElementById('auto-update').checked,
+        notificacoes: document.getElementById('notificacoes').checked,
+        velocidade_min: parseFloat(document.getElementById('velocidade-min').value),
+        dias_alerta: parseInt(document.getElementById('dias-alerta').value)
+    };
+    
+    // Salvar no localStorage
+    localStorage.setItem('dashboard_preditivo_config', JSON.stringify(config));
+    
+    // Aplicar configurações
+    if (dashboardPreditivo) {
+        dashboardPreditivo.aplicarConfiguracoes(config);
+    }
+    
+    fecharModal();
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Botão de configurações
+    document.getElementById('btn-config').addEventListener('click', abrirModal);
+    
+    // Botão de atualizar
+    document.getElementById('btn-atualizar').addEventListener('click', function() {
+        if (dashboardPreditivo) {
+            dashboardPreditivo.atualizarDados();
+        }
+    });
+    
+    // Botão de exportar
+    document.getElementById('btn-exportar').addEventListener('click', function() {
+        if (dashboardPreditivo) {
+            dashboardPreditivo.exportarRelatorio();
+        }
+    });
+    
+    // Fechar modal clicando fora
+    document.getElementById('modal-config').addEventListener('click', function(e) {
+        if (e.target === this) {
+            fecharModal();
+        }
+    });
+    
+    // Carregar configurações salvas
+    const configSalva = localStorage.getItem('dashboard_preditivo_config');
+    if (configSalva) {
+        const config = JSON.parse(configSalva);
+        document.getElementById('auto-update').checked = config.auto_update;
+        document.getElementById('notificacoes').checked = config.notificacoes;
+        document.getElementById('velocidade-min').value = config.velocidade_min;
+        document.getElementById('dias-alerta').value = config.dias_alerta;
+    }
+});
+
+// Atalhos de teclado
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+            case 'r':
+                e.preventDefault();
+                if (dashboardPreditivo) {
+                    dashboardPreditivo.atualizarDados();
+                }
+                break;
+            case 'e':
+                e.preventDefault();
+                if (dashboardPreditivo) {
+                    dashboardPreditivo.exportarRelatorio();
+                }
+                break;
+            case ',':
+                e.preventDefault();
+                abrirModal();
+                break;
+        }
+    }
+});
+</script>
+{% endblock %}

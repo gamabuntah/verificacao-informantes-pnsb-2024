@@ -81,7 +81,7 @@ class AgendamentoAvancado:
                     rota_otimizada.append({
                         'visita_id': visita.id,
                         'municipio': visita.municipio,
-                        'informante': visita.informante,
+                        'local': visita.local,
                         'hora_inicio': visita.hora_inicio.strftime('%H:%M'),
                         'tempo_viagem': f"{tempo_viagem} min",
                         'distancia': rota.get('distancia', 'N/A'),

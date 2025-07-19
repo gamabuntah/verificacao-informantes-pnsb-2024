@@ -3,6 +3,7 @@ APIs para gestão de questionários obrigatórios do PNSB 2024
 """
 
 from flask import Blueprint, request, jsonify, current_app
+from flask_wtf.csrf import CSRFProtect
 from gestao_visitas.db import db
 from gestao_visitas.models.questionarios_obrigatorios import (
     QuestionarioObrigatorio, 
@@ -15,6 +16,9 @@ MUNICIPIOS_PNSB = MUNICIPIOS
 from datetime import datetime
 
 questionarios_bp = Blueprint('questionarios', __name__)
+
+# Inicializar CSRF
+csrf = CSRFProtect()
 
 @questionarios_bp.route('/questionarios-obrigatorios', methods=['GET'])
 def listar_questionarios_obrigatorios():
@@ -292,6 +296,7 @@ def criar_entidade_identificada():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @questionarios_bp.route('/entidades-identificadas/<int:entidade_id>', methods=['PUT'])
+@csrf.exempt
 def atualizar_entidade_identificada(entidade_id):
     """Atualiza status de questionários de uma entidade"""
     try:

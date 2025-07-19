@@ -624,7 +624,7 @@ function carregarRelatorio(periodo, inicio = '', fim = '') {
                     <td>${v.data || '-'}</td>
                     <td>${v.hora_inicio || '--:--'}</td>
                     <td><span class="badge bg-${statusClass}">${v.status || '-'}</span></td>
-                    <td>${v.informante || '-'}</td>
+                    <td>${v.local || '-'}</td>
                 `;
                 tbody.appendChild(tr);
             }

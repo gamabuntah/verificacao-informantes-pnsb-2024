@@ -1,0 +1,1238 @@
+/* Dashboard Preditivo PNSB 2024 - Estilos */
+:root {
+    --primary-color: #2E86AB;
+    --secondary-color: #A23B72;
+    --accent-color: #F18F01;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    --card-background: #ffffff;
+    --border-color: #e1e8ed;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
+}
+
+.dashboard-preditivo-container {
+    padding: 2rem;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.dashboard-header {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-content h1 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.header-subtitle {
+    margin: 0.5rem 0 0 0;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.header-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1a5f7a;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.btn-outline-primary {
+    background: transparent;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Score de Saúde Principal */
+.score-saude-section {
+    margin-bottom: 2rem;
+}
+
+.score-saude-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.score-saude-container {
+    text-align: center;
+}
+
+.score-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.score-header h3 {
+    margin: 0;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+}
+
+.score-valor {
+    font-size: 3rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+}
+
+.score-valor.success { color: var(--success-color); }
+.score-valor.info { color: var(--info-color); }
+.score-valor.warning { color: var(--warning-color); }
+.score-valor.danger { color: var(--danger-color); }
+
+.score-progress {
+    margin-bottom: 2rem;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.progress-fill.success { background: var(--success-color); }
+.progress-fill.info { background: var(--info-color); }
+.progress-fill.warning { background: var(--warning-color); }
+.progress-fill.danger { background: var(--danger-color); }
+
+.score-classificacao {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.score-componentes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.componente {
+    padding: 1rem;
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.componente .label {
+    display: block;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.componente .valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.score-interpretacao {
+    font-style: italic;
+    color: #6c757d;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dashboard-card h3 {
+    margin: 0 0 1.5rem 0;
+    color: var(--dark-color);
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+/* Análise de Prazos */
+.prazos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.prazo-card {
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    border-left: 4px solid var(--primary-color);
+    transition: var(--transition);
+}
+
+.prazo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.prazo-card.ok {
+    border-left-color: var(--success-color);
+}
+
+.prazo-card.risco {
+    border-left-color: var(--danger-color);
+}
+
+.prazo-card.atencao {
+    border-left-color: var(--warning-color);
+}
+
+.prazo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.prazo-header h4 {
+    margin: 0;
+    color: var(--dark-color);
+    font-size: 1.1rem;
+}
+
+.prazo-data {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.prazo-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.dias-restantes,
+.progresso-atual {
+    text-align: center;
+}
+
+.dias-restantes .numero,
+.progresso-atual .numero {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.dias-restantes .label,
+.progresso-atual .label {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.prazo-projecao {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.status-icon {
+    font-size: 1.5rem;
+}
+
+.projecao-info {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.resumo-progresso {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.progresso-barras {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.barra-progresso {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.barra-progresso label {
+    min-width: 120px;
+    font-weight: 500;
+}
+
+.barra-progresso .progress-bar {
+    flex: 1;
+    height: 12px;
+}
+
+/* Alertas Críticos */
+.alertas-container {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.alertas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.alerta-card {
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--info-color);
+    background: var(--light-color);
+}
+
+.alerta-card.critico {
+    border-left-color: var(--danger-color);
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.alerta-card.alto {
+    border-left-color: var(--warning-color);
+    background: rgba(255, 193, 7, 0.1);
+}
+
+.alerta-card.medio {
+    border-left-color: var(--info-color);
+    background: rgba(23, 162, 184, 0.1);
+}
+
+.alerta-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.alerta-nivel {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.alerta-nivel.critico {
+    background: var(--danger-color);
+}
+
+.alerta-nivel.alto {
+    background: var(--warning-color);
+    color: var(--dark-color);
+}
+
+.alerta-nivel.medio {
+    background: var(--info-color);
+}
+
+.alerta-tipo {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.alerta-content h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--dark-color);
+}
+
+.alerta-mensagem {
+    margin-bottom: 1rem;
+    color: #6c757d;
+}
+
+.alerta-acao {
+    padding: 0.75rem;
+    background: rgba(46, 134, 171, 0.1);
+    border-radius: var(--border-radius);
+    border-left: 3px solid var(--primary-color);
+}
+
+.alerta-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.alerta-timestamp {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.btn-alerta-acao {
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.btn-alerta-acao:hover {
+    background: #1a5f7a;
+}
+
+.sem-alertas {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+.status-ok {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+/* Projeções */
+.projecoes-container {
+    max-height: 700px;
+    overflow-y: auto;
+}
+
+.tendencia-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+}
+
+.tendencia-card {
+    text-align: center;
+    padding: 1rem;
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+}
+
+.tendencia-valor {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.tendencia-valor.crescente {
+    color: var(--success-color);
+}
+
+.tendencia-valor.decrescente {
+    color: var(--danger-color);
+}
+
+.tendencia-valor.estável {
+    color: var(--info-color);
+}
+
+.tendencia-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.media-semanal {
+    text-align: center;
+    padding: 1rem;
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+}
+
+.media-valor {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.media-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.grafico-projecoes {
+    margin: 2rem 0;
+    height: 300px;
+}
+
+.conclusao-prevista {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.conclusao-info {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+}
+
+.conclusao-data,
+.conclusao-semanas,
+.conclusao-status {
+    text-align: center;
+}
+
+.conclusao-status.ok {
+    color: var(--success-color);
+}
+
+.conclusao-status.risco {
+    color: var(--danger-color);
+}
+
+.semanas-futuras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.semana-card {
+    padding: 1rem;
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    text-align: center;
+}
+
+.semana-nome {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+.semana-data {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.semana-visitas {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.semana-acumulado {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+/* Riscos */
+.riscos-container {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.riscos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.risco-card {
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--info-color);
+    background: var(--light-color);
+}
+
+.risco-card.critico {
+    border-left-color: var(--danger-color);
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.risco-card.alto {
+    border-left-color: var(--warning-color);
+    background: rgba(255, 193, 7, 0.1);
+}
+
+.risco-card.medio {
+    border-left-color: var(--info-color);
+    background: rgba(23, 162, 184, 0.1);
+}
+
+.risco-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.risco-nivel {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.risco-nivel.critico {
+    background: var(--danger-color);
+}
+
+.risco-nivel.alto {
+    background: var(--warning-color);
+    color: var(--dark-color);
+}
+
+.risco-nivel.medio {
+    background: var(--info-color);
+}
+
+.risco-tipo {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.risco-probabilidade {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.risco-content h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--dark-color);
+}
+
+.risco-descricao {
+    margin-bottom: 1rem;
+    color: #6c757d;
+}
+
+.risco-impacto,
+.risco-acao {
+    padding: 0.75rem;
+    background: rgba(46, 134, 171, 0.1);
+    border-radius: var(--border-radius);
+    border-left: 3px solid var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.risco-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-risco-mitigar {
+    padding: 0.5rem 1rem;
+    background: var(--warning-color);
+    color: var(--dark-color);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.btn-risco-mitigar:hover {
+    background: #e0a800;
+}
+
+.sem-riscos {
+    text-align: center;
+    padding: 3rem;
+    color: #6c757d;
+}
+
+/* Análise de Velocidade */
+.velocidade-container {
+    text-align: center;
+}
+
+.velocidade-principal {
+    margin-bottom: 2rem;
+}
+
+.velocidade-valor {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.velocidade-valor.excelente {
+    color: var(--success-color);
+}
+
+.velocidade-valor.boa {
+    color: var(--info-color);
+}
+
+.velocidade-valor.regular {
+    color: var(--warning-color);
+}
+
+.velocidade-valor.critica {
+    color: var(--danger-color);
+}
+
+.velocidade-label {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.velocidade-interpretacao {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+.velocidade-detalhes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.velocidade-item {
+    padding: 1rem;
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.velocidade-item .label {
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.velocidade-item .valor {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.velocidade-grafico {
+    height: 300px;
+    margin-top: 2rem;
+}
+
+/* Municípios */
+.municipios-container {
+    max-height: 800px;
+    overflow-y: auto;
+}
+
+.municipios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.municipio-card {
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    background: var(--light-color);
+    border-left: 4px solid var(--primary-color);
+    transition: var(--transition);
+}
+
+.municipio-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.municipio-card.concluido {
+    border-left-color: var(--success-color);
+}
+
+.municipio-card.andamento {
+    border-left-color: var(--warning-color);
+}
+
+.municipio-card.iniciado {
+    border-left-color: var(--info-color);
+}
+
+.municipio-card.pendente {
+    border-left-color: var(--danger-color);
+}
+
+.municipio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.municipio-header h4 {
+    margin: 0;
+    color: var(--dark-color);
+}
+
+.municipio-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.municipio-status.concluido {
+    background: var(--success-color);
+}
+
+.municipio-status.andamento {
+    background: var(--warning-color);
+    color: var(--dark-color);
+}
+
+.municipio-status.iniciado {
+    background: var(--info-color);
+}
+
+.municipio-status.pendente {
+    background: var(--danger-color);
+}
+
+.municipio-metricas {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.metrica {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.metrica .label {
+    color: #6c757d;
+}
+
+.metrica .valor {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.municipio-progresso {
+    margin-bottom: 1rem;
+}
+
+.municipio-progresso .progress-bar {
+    height: 8px;
+}
+
+.municipio-prioridade {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.prioridade-label {
+    color: #6c757d;
+}
+
+.prioridade-valor {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.municipio-acao {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Recomendações */
+.recomendacoes-container {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.recomendacoes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.recomendacao-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+.recomendacao-numero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.recomendacao-texto {
+    flex: 1;
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+/* Cenários */
+.cenarios-section {
+    margin-bottom: 2rem;
+}
+
+.cenarios-section h2 {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.cenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.cenario-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    text-align: center;
+}
+
+.cenario-card.otimista {
+    border-left: 4px solid var(--success-color);
+}
+
+.cenario-card.realista {
+    border-left: 4px solid var(--info-color);
+}
+
+.cenario-card.pessimista {
+    border-left: 4px solid var(--danger-color);
+}
+
+.cenario-card h4 {
+    margin: 0 0 1rem 0;
+    color: var(--dark-color);
+}
+
+/* Ações */
+.acoes-section {
+    margin-bottom: 2rem;
+}
+
+.acoes-section h2 {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.acoes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.acao-card {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+}
+
+.acao-card.urgente {
+    border-left: 4px solid var(--danger-color);
+}
+
+.acao-card.alta {
+    border-left: 4px solid var(--warning-color);
+}
+
+.acao-card.media {
+    border-left: 4px solid var(--info-color);
+}
+
+.acao-card h4 {
+    margin: 0 0 1rem 0;
+    color: var(--dark-color);
+}
+
+.acao-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.acao-card li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.acao-card li:last-child {
+    border-bottom: none;
+}
+
+/* Chart containers */
+.chart-container {
+    height: 300px;
+    margin-top: 2rem;
+}
+
+/* Loading */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    text-align: center;
+    color: white;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: var(--card-background);
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--dark-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.config-group {
+    margin-bottom: 1.5rem;
+}
+
+.config-group h4 {
+    margin: 0 0 1rem 0;
+    color: var(--dark-color);
+}
+
+.config-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+}
+
+.config-group input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.config-group input[type="number"] {
+    width: 100px;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin-left: 0.5rem;
+}
+
+.modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-preditivo-container {
+        padding: 1rem;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .score-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .score-componentes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .prazos-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .municipios-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cenarios-grid,
+    .acoes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

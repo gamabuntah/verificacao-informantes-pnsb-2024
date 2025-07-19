@@ -353,8 +353,8 @@ def obter_mapa_progresso_geral():
             if visitas:
                 # Usar dados reais se disponível
                 visita_recente = max(visitas, key=lambda v: v.data_atualizacao or v.data_criacao)
-                if hasattr(visita_recente, 'informante') and visita_recente.informante:
-                    informante_principal = visita_recente.informante
+                if hasattr(visita_recente, 'local') and visita_recente.local:
+                    informante_principal = visita_recente.local
                 if hasattr(visita_recente, 'telefone_responsavel') and visita_recente.telefone_responsavel:
                     telefone_contato = visita_recente.telefone_responsavel
             
@@ -477,8 +477,8 @@ def obter_status_municipio(municipio):
 
 @funcionalidades_pnsb_bp.route('/questionarios/atualizar-status', methods=['POST'])
 @validate_json_input(required_fields=['municipio', 'tipo_pesquisa', 'novo_status'])
-def atualizar_status_questionario():
-    """Atualiza status de um questionário"""
+def atualizar_status_questionario_pnsb():
+    """Atualiza status de um questionário PNSB"""
     try:
         data = request.validated_data
         

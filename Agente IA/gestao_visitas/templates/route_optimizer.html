@@ -620,7 +620,7 @@
                     optimization_type: selectedOptimizationType
                 };
 
-                const response = await fetch('/api/routes/optimize/daily-route', {
+                const response = await fetch('/api/otimizar-rotas', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -664,7 +664,7 @@
                     municipality: municipality || null
                 };
 
-                const response = await fetch('/api/routes/optimize/weekly-plan', {
+                const response = await fetch('/api/otimizar-rotas', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -701,7 +701,7 @@
                     count: count
                 };
 
-                const response = await fetch('/api/routes/optimize/alternatives', {
+                const response = await fetch('/api/otimizar-rotas', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

@@ -130,7 +130,7 @@ class TestVisitaValidator:
             'data': '2024-12-25',
             'hora_inicio': '09:00',
             'hora_fim': '10:00',
-            'informante': 'João Silva',
+            'local': 'João Silva',
             'tipo_pesquisa': 'MRS',
             'tipo_informante': 'prefeitura',
             'observacoes': 'Teste'
@@ -139,7 +139,7 @@ class TestVisitaValidator:
         validated = VisitaValidator.validate_visita_data(data)
         
         assert validated['municipio'] == 'Itajaí'
-        assert validated['informante'] == 'João Silva'
+        assert validated['local'] == 'João Silva'
         assert validated['tipo_pesquisa'] == 'MRS'
     
     def test_validate_visita_data_minima(self):
@@ -148,7 +148,7 @@ class TestVisitaValidator:
             'municipio': 'Itajaí',
             'data': '2024-12-25',
             'hora_inicio': '09:00',
-            'informante': 'João Silva',
+            'local': 'João Silva',
             'tipo_pesquisa': 'MRS'
         }
         
@@ -164,7 +164,7 @@ class TestVisitaValidator:
             'data': '2024-12-25',
             'hora_inicio': '10:00',
             'hora_fim': '09:00',  # Antes do início
-            'informante': 'João Silva',
+            'local': 'João Silva',
             'tipo_pesquisa': 'MRS'
         }
         
@@ -173,20 +173,20 @@ class TestVisitaValidator:
         
         assert 'posterior' in str(exc_info.value).lower()
     
-    def test_validate_visita_informante_vazio(self):
-        """Testa validação com informante vazio"""
+    def test_validate_visita_local_vazio(self):
+        """Testa validação com local vazio"""
         data = {
             'municipio': 'Itajaí',
             'data': '2024-12-25',
             'hora_inicio': '09:00',
-            'informante': '',  # Vazio
+            'local': '',  # Vazio
             'tipo_pesquisa': 'MRS'
         }
         
         with pytest.raises(ValidationError) as exc_info:
             VisitaValidator.validate_visita_data(data)
         
-        assert 'informante' in str(exc_info.value).lower()
+        assert 'local' in str(exc_info.value).lower()
     
     def test_validate_visita_municipio_invalido(self):
         """Testa validação com município inválido"""
@@ -194,7 +194,7 @@ class TestVisitaValidator:
             'municipio': 'Município Inexistente',
             'data': '2024-12-25',
             'hora_inicio': '09:00',
-            'informante': 'João Silva',
+            'local': 'João Silva',
             'tipo_pesquisa': 'MRS'
         }
         

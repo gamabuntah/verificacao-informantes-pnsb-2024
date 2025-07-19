@@ -20,13 +20,24 @@ MUNICIPIOS = [
     'Ilhota'
 ]
 
-# Configurações de Status de Visita
+# Configurações de Status de Visita (integrado com sistema livre)
 STATUS_VISITA = {
     'agendada': 'Agendada',
-    'em_andamento': 'Em Andamento',
-    'concluida': 'Concluída',
+    'em preparação': 'Em Preparação',
+    'em andamento': 'Em Andamento',
+    'em execução': 'Em Execução',
+    'em follow-up': 'Em Follow-up',
+    'verificação whatsapp': 'Verificação WhatsApp',
+    'realizada': 'Realizada',
+    'questionários concluídos': 'Questionários Concluídos',
+    'questionários validados': 'Questionários Validados',
+    'finalizada': 'Finalizada',
+    'remarcada': 'Remarcada',
+    'não realizada': 'Não Realizada',
     'cancelada': 'Cancelada',
-    'reagendada': 'Reagendada'
+    'aguardando': 'Aguardando',
+    'pendente': 'Pendente',
+    'confirmada': 'Confirmada'
 }
 
 # Configurações de Checklist

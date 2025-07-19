@@ -7,13 +7,28 @@ from ..config import STATUS_VISITA, DURACAO_PADRAO_VISITA
 
 STATUS_VISITA_COMPLETO = [
     'agendada',
-    'em andamento',              # SIMPLIFICADO: em preparação + em execução
+    'em preparação',
+    'em andamento',
+    'em execução', 
+    'em follow-up',
+    'verificação whatsapp',
     'realizada',
-    'questionários concluídos',  # Questionários respondidos, aguardando validação
-    'questionários validados',   # Questionários validados sem críticas ✅
+    'questionários concluídos',
+    'questionários validados',
     'finalizada',
     'remarcada',
-    'não realizada'
+    'não realizada',
+    'cancelada',
+    'aguardando',
+    'pendente',
+    'confirmada',
+    # Status PNSB adicionais
+    'nao_iniciado',
+    'contactado',
+    'respondido',
+    'aguardando_validacao',
+    'validado_concluido',
+    'revisao_necessaria'
 ]
 
 class Visita(db.Model):
@@ -56,16 +71,23 @@ class Visita(db.Model):
         cascade='all, delete-orphan'
     )
 
-    # Mapeamento de transições de status simplificado para entrevistas PNSB
+    # Mapeamento de transições de status completo para PNSB 2024
     TRANSICOES_STATUS = {
-        'agendada': ['em andamento', 'realizada', 'remarcada', 'não realizada'],
+        'agendada': ['em andamento', 'realizada', 'remarcada', 'não realizada', 'contactado'],
         'em andamento': ['realizada', 'agendada', 'remarcada', 'não realizada'],
-        'realizada': ['questionários concluídos', 'agendada', 'em andamento'],
+        'realizada': ['questionários concluídos', 'agendada', 'em andamento', 'respondido'],
         'questionários concluídos': ['questionários validados', 'realizada'],
-        'questionários validados': ['finalizada', 'questionários concluídos'],
-        'finalizada': ['questionários validados', 'questionários concluídos', 'realizada'],  # Permite reabrir se necessário
+        'questionários validados': ['finalizada', 'questionários concluídos', 'validado_concluido'],
+        'finalizada': ['questionários validados', 'questionários concluídos', 'realizada'],
         'remarcada': ['agendada'],
-        'não realizada': ['agendada', 'remarcada']
+        'não realizada': ['agendada', 'remarcada'],
+        # Status PNSB workflow
+        'nao_iniciado': ['contactado', 'agendada'],
+        'contactado': ['respondido', 'agendada', 'revisao_necessaria'],
+        'respondido': ['aguardando_validacao', 'revisao_necessaria', 'realizada'],
+        'aguardando_validacao': ['validado_concluido', 'revisao_necessaria', 'respondido'],
+        'validado_concluido': ['finalizada'],
+        'revisao_necessaria': ['contactado', 'respondido', 'aguardando_validacao']
     }
     
     def __init__(self, id=None, municipio=None, data=None, hora_inicio=None, 
@@ -114,14 +136,86 @@ class Visita(db.Model):
         self.data_atualizacao = datetime.now()
 
     def atualizar_status(self, novo_status):
-        """Atualiza o status da visita, validando a transição."""
-        if novo_status not in STATUS_VISITA_COMPLETO:
-            raise ValueError(f'Status inválido: {novo_status}')
-        if novo_status not in self.TRANSICOES_STATUS.get(self.status, []):
-            raise ValueError(f'Transição de status não permitida: {self.status} -> {novo_status}')
+        """Atualiza o status da visita E sincroniza questionários automaticamente"""
+        # Permitir qualquer status sem validação rígida
+        if not novo_status or not isinstance(novo_status, str):
+            raise ValueError('Status deve ser uma string não vazia')
+        
+        # Normalizar status (remover espaços e padronizar)
+        novo_status = novo_status.strip()
+        
+        # Log da mudança para auditoria
+        print(f"📝 Status alterado: {self.status} → {novo_status} (Visita ID: {self.id})")
+        
         self.status = novo_status
         self.data_atualizacao = datetime.now()
+        
+        # NOVO: Sincronizar questionários automaticamente
+        self._sincronizar_questionarios()
+        
         return True
+
+    def _sincronizar_questionarios(self):
+        """Sincroniza status dos questionários com o status da visita"""
+        try:
+            from .questionarios_obrigatorios import EntidadeIdentificada
+            
+            # Garantir que existem entidades para esta visita
+            entidades = EntidadeIdentificada.query.filter_by(visita_id=self.id).all()
+            if not entidades:
+                self._criar_entidades_automaticas()
+                entidades = EntidadeIdentificada.query.filter_by(visita_id=self.id).all()
+            
+            # Sincronizar cada entidade
+            for entidade in entidades:
+                entidade.sincronizar_com_visita()
+                
+            # Commit das mudanças
+            db.session.commit()
+            print(f"✅ Questionários sincronizados para visita {self.id}")
+            
+        except Exception as e:
+            print(f"❌ Erro ao sincronizar questionários: {e}")
+            db.session.rollback()
+
+    def _criar_entidades_automaticas(self):
+        """Cria entidades automaticamente para visitas que não possuem"""
+        try:
+            from .questionarios_obrigatorios import EntidadeIdentificada
+            
+            # Verificar se já existem entidades
+            entidades_existentes = EntidadeIdentificada.query.filter_by(visita_id=self.id).count()
+            if entidades_existentes > 0:
+                return
+            
+            # Determinar obrigatoriedade baseada no tipo de pesquisa
+            mrs_obrigatorio = self.tipo_pesquisa in ['MRS', 'ambos']
+            map_obrigatorio = self.tipo_pesquisa in ['MAP', 'ambos']
+            
+            # Criar entidade baseada na visita
+            entidade = EntidadeIdentificada(
+                municipio=self.municipio,
+                tipo_entidade=self.tipo_informante or 'prefeitura',
+                nome_entidade=self.local or f'Visita {self.municipio}',
+                mrs_obrigatorio=mrs_obrigatorio,
+                map_obrigatorio=map_obrigatorio,
+                status_mrs='nao_iniciado',
+                status_map='nao_iniciado',
+                fonte_identificacao='visita_automatica',
+                visita_id=self.id,
+                prioridade=1 if self.tipo_informante == 'prefeitura' else 2,
+                categoria_prioridade='p1' if self.tipo_informante == 'prefeitura' else 'p2',
+                origem_prefeitura=(self.tipo_informante == 'prefeitura'),
+                observacoes=f'Questionários gerados automaticamente para visita em {self.local}'
+            )
+            
+            db.session.add(entidade)
+            db.session.commit()
+            print(f"✅ Entidade criada automaticamente para visita {self.id}")
+            
+        except Exception as e:
+            print(f"❌ Erro ao criar entidades automáticas: {e}")
+            db.session.rollback()
 
     def calcular_status_inteligente(self):
         """Calcula o status real baseado em questionários, checklist e visitas obrigatórias (versão otimizada)."""
@@ -140,15 +234,51 @@ class Visita(db.Model):
             return {'antes': 0, 'durante': 0, 'apos': 0}
 
     def obter_status_questionarios(self):
-        """Retorna o status detalhado dos questionários (versão otimizada)."""
+        """Retorna o status real dos questionários baseado nas entidades vinculadas"""
         try:
-            # Retorna estrutura padrão sem queries pesadas
+            from .questionarios_obrigatorios import EntidadeIdentificada
+            
+            # Buscar entidades vinculadas a esta visita
+            entidades = EntidadeIdentificada.query.filter_by(visita_id=self.id).all()
+            
+            if not entidades:
+                # Se não há entidades, tentar criar automaticamente
+                self._criar_entidades_automaticas()
+                entidades = EntidadeIdentificada.query.filter_by(visita_id=self.id).all()
+            
+            if not entidades:
+                return {
+                    'mrs': {'nao_iniciado': 0, 'respondido': 0, 'validado_concluido': 0, 'nao_aplicavel': 0},
+                    'map': {'nao_iniciado': 0, 'respondido': 0, 'validado_concluido': 0, 'nao_aplicavel': 0},
+                    'total_entidades': 0
+                }
+            
+            # Contar status reais
+            mrs_stats = {'nao_iniciado': 0, 'respondido': 0, 'validado_concluido': 0, 'nao_aplicavel': 0}
+            map_stats = {'nao_iniciado': 0, 'respondido': 0, 'validado_concluido': 0, 'nao_aplicavel': 0}
+            
+            for entidade in entidades:
+                if entidade.mrs_obrigatorio:
+                    status_mrs = entidade.status_mrs or 'nao_iniciado'
+                    if status_mrs in mrs_stats:
+                        mrs_stats[status_mrs] += 1
+                    else:
+                        mrs_stats['nao_iniciado'] += 1
+                        
+                if entidade.map_obrigatorio:
+                    status_map = entidade.status_map or 'nao_iniciado'
+                    if status_map in map_stats:
+                        map_stats[status_map] += 1
+                    else:
+                        map_stats['nao_iniciado'] += 1
+            
             return {
-                'mrs': {'nao_iniciado': 0, 'respondido': 0, 'validado_concluido': 0, 'nao_aplicavel': 0},
-                'map': {'nao_iniciado': 0, 'respondido': 0, 'validado_concluido': 0, 'nao_aplicavel': 0},
-                'total_entidades': 0
+                'mrs': mrs_stats,
+                'map': map_stats,
+                'total_entidades': len(entidades)
             }
-        except Exception:
+        except Exception as e:
+            print(f"Erro ao obter status questionários: {e}")
             return {
                 'mrs': {'nao_iniciado': 0, 'respondido': 0, 'validado_concluido': 0, 'nao_aplicavel': 0},
                 'map': {'nao_iniciado': 0, 'respondido': 0, 'validado_concluido': 0, 'nao_aplicavel': 0},
@@ -332,15 +462,24 @@ class Visita(db.Model):
     @classmethod
     def excluir_visita(cls, visita_id):
         """Exclui uma visita do banco de dados e seu checklist relacionado."""
-        visita = cls.query.get(visita_id)
-        if visita:
+        try:
+            visita = cls.query.get(visita_id)
+            if not visita:
+                return False
+            
             # Excluir checklist relacionado, se existir
-            if visita.checklist:
+            if hasattr(visita, 'checklist') and visita.checklist:
                 db.session.delete(visita.checklist)
+            
+            # Excluir a visita
             db.session.delete(visita)
             db.session.commit()
             return True
-        return False
+            
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erro ao excluir visita {visita_id}: {str(e)}")
+            return False
 
     def registrar_email_enviado(self, data_envio=None):
         """Registra quando o e-mail foi enviado pelo sistema IBGE."""
