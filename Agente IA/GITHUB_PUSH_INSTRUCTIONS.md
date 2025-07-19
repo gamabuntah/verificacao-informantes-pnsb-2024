@@ -3,7 +3,7 @@
 ## Token Saved Securely
 GitHub Personal Access Token has been saved in:
 - **Location**: `/mnt/c/users/ggmob/Cursor AI/Verificação Informantes PNSB/Agente IA/.github_token`
-- **Token**: `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`
+- **Token**: `[REDACTED FOR SECURITY]`
 
 ## Current Git Configuration
 - **User**: gamabuntah
@@ -19,7 +19,7 @@ GitHub Personal Access Token has been saved in:
 ### Option 1: If you have a GitHub repository already
 1. Update the remote URL:
    ```bash
-   git remote set-url origin https://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@github.com/USERNAME/REPO_NAME.git
+   git remote set-url origin https://[TOKEN]@github.com/USERNAME/REPO_NAME.git
    ```
 
 2. Push the changes:
@@ -32,7 +32,7 @@ GitHub Personal Access Token has been saved in:
 2. Copy the repository URL
 3. Update the remote:
    ```bash
-   git remote set-url origin https://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@github.com/USERNAME/NEW_REPO_NAME.git
+   git remote set-url origin https://[TOKEN]@github.com/USERNAME/NEW_REPO_NAME.git
    ```
 4. Push:
    ```bash
